@@ -1,4 +1,5 @@
 package com.example.optimate.loginAndRegister
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -84,7 +85,18 @@ class Register : AppCompatActivity() {
     }
 
     private fun updateUI(user: FirebaseUser?) {
-        // Navigate to the next activity if the user is signed in or show error
+        if (user != null) {
+            // User is signed in, show success message
+            Toast.makeText(this, "Welcome, optiMate!", Toast.LENGTH_SHORT).show()
+
+            // Navigate to the Login activity
+            val intent = Intent(this, Login::class.java)
+            startActivity(intent)
+            finish() // Finish the current activity so the user can't go back to it
+        } else {
+            // User is null, stay on the register page or show an error message
+            Toast.makeText(this, "Register failed.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun reload() {
