@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "705020483761",
+    "project_id": "businessmanagementapp-47a35",
+    "storage_bucket": "businessmanagementapp-47a35.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:705020483761:android:6280771f244a6e47fbaa90",
+        "android_client_info": {
+          "package_name": "com.example.optimate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmFx-ypzuEfdcG5tgLCQva50tw4ADynW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
