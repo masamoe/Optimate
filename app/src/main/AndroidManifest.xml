@@ -24,7 +24,7 @@
         </activity>
         <activity android:name=".loginAndRegister.Login" />
         <activity android:name=".loginAndRegister.Register" />
-        <activity android:name=".loginAndRegister.LoginSuccess" />
+        <activity android:name=".loginAndRegister.BusinessLanding" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

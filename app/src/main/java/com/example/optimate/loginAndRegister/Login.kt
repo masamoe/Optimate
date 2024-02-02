@@ -69,7 +69,7 @@ class Login : AppCompatActivity(){
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             // Go to your main activity or another activity after login
-            val intent = Intent(this, LoginSuccess::class.java)
+            val intent = Intent(this, BusinessLanding::class.java)
             startActivity(intent)
             finish()
         } else {
