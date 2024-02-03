@@ -72,7 +72,7 @@ class Register : AppCompatActivity() {
                     Log.d("RegisterActivity", "createUserWithEmail:success")
                     val user = auth.currentUser
                     if (user != null) {
-                        addUsertoDB(email, address, name, user.uid)
+                        addUserToDB(email, address, name, user.uid)
                         // Update UI after user creation and addition to the database
                         updateUI(user)
                     } else {
@@ -102,7 +102,7 @@ class Register : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             // User is signed in, show success message
-            Toast.makeText(this, "Welcome, optiMate!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Welcome to OptiMate!", Toast.LENGTH_SHORT).show()
 
             // Navigate to the Login activity
             val intent = Intent(this, Login::class.java)
@@ -114,9 +114,9 @@ class Register : AppCompatActivity() {
         }
     }
 
-    private fun addUsertoDB(email: String, address: String, name: String, UID: String){
+    private fun addUserToDB(email: String, address: String, name: String, uid: String){
 
-        val BID = UID + name.substring(0,2)
+        val bid = uid + name.substring(0,2)
 
         val user = hashMapOf(
             "email" to email,
@@ -124,8 +124,8 @@ class Register : AppCompatActivity() {
             "name" to name,
             "title" to "businessOwner",
             "role" to "businessOwner",
-            "UID" to UID,
-            "BID" to BID
+            "UID" to uid,
+            "BID" to bid
         )
 
         db.collection("users")
