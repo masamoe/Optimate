@@ -14,10 +14,11 @@
     <string name="success">success</string>
     <string name="hello">Hello,</string>
     <string name="roles">Roles</string>
-    <string name="rolesIcon">roles icon</string>
+    <string name="titlesIcon">titles icon</string>
     <string name="accountsIcon">accounts icon</string>
     <string name="scheduleIcon">schedule icon</string>
     <string name="financesIcon">finances icon</string>
     <string name="notificationsIcon">notifications icon</string>
     <string name="requestsIcon">requests icon</string>
+    <string name="titles">Titles</string>
 </resources>
