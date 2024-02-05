@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:grid="http://schemas.android.com/apk/res-auto"
     android:contentDescription="@string/notificationsIcon"
     tools:ignore="MissingDefaultResource">
 
@@ -19,14 +20,280 @@
         app:layout_constraintStart_toStartOf="@id/guideline5"
         app:layout_constraintTop_toTopOf="@id/guideline31">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvNumbers"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:itemCount="8"
-            tools:layoutManager="GridLayoutManager"
-            tools:listitem="@layout/recycler_view_item"
-            tools:spanCount="5" />
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/choice_grid"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:padding="0dp"
+            app:alignmentMode="alignBounds"
+            grid:columnCount="2"
+            grid:rowOrderPreserved="false"
+            grid:useDefaultMargins="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical"
+                grid:layout_columnWeight="1"
+                grid:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/rolesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_rect"
+                    android:backgroundTint="@color/ic_roles_background"
+                    android:maxHeight="100dp"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_roles_foreground"
+                    android:textAlignment="center"
+                    grid:layout_columnWeight="1"
+                    grid:layout_gravity="center"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Titles"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical"
+                grid:layout_columnWeight="1"
+                grid:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/rolesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_rect"
+                    android:backgroundTint="@color/ic_roles_background"
+                    android:maxHeight="100dp"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_roles_foreground"
+                    android:textAlignment="center"
+                    grid:layout_columnWeight="1"
+                    grid:layout_gravity="center"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Titles"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical"
+                grid:layout_columnWeight="1"
+                grid:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/rolesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_rect"
+                    android:backgroundTint="@color/ic_roles_background"
+                    android:maxHeight="100dp"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_roles_foreground"
+                    android:textAlignment="center"
+                    grid:layout_columnWeight="1"
+                    grid:layout_gravity="center"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Titles"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical"
+                grid:layout_columnWeight="1"
+                grid:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/rolesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_rect"
+                    android:backgroundTint="@color/ic_roles_background"
+                    android:maxHeight="100dp"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_roles_foreground"
+                    android:textAlignment="center"
+                    grid:layout_columnWeight="1"
+                    grid:layout_gravity="center"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Titles"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical"
+                grid:layout_columnWeight="1"
+                grid:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/rolesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_rect"
+                    android:backgroundTint="@color/ic_roles_background"
+                    android:maxHeight="100dp"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_roles_foreground"
+                    android:textAlignment="center"
+                    grid:layout_columnWeight="1"
+                    grid:layout_gravity="center"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Titles"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical"
+                grid:layout_columnWeight="1"
+                grid:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/rolesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_rect"
+                    android:backgroundTint="@color/ic_roles_background"
+                    android:maxHeight="100dp"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_roles_foreground"
+                    android:textAlignment="center"
+                    grid:layout_columnWeight="1"
+                    grid:layout_gravity="center"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Titles"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical"
+                grid:layout_columnWeight="1"
+                grid:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/rolesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_rect"
+                    android:backgroundTint="@color/ic_roles_background"
+                    android:maxHeight="100dp"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_roles_foreground"
+                    android:textAlignment="center"
+                    grid:layout_columnWeight="1"
+                    grid:layout_gravity="center"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Titles"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+
+        </androidx.gridlayout.widget.GridLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.constraintlayout.widget.Guideline
