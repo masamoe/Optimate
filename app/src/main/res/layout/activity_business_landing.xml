@@ -19,6 +19,14 @@
         app:layout_constraintStart_toStartOf="@id/guideline5"
         app:layout_constraintTop_toTopOf="@id/guideline31">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNumbers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:itemCount="8"
+            tools:layoutManager="GridLayoutManager"
+            tools:listitem="@layout/recycler_view_item"
+            tools:spanCount="5" />
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.constraintlayout.widget.Guideline
@@ -173,92 +181,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.75" />
-
-    <ImageView
-        android:id="@+id/rolesIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/rolesIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline28"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="@+id/guideline31"
-        app:srcCompat="@drawable/roles_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/accountsIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/accountsIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline28"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline31"
-        app:srcCompat="@drawable/accounts_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/scheduleIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/scheduleIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline33"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="@+id/guideline28"
-        app:srcCompat="@drawable/schedule_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/financesIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/financesIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline33"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline28"
-        app:srcCompat="@drawable/finances_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/notificationsIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/notificationsIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline34"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="@+id/guideline33"
-        app:srcCompat="@drawable/notifications_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/requestsIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/requestsIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline34"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline33"
-        app:srcCompat="@drawable/requests_icon"
-        tools:ignore="ImageContrastCheck" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
