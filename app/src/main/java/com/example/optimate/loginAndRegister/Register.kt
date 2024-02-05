@@ -57,10 +57,8 @@ class Register : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-
-
             // Proceed with creating the user if all checks pass
-            createNewUser(email, password, name, address)
+            createNewUser(email, password, address,name)
         }
     }
 

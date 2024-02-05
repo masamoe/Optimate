@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.businessOwner.BusinessLanding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -100,8 +101,6 @@ class Login : AppCompatActivity(){
                         GlobalUserData.role = (document.getString("role") ?: "").toString()
                         GlobalUserData.title = (document.getString("title") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
-
-
 
                 }
                     updateUI(user)
