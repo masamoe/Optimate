@@ -87,10 +87,14 @@ fun XmlTopBar(titleText: String = "Titles") {
 }
 @Composable
 fun AddTitleButton(modifier: Modifier = Modifier) {
+        val addTitleBtn = LocalContext.current
         val buttonColor = MaterialTheme.colors.run {
             if (isLight) Color(0xFFC4F0E6) else Color(0xFF91C9B7)}
         Button(
-            onClick = { /* TODO: Handle add role action */ },
+            onClick = {
+                        val intent = Intent(addTitleBtn, AddTitle::class.java)
+                        addTitleBtn.startActivity(intent)
+                      },
             colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
             modifier = modifier.padding(end = 16.dp).height(30.dp),
             //add shadow to the button

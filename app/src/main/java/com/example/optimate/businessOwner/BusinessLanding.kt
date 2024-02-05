@@ -2,7 +2,6 @@ package com.example.optimate.businessOwner
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R

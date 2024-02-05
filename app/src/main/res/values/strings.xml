@@ -22,4 +22,7 @@
     <string name="requestsIcon">requests icon</string>
     <string name="titles">Titles</string>
     <string name="home">home</string>
+    <string name="add_title">Add Title</string>
+    <string name="manager_button">manager button</string>
+    <string name="employee_button">employee button</string>
 </resources>
