@@ -102,8 +102,6 @@ class Login : AppCompatActivity(){
                         GlobalUserData.title = (document.getString("title") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
 
-
-
                 }
                     updateUI(user)
                 }

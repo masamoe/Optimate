@@ -58,6 +58,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
     implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
     implementation ("androidx.compose.ui:ui:1.6.0")
     // Tooling support (Previews, etc.)
