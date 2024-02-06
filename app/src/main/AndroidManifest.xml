@@ -27,6 +27,7 @@
         <activity android:name=".businessOwner.BusinessLanding" />
         <activity android:name=".businessOwner.TitlesActivity" />
         <activity android:name=".businessOwner.AddTitle" />
+        <activity android:name=".businessOwner.AddTitleDetailsActivity" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

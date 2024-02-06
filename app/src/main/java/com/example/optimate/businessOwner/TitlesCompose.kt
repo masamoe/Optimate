@@ -42,15 +42,15 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.optimate.R
 
-data class Role(val title: String, val category: String)
+data class Title(val title: String, val category: String)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TitlesScreen(roles: List<Role>) {
+fun TitlesScreen(titles: List<Title>) {
     Scaffold(
         topBar = { XmlTopBar() },
         content = { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
-                RolesList(roles)
+                TitlesList(titles)
                 AddTitleButton(modifier = Modifier.align(Alignment.TopEnd).padding(top = 5.dp)) // Button appears over the list
             }
         }
@@ -105,17 +105,17 @@ fun AddTitleButton(modifier: Modifier = Modifier) {
 }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RolesList(roles: List<Role>) {
-    val groupedRoles = roles.groupBy { it.category }
+fun TitlesList(titles: List<Title>) {
+    val groupedTitles = titles.groupBy { it.category }
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        groupedRoles.forEach { (category, roles) ->
+        groupedTitles.forEach { (category, titles) ->
             stickyHeader {
                 Header(title = category)
             }
-            itemsIndexed(roles) { index, role ->
-                RoleRow(role, index)
+            itemsIndexed(titles) { index, title ->
+                TitleRow(title, index)
             }
         }
     }
@@ -132,7 +132,7 @@ fun Header(title: String) {
     )
 }
 @Composable
-fun RoleRow(role: Role, index: Int) {
+fun TitleRow(title: Title, index: Int) {
     val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
 
     Card(
@@ -157,7 +157,7 @@ fun RoleRow(role: Role, index: Int) {
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Text(text = role.title, fontSize = 18.sp)
+                Text(text = title.title, fontSize = 18.sp)
             }
 
             // Right arrow icon at the end of the card
@@ -172,24 +172,24 @@ fun RoleRow(role: Role, index: Int) {
 @Preview(showBackground = true)
 @Composable
 fun TitlesScreenPreview() {
-    val sampleRoles = listOf(
-        Role("Manager", "Managers:"),
-        Role("Head Chef", "Managers:"),
-        Role("Server", "Employees:"),
-        Role("Line Cook", "Employees:"),
-        Role("Dishwasher", "Employees:"),
-        Role("Manager", "Managers:"),
-        Role("Head Chef", "Managers:"),
-        Role("Server", "Employees:"),
-        Role("Line Cook", "Employees:"),
-        Role("Dishwasher", "Employees:"),
-        Role("Manager", "Managers:"),
-        Role("Head Chef", "Managers:"),
-        Role("Server", "Employees:"),
-        Role("Line Cook", "Employees:"),
-        Role("Dishwasher", "Employees:")
+    val sampleTitles = listOf(
+        Title("Manager", "Managers:"),
+        Title("Head Chef", "Managers:"),
+        Title("Server", "Employees:"),
+        Title("Line Cook", "Employees:"),
+        Title("Dishwasher", "Employees:"),
+        Title("Manager", "Managers:"),
+        Title("Head Chef", "Managers:"),
+        Title("Server", "Employees:"),
+        Title("Line Cook", "Employees:"),
+        Title("Dishwasher", "Employees:"),
+        Title("Manager", "Managers:"),
+        Title("Head Chef", "Managers:"),
+        Title("Server", "Employees:"),
+        Title("Line Cook", "Employees:"),
+        Title("Dishwasher", "Employees:")
     )
     MaterialTheme {
-        TitlesScreen(sampleRoles)
+        TitlesScreen(sampleTitles)
     }
 }
