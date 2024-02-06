@@ -108,5 +108,3 @@ public class LayoutButton extends RelativeLayout {
     }
 
 }
-
-
