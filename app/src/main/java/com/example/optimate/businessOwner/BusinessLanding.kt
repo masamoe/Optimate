@@ -3,17 +3,20 @@ package com.example.optimate.businessOwner
 import android.os.Bundle
 import android.view.View
 import android.widget.GridLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.GlobalUserData
 
 class BusinessLanding : AppCompatActivity() {
     private lateinit var businessName: String
-
+    private lateinit var user_name: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_business_landing)
         businessName = GlobalUserData.name
+        user_name = findViewById(R.id.user_name)
+        user_name.text = businessName
 
         val gridLayout = findViewById<GridLayout>(R.id.choice_grid)
 
