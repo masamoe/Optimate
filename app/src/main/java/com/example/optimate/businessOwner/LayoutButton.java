@@ -27,6 +27,7 @@ public class LayoutButton extends RelativeLayout {
 
         RelativeLayout layout = (RelativeLayout)v;
 
+
 // copy layout parameters
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         this.setLayoutParams(params);
@@ -103,9 +104,9 @@ public class LayoutButton extends RelativeLayout {
     }
 
     public void setID(int id, int i) {
-        View v = findViewById(id);
-        v.setId(i);
+        setId(i);
     }
+
 }
 
 
