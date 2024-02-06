@@ -2,11 +2,13 @@ package com.example.optimate.businessOwner
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -46,11 +48,19 @@ data class Title(val title: String, val category: String)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TitlesScreen(titles: List<Title>) {
+    val context = LocalContext.current
     Scaffold(
         topBar = { XmlTopBar() },
         content = { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
-                TitlesList(titles)
+                TitlesList(titles) { title ->
+                    // This lambda is called when a title is clicked
+                    val intent = Intent(context, EditTitleDetailsActivity::class.java).apply {
+                        putExtra("title_name", title.title) // Pass the title name to the EditTitleDetailsActivity
+                        Log.d("TitleTransfer", "Sending title_name: ${title.title}")
+                    }
+                    context.startActivity(intent)
+                }
                 AddTitleButton(modifier = Modifier.align(Alignment.TopEnd).padding(top = 5.dp)) // Button appears over the list
             }
         }
@@ -105,7 +115,7 @@ fun AddTitleButton(modifier: Modifier = Modifier) {
 }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TitlesList(titles: List<Title>) {
+fun TitlesList(titles: List<Title>, onClickTitle: (Title) -> Unit) { // Add onClickTitle lambda parameter
     val groupedTitles = titles.groupBy { it.category }
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -115,11 +125,14 @@ fun TitlesList(titles: List<Title>) {
                 Header(title = category)
             }
             itemsIndexed(titles) { index, title ->
-                TitleRow(title, index)
+                TitleRow(title, index) {
+                    onClickTitle(title) // Call onClickTitle with the title
+                }
             }
         }
     }
 }
+
 @Composable
 fun Header(title: String) {
     Text(
@@ -132,13 +145,14 @@ fun Header(title: String) {
     )
 }
 @Composable
-fun TitleRow(title: Title, index: Int) {
+fun TitleRow(title: Title, index: Int, onClick: () -> Unit) {
     val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp), // Increased padding from 4.dp to 8.dp
+            .padding(vertical = 8.dp)// Increased padding from 4.dp to 8.dp
+            .clickable (onClick = onClick ),
         elevation = 2.dp,
         backgroundColor = backgroundColor
     ) {
