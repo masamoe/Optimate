@@ -2,13 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="buttonColor">#C4F0E6</color>
-    <color name="hello_colour">#8696BB</color>
-    <color name="light_purple">#F2EBF3</color>
-    <color name="clock_in_color">#C4F0E6</color>
-    <color name="break_color">#FFFCE5</color>
-    <color name="clock_out_color">#FFDFE7</color>
-    <color name="clock_out_text">#000000</color>
-    <color name="clock_out_color_disabled">#E3E3E4</color>
-    <color name="clock_out_text_disabled">#98979A</color>
+    <color name="light_green">#C4F0E6</color>
+    <color name="dark_purple">#996750A4</color>
+    <color name="light_purple">#99D0BCFF</color>
+    <color name="light_yellow">#FFFCE5</color>
+    <color name="light_red">#FFDFE7</color>
+    <color name="light_grey">#E3E3E4</color>
+    <color name="grey">#98979A</color>
 </resources>

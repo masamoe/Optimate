@@ -192,7 +192,7 @@
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="187dp"
         android:layout_height="71dp"
-        android:backgroundTint="@color/buttonColor"
+        android:backgroundTint="@color/light_green"
         android:elevation="10dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/continue1"
@@ -203,6 +203,6 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline25"
         app:layout_constraintStart_toStartOf="@+id/guideline26"
         app:layout_constraintTop_toTopOf="@+id/guideline23"
-        app:strokeColor="@color/hello_colour"
+        app:strokeColor="@color/dark_purple"
         app:strokeWidth="1dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -63,7 +63,7 @@
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/buttonColor"
+        android:backgroundTint="@color/light_green"
         android:elevation="10dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/login"
@@ -74,7 +74,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:strokeColor="@color/hello_colour"
+        app:strokeColor="@color/dark_purple"
         app:strokeWidth="1dp" />
 
     <Button
@@ -82,7 +82,7 @@
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/buttonColor"
+        android:backgroundTint="@color/light_green"
         android:elevation="10dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/register"
@@ -93,7 +93,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:strokeColor="@color/hello_colour"
+        app:strokeColor="@color/dark_purple"
         app:strokeWidth="1dp" />
 
     <androidx.constraintlayout.widget.Guideline
