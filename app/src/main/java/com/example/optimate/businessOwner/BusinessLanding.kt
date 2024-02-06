@@ -24,7 +24,7 @@ class BusinessLanding : AppCompatActivity() {
         val titleButton = LayoutButton(this, R.id.layout_button)
 
         // Generate a unique ID for LayoutButton
-        titleButton.setId(View.generateViewId())
+        titleButton.id = View.generateViewId()
 
         // Add LayoutButton to GridLayout
         gridLayout.addView(titleButton)
