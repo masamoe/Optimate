@@ -1,23 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_button"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:layout_weight="1"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="visible">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/buttonImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         android:adjustViewBounds="true"
         android:background="@drawable/button_rect"
         android:backgroundTint="@color/ic_roles_background"
         android:elevation="10dp"
-        android:src="@drawable/ic_roles_foreground" />
+        android:maxHeight="100dp"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_roles_foreground"
+        android:textAlignment="center" />
 
     <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonTxt"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:text="TextView" />
+        android:layout_below="@+id/buttonImg"
+        android:layout_alignStart="@+id/buttonImg"
+        android:layout_alignEnd="@+id/buttonImg"
+        android:fontFamily="sans-serif-black"
+        android:text="Placeholder"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:typeface="sans" />
 
-</FrameLayout>
+</RelativeLayout>

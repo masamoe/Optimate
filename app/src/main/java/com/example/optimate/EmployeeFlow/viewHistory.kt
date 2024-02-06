@@ -1,12 +1,12 @@
-package com.example.optimate.loginAndRegister
+package com.example.optimate.EmployeeFlow
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import com.example.optimate.R
 
-class BusinessLanding : AppCompatActivity(){
+class viewHistory : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_business_landing)
+        setContentView(R.layout.activity_view_history)
     }
 }

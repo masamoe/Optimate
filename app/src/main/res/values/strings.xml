@@ -14,10 +14,21 @@
     <string name="success">success</string>
     <string name="hello">Hello,</string>
     <string name="roles">Roles</string>
-    <string name="rolesIcon">roles icon</string>
+    <string name="titlesIcon">titles icon</string>
     <string name="accountsIcon">accounts icon</string>
     <string name="scheduleIcon">schedule icon</string>
     <string name="financesIcon">finances icon</string>
     <string name="notificationsIcon">notifications icon</string>
     <string name="requestsIcon">requests icon</string>
+    <string name="titles">Titles</string>
+    <string name="home">home</string>
+    <string name="add_title">Add Title</string>
+    <string name="manager_button">manager button</string>
+    <string name="employee_button">employee button</string>
+    <string name="clock_in">Clock In</string>
+    <string name="start_break">Start Break</string>
+    <string name="end_break">End Break</string>
+    <string name="clock_out">Clock Out</string>
+    <string name="clock">Clock</string>
+    <string name="view_history">View History</string>
 </resources>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FEF7FF"
+    tools:context=".EmployeeFlow.clockModule">
+
+    <Button
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:id="@+id/clockIn"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:backgroundTint="#C4F0E6"
+        app:elevation="8dp"
+        android:text= "@string/clock_in"
+        android:textColor="#000000"
+        android:padding="8dp"
+
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="413dp"
+        android:layout_height="64dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/digitalClock"
+        android:layout_width="177dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="142dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="151dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/clock"
+        android:textAlignment="center"
+        android:textSize="34sp"
+
+        app:layout_constraintBottom_toTopOf="@+id/clockIn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <Button
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:id="@+id/viewHistory"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#C4F0E6"
+        android:elevation="8dp"
+        android:text="@string/view_history"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.175"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clockIn"
+        app:layout_constraintVertical_bias="0.449" />
+
+    <Button
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:id="@+id/clockOut"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:elevation="8dp"
+        android:text="@string/clock_out"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toEndOf="@+id/viewHistory"
+        app:layout_constraintTop_toBottomOf="@+id/clockIn"
+        app:layout_constraintVertical_bias="0.438" />
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

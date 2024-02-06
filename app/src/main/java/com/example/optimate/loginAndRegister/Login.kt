@@ -6,8 +6,13 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.businessOwner.BusinessLanding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+
+import com.google.firebase.firestore.firestore
+import com.google.firebase.Firebase
+
 
 class Login : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
@@ -15,12 +20,14 @@ class Login : AppCompatActivity(){
     private lateinit var loginBtn: Button
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
+    private val db = Firebase.firestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+
 
         // Get references to the EditTexts and Buttons in the layout
         emailEditText = findViewById(R.id.loginEmail)
@@ -56,7 +63,8 @@ class Login : AppCompatActivity(){
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     val user = auth.currentUser
-                    updateUI(user)
+                    getUserData(user)
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.",
@@ -76,5 +84,35 @@ class Login : AppCompatActivity(){
             // Stay on the login page or show error
         }
     }
+    private fun getUserData(user: FirebaseUser?) {
+        if (user != null) {
+            val uid = user.uid
+            val docRef = db.collection("users").whereEqualTo("UID", uid)
+            docRef.get()
+                .addOnSuccessListener { querySnapshot ->
+
+                    for (document in querySnapshot.documents) {
+                        // Access data for each document
+                        GlobalUserData.name = (document.getString("name") ?: "").toString()
+                        GlobalUserData.uid = (document.getString("UID") ?: "").toString()
+                        GlobalUserData.bid = (document.getString("BID") ?: "").toString()
+                        GlobalUserData.email = (document.getString("email") ?: "").toString()
+                        GlobalUserData.address = (document.getString("address") ?: "").toString()
+                        GlobalUserData.role = (document.getString("role") ?: "").toString()
+                        GlobalUserData.title = (document.getString("title") ?: "").toString()
+                        GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
+
+                }
+                    updateUI(user)
+                }
+                .addOnFailureListener {e ->
+                    Toast.makeText(baseContext, "Get Failed $e",
+                        Toast.LENGTH_SHORT).show()
+                }
+
+        }
+
+    }
 }
+
 

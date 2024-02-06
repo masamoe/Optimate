@@ -6,13 +6,17 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
-        android:hardwareAccelerated="true"
         tools:targetApi="31">
+        <activity
+            android:name=".EmployeeFlow.viewHistory"
+            android:exported="false" />
+        <activity android:name=".EmployeeFlow.clockModule" />
         <activity
             android:name=".loginAndRegister.LandingMain"
             android:exported="true">
@@ -24,11 +28,14 @@
         </activity>
         <activity android:name=".loginAndRegister.Login" />
         <activity android:name=".loginAndRegister.Register" />
-        <activity android:name=".loginAndRegister.BusinessLanding" />
+        <activity android:name=".businessOwner.BusinessLanding" />
+        <activity android:name=".businessOwner.TitlesActivity" />
+        <activity android:name=".businessOwner.AddTitle" />
+        <activity android:name=".businessOwner.AddTitleDetailsActivity" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
-
