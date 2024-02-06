@@ -25,4 +25,10 @@
     <string name="add_title">Add Title</string>
     <string name="manager_button">manager button</string>
     <string name="employee_button">employee button</string>
+    <string name="clock_in">Clock In</string>
+    <string name="start_break">Start Break</string>
+    <string name="end_break">End Break</string>
+    <string name="clock_out">Clock Out</string>
+    <string name="clock">Clock</string>
+    <string name="view_history">View History</string>
 </resources>
