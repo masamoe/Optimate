@@ -6,15 +6,18 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
-        android:hardwareAccelerated="true"
         tools:targetApi="31">
+
         <activity
+
             android:name=".loginAndRegister.LandingMain"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,11 +31,19 @@
         <activity android:name=".businessOwner.TitlesActivity" />
         <activity android:name=".businessOwner.AddTitle" />
         <activity android:name=".businessOwner.AddTitleDetailsActivity" />
+
         <activity android:name=".businessOwner.EditTitleDetailsActivity" />
+
+        <activity android:name=".employeeFlow.ClockModule" />
+        <activity android:name=".employeeFlow.ViewHistory" />
+        <activity android:name=".employeeFlow.ScheduleModule" />
+        <activity android:name=".employeeFlow.ViewTimeOffRequests" />
+
+        <activity android:name=".employeeFlow.RequestTimeOff"  />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
-

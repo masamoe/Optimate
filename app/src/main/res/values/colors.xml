@@ -2,7 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="buttonColor">#C4F0E6</color>
-    <color name="hello_colour">#8696BB</color>
-    <color name="light_purple">#F2EBF3</color>
+    <color name="dark_green">#006b5e</color>
+    <color name="light_green">#75f8e2</color>
+    <color name="dark_purple">#6750a4</color>
+    <color name="light_purple">#e9ddff</color>
+    <color name="light_yellow">#e8e970</color>
+    <color name="light_red">#ffdad6</color>
+    <color name="light_grey">#e7e0eb</color>
+    <color name="grey">#7a757f</color>
 </resources>

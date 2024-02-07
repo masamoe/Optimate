@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.55" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        app:layout_constraintGuide_percent="0.44" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
@@ -60,10 +60,12 @@
 
     <Button
         android:id="@+id/loginBtn"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/buttonColor"
-        android:fontFamily="@font/baloo"
+        android:backgroundTint="@color/light_green"
+        android:elevation="10dp"
+        android:fontFamily="sans-serif-black"
         android:text="@string/login"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -71,14 +73,18 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:strokeColor="@color/dark_purple"
+        app:strokeWidth="1dp" />
 
     <Button
         android:id="@+id/registerBtn"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/buttonColor"
-        android:fontFamily="@font/baloo"
+        android:backgroundTint="@color/light_green"
+        android:elevation="10dp"
+        android:fontFamily="sans-serif-black"
         android:text="@string/register"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -86,7 +92,9 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline9"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        app:strokeColor="@color/dark_purple"
+        app:strokeWidth="1dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10"

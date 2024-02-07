@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:grid="http://schemas.android.com/apk/res-auto"
+    android:contentDescription="@string/notificationsIcon"
     tools:ignore="MissingDefaultResource">
 
     <com.google.android.material.card.MaterialCardView
@@ -17,6 +19,16 @@
         app:layout_constraintEnd_toStartOf="@id/guideline2"
         app:layout_constraintStart_toStartOf="@id/guideline5"
         app:layout_constraintTop_toTopOf="@id/guideline31">
+
+        <GridLayout
+            android:id="@+id/choice_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="2"
+            android:layout_gravity="center"
+            android:alignmentMode="alignBounds"
+            android:useDefaultMargins="true"/>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -103,7 +115,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello"
-        android:textColor="@color/hello_colour"
+        android:textColor="@color/dark_purple"
         app:layout_constraintBottom_toTopOf="@+id/guideline27"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.0"
@@ -172,92 +184,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.75" />
-
-    <ImageView
-        android:id="@+id/titlesIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/titlesIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline28"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="@+id/guideline31"
-        app:srcCompat="@drawable/titles_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/accountsIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/accountsIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline28"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline31"
-        app:srcCompat="@drawable/accounts_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/scheduleIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/scheduleIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline33"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="@+id/guideline28"
-        app:srcCompat="@drawable/schedule_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/financesIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/financesIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline33"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline28"
-        app:srcCompat="@drawable/finances_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/notificationsIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/notificationsIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline34"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="@+id/guideline33"
-        app:srcCompat="@drawable/notifications_icon"
-        tools:ignore="ImageContrastCheck" />
-
-    <ImageView
-        android:id="@+id/requestsIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/requestsIcon"
-        android:translationZ="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline34"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline33"
-        app:srcCompat="@drawable/requests_icon"
-        tools:ignore="ImageContrastCheck" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

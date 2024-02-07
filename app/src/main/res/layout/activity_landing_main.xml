@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="0dp"
+    android:translationZ="3dp"
     tools:context=".loginAndRegister.LandingMain">
 
     <androidx.constraintlayout.widget.Guideline
@@ -44,7 +46,7 @@
         android:fontFamily="@font/baloo"
         android:text="@string/optimate"
         android:textColor="@color/black"
-        android:textSize="40sp"
+        android:textSize="56sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,10 +54,13 @@
 
     <Button
         android:id="@+id/startBtn"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="177dp"
         android:layout_height="67dp"
-        android:backgroundTint="@color/buttonColor"
-        android:fontFamily="@font/baloo"
+        android:backgroundTint="@color/light_green"
+        android:elevation="10dp"
+        android:fontFamily="sans-serif-black"
+        android:insetLeft="0dp"
         android:text="@string/getStart"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -63,7 +68,9 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:strokeColor="@color/dark_purple"
+        app:strokeWidth="1dp" />
 
     <ImageView
         android:id="@+id/optimateLogo"

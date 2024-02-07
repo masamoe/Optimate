@@ -25,6 +25,26 @@
     <string name="add_title">Add Title</string>
     <string name="manager_button">manager button</string>
     <string name="employee_button">employee button</string>
+
     <string name="modules">Choose Modules</string>
     <string name="title_activity_module_choosing">ModuleChoosing</string>
+
+    <string name="clock_in">Clock In</string>
+    <string name="start_break">Start Break</string>
+    <string name="end_break">End Break</string>
+    <string name="clock_out">Clock Out</string>
+    <string name="clock">Clock</string>
+    <string name="view_history">View History</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="end_date_before_start_date_error">End date cannot be before start date!</string>
+    <string name="start_date_after_end_date_error">Start date cannot be after end date!</string>
+    <string name="all_day">All Day</string>
+    <string name="select_time">Select time:</string>
+    <string name="select_date">Select date:</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
+    <string name="select_reason">Select a reason</string>
+
+
 </resources>
