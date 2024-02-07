@@ -99,6 +99,9 @@ class clockModule : AppCompatActivity() {
                 clockInButton.text = getString(R.string.clock_in)
                 clockInButton.backgroundTintList = getColorStateList(R.color.light_green)
                 clockOutButton.text = getString(R.string.clock_out)
+                clockOutButton.backgroundTintList = getColorStateList(R.color.light_grey)
+                clockOutButton.setTextColor(getColor(R.color.grey))
+
 
             }
         }

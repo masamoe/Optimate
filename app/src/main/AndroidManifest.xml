@@ -13,12 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
+
+
         <activity
-            android:name=".EmployeeFlow.viewHistory"
-            android:exported="false" />
-        <activity android:name=".EmployeeFlow.clockModule" />
-        <activity
+
             android:name=".loginAndRegister.LandingMain"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,12 +26,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".loginAndRegister.Login" />
         <activity android:name=".loginAndRegister.Register" />
         <activity android:name=".businessOwner.BusinessLanding" />
         <activity android:name=".businessOwner.TitlesActivity" />
         <activity android:name=".businessOwner.AddTitle" />
         <activity android:name=".businessOwner.AddTitleDetailsActivity" />
+
+        <activity android:name=".EmployeeFlow.clockModule"/>
+        <activity android:name=".EmployeeFlow.viewHistory" />
+        <activity android:name=".EmployeeFlow.scheduleModule"/>
 
         <meta-data
             android:name="preloaded_fonts"
