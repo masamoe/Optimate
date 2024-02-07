@@ -25,4 +25,6 @@
     <string name="add_title">Add Title</string>
     <string name="manager_button">manager button</string>
     <string name="employee_button">employee button</string>
+    <string name="modules">Choose Modules</string>
+    <string name="title_activity_module_choosing">ModuleChoosing</string>
 </resources>
