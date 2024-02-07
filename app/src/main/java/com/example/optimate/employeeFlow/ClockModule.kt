@@ -1,4 +1,4 @@
-package com.example.optimate.EmployeeFlow
+package com.example.optimate.employeeFlow
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,7 +12,7 @@ import java.util.*
 
 
 
-class clockModule : AppCompatActivity() {
+class ClockModule : AppCompatActivity() {
     private lateinit var digitalClock: TextView
     private lateinit var clockInButton: Button
     private lateinit var clockOutButton: Button

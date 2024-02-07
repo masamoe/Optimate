@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FEF7FF"
-    tools:context=".EmployeeFlow.clockModule">
+    tools:context=".employeeFlow.ClockModule">
 
     <Button
         style="@style/Widget.Material3.Button.ElevatedButton"
