@@ -16,7 +16,11 @@
 
         <activity
 
-            android:name=".loginAndRegister.LandingMain"
+
+            android:name=".employeeFlow.ScheduleModule"
+
+
+
 
             android:exported="true">
             <intent-filter>
@@ -31,12 +35,12 @@
         <activity android:name=".businessOwner.TitlesActivity" />
         <activity android:name=".businessOwner.AddTitle" />
         <activity android:name=".businessOwner.AddTitleDetailsActivity" />
-        <activity android:name=".employeeFlow.ClockModule" />
+        <activity android:name=".employeeFlow.RequestTimeOff" />
         <activity android:name=".employeeFlow.ViewHistory" />
-        <activity android:name=".employeeFlow.ScheduleModule" />
+        <activity android:name=".employeeFlow.ClockModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
 
-        <activity android:name=".employeeFlow.RequestTimeOff"  />
+        <activity android:name=".loginAndRegister.LandingMain"  />
 
         <meta-data
             android:name="preloaded_fonts"
