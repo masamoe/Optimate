@@ -15,6 +15,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import java.util.Date
 
 class AddAccountActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
@@ -117,6 +118,10 @@ class AddAccountActivity : AppCompatActivity() {
 
     private fun addEmployeeToDatabase(uid: String?, name: String, email: String, password: String, wage: Float, title: String, role: String) {
         val bid = GlobalUserData.bid
+        val firstTime = true
+        data class AccountStatus(val date: Date, val status: String)
+        val accountStatus = AccountStatus(date = Date(), status = "Created")
+
 
         val user = hashMapOf(
             "UID" to uid,
@@ -126,7 +131,9 @@ class AddAccountActivity : AppCompatActivity() {
             "role" to role,
             "BID" to bid,
             "wage" to wage,
-            "initial_password" to password
+            "initial_password" to password,
+            "first_time" to firstTime,
+            "account_status" to accountStatus
         )
         Log.d("Hison", "addEmployeeToDatabase: $user")
         //add user to users collection
