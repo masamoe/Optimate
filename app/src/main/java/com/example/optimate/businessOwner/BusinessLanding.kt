@@ -10,6 +10,7 @@ import com.example.optimate.loginAndRegister.GlobalUserData
 
 class BusinessLanding : AppCompatActivity(){
     private lateinit var titlesBtn: ImageView
+    private lateinit var accountsBtn: ImageView
     private lateinit var businessName: String
     private lateinit var title: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +23,11 @@ class BusinessLanding : AppCompatActivity(){
         titlesBtn.setOnClickListener {
             // Go to the Titles activity
             startActivity(Intent(this, TitlesActivity::class.java))
+        }
+        accountsBtn = findViewById(R.id.accountsIcon)
+        accountsBtn.setOnClickListener {
+            // Go to the Accounts activity
+            startActivity(Intent(this, AccountsActivity::class.java))
         }
     }
 }

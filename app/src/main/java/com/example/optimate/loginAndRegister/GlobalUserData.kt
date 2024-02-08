@@ -9,6 +9,6 @@ object GlobalUserData {
     var title: String = ""
     var role: String = ""
     var wage: Float = 0F
-
+    var password: String = ""
 
 }
