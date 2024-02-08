@@ -26,11 +26,11 @@
         android:layout_height="wrap_content"
 
         android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="150dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,10 +48,11 @@
 
 
                 <TextView
+                    android:id="@+id/selectedDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Sat, Aug 5 @string/title"
+                    android:text="@string/selected_date"
                     android:textAppearance="?attr/textAppearanceTitleLarge" />
 
                 <com.google.android.material.divider.MaterialDivider
@@ -61,10 +62,11 @@
                     android:layout_marginBottom="8dp" />
 
                 <CalendarView
-                    android:id="@+id/calendarView3"
+                    android:id="@+id/calendarView"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_marginTop="8dp"
+
                     tools:layout_editor_absoluteX="34dp"
                     tools:layout_editor_absoluteY="74dp" />
 
@@ -75,16 +77,18 @@
                     android:layout_marginBottom="8dp" />
 
                 <TextView
+                    android:id="@+id/nextShiftOrNotScheduled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Your next shift: @string/title"
+                    android:text="@string/shift_or_no"
                     android:textAppearance="?attr/textAppearanceTitleMedium" />
 
                 <TextView
+                    android:id="@+id/scheduledOrNot"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Monday, August 21, 2024 at 09:00 am to 05:00 pm.@string/secondary_text"
+                    android:text="@string/date_and_time_or_not_scheduled"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?android:attr/textColorSecondary" />
 
@@ -96,7 +100,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <Button
-        android:id="@+id/elevatedButton"
+        android:id="@+id/viewTimeRequests"
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
@@ -105,16 +109,16 @@
         android:layout_marginEnd="11dp"
         android:layout_marginBottom="68dp"
         android:backgroundTint="#C4F0E6"
-        android:text="View Time Requests"
+        android:text="@string/view_time_requests"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/elevatedButton1"
+        app:layout_constraintEnd_toStartOf="@+id/requestTimeOff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/elevatedButton1"
+        android:id="@+id/requestTimeOff"
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
@@ -123,11 +127,11 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="68dp"
         android:backgroundTint="#C4F0E6"
-        android:text="Request time off"
+        android:text="@string/request_time_off"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/elevatedButton"
+        app:layout_constraintStart_toEndOf="@+id/viewTimeRequests"
         app:layout_constraintTop_toBottomOf="@+id/card"
         app:layout_constraintVertical_bias="1.0" />
 

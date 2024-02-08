@@ -3,6 +3,6 @@
     <string-array name="reasons_array">
         <item>Sick day</item>
         <item>Vacation paid</item>
-        <item>Vacation unpaid</item>
+        <item>Unpaid leave</item>
     </string-array>
 </resources>
