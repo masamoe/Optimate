@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
@@ -31,6 +32,13 @@ class AddAccountActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.employeePassword)
         val wage = findViewById<EditText>(R.id.wage)
         val submitBtn = findViewById<Button>(R.id.submitBtn)
+        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
+
+        homeBtn.setOnClickListener {
+            val intent = Intent(this, BusinessLanding::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         val titlesList = arrayListOf<String>()
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, titlesList)
@@ -105,7 +113,7 @@ class AddAccountActivity : AppCompatActivity() {
                             Toast.makeText(this, "Employee added successfully.", Toast.LENGTH_SHORT).show()
                             navigateToAccountsActivity()
                         } else {
-                            Toast.makeText(this, "Failed to re-sign in business account", Toast.LENGTH_SHORT).show()
+                            Log.e("registerEmployee", "Failed to sign in business owner after adding employee.")
                         }
                     }
                 } else {

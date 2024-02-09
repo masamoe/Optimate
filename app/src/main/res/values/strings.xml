@@ -31,4 +31,6 @@
     <string name="pick_a_title">Pick A Title</string>
     <string name="employee_name">Employee Name</string>
     <string name="wage">Wage</string>
+    <string name="edit_account">Edit Account</string>
+    <string name="delete">delete</string>
 </resources>

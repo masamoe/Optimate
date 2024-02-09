@@ -21,24 +21,29 @@ class AccountsActivity : AppCompatActivity() {
             val accounts = remember { accountsList }
             AccountsScreen(accounts = accounts)
         }
-
+    }
+    override fun onResume() {
+        super.onResume()
         fetchAccounts(bid)
     }
 
     private fun fetchAccounts(bid: String) {
         db.collection("users")
             .whereEqualTo("BID", bid)
+            .whereEqualTo("account_status.status", "Created")
             .get()
             .addOnSuccessListener { documents ->
                 val fetchedAccounts = mutableListOf<Account>()
                 for (document in documents) {
                     val name = document.getString("name") ?: "N/A"
                     val title = document.getString("title") ?: "N/A"
-                    fetchedAccounts.add(Account(name, title))
+                    val uid = document.getString("UID") ?: "N/A"
+                    fetchedAccounts.add(Account(name, title, uid))
                 }
 
                 accountsList.clear()
                 accountsList.addAll(fetchedAccounts)
+
             }
             .addOnFailureListener { exception ->
                 // Handle the error appropriately

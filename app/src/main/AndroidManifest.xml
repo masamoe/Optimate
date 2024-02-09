@@ -31,6 +31,7 @@
         <activity android:name=".businessOwner.EditTitleDetailsActivity" />
         <activity android:name=".businessOwner.AccountsActivity" />
         <activity android:name=".businessOwner.AddAccountActivity" />
+        <activity android:name=".businessOwner.EditAccountActivity" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

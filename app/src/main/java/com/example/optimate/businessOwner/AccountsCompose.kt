@@ -30,11 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-data class Account(val name: String, val title: String)
+data class Account(val name: String, val title: String, val uid: String)
 @Composable
 fun AccountsScreen(accounts: List<Account>) {
     val context = LocalContext.current
@@ -54,6 +53,7 @@ fun AccountsScreen(accounts: List<Account>) {
                     val intent = Intent(context, EditAccountActivity::class.java).apply {
                         putExtra("account_name", account.name)
                         putExtra("account_title", account.title)
+                        putExtra("account_uid", account.uid)
                     }
                     context.startActivity(intent)
                 }
@@ -137,17 +137,4 @@ fun AccountRow(account: Account, index: Int, onClick:() ->Unit){
              )
          }
      }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AccountsScreenPreview() {
-    val sampleAccounts = listOf(
-        Account("Zephyr Smith", "Manager"),
-        Account("Quantum Johnson", "Head Chef"),
-        // Add more accounts for the preview
-    )
-    MaterialTheme {
-        AccountsScreen(sampleAccounts)
-    }
 }
