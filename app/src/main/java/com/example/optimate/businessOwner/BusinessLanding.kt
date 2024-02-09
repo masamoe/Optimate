@@ -15,17 +15,6 @@ class BusinessLanding : AppCompatActivity() {
         setContentView(R.layout.activity_business_landing)
         businessName = GlobalUserData.name
 
-        val gridLayout = findViewById<GridLayout>(R.id.choice_grid)
-
-        // Create an instance of LayoutButton
-        val titleButton = LayoutButton(this, R.id.layout_button)
-
-        // Generate a unique ID for LayoutButton
-        titleButton.setId(View.generateViewId())
-
-        // Add LayoutButton to GridLayout
-        gridLayout.addView(titleButton)
-
         // Customize properties if needed
         // titleButton.setText(R.id.some_text_view_id, "Your Text")
         // titleButton.setImageResource(R.id.some_image_view_id, R.drawable.your_image)
