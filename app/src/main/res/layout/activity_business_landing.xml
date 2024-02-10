@@ -31,15 +31,16 @@
             app:useDefaultMargins="true">
 
             <LinearLayout
-                android:id="@+id/titles_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
                 app:layout_gravity="center_horizontal|fill_horizontal"
                 app:layout_rowWeight="1">
 
                 <ImageButton
+                    android:id="@+id/titles_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -50,6 +51,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/button_rect"
                     android:backgroundTint="@color/ic_roles_background"
+                    android:clickable="true"
                     android:elevation="10dp"
                     android:maxHeight="100dp"
                     android:padding="10dp"
@@ -68,15 +70,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/accounts_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
                 app:layout_gravity="center_horizontal|fill_horizontal"
                 app:layout_rowWeight="1">
 
                 <ImageButton
+                    android:id="@+id/accounts_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -87,6 +90,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/button_rect"
                     android:backgroundTint="@color/ic_roles_background"
+                    android:clickable="true"
                     android:elevation="10dp"
                     android:maxHeight="100dp"
                     android:padding="10dp"
@@ -105,15 +109,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/request_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
                 app:layout_gravity="center_horizontal|fill_horizontal"
                 app:layout_rowWeight="1">
 
                 <ImageButton
+                    android:id="@+id/request_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -124,6 +129,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/button_rect"
                     android:backgroundTint="@color/ic_roles_background"
+                    android:clickable="true"
                     android:elevation="10dp"
                     android:maxHeight="100dp"
                     android:padding="10dp"
@@ -142,15 +148,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/finances_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
                 app:layout_gravity="center_horizontal|fill_horizontal"
                 app:layout_rowWeight="1">
 
                 <ImageButton
+                    android:id="@+id/finances_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -161,6 +168,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/button_rect"
                     android:backgroundTint="@color/ic_roles_background"
+                    android:clickable="true"
                     android:elevation="10dp"
                     android:maxHeight="100dp"
                     android:padding="10dp"
@@ -179,15 +187,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/notifications_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
                 app:layout_gravity="center_horizontal|fill_horizontal"
                 app:layout_rowWeight="1">
 
                 <ImageButton
+                    android:id="@+id/notifications_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -198,6 +207,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/button_rect"
                     android:backgroundTint="@color/ic_roles_background"
+                    android:clickable="true"
                     android:elevation="10dp"
                     android:maxHeight="100dp"
                     android:padding="10dp"
@@ -216,15 +226,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/schedule_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
                 app:layout_gravity="center_horizontal|fill_horizontal"
                 app:layout_rowWeight="1">
 
                 <ImageButton
+                    android:id="@+id/schedule_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -235,6 +246,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/button_rect"
                     android:backgroundTint="@color/ic_roles_background"
+                    android:clickable="true"
                     android:elevation="10dp"
                     android:maxHeight="100dp"
                     android:padding="10dp"
@@ -299,7 +311,7 @@
 
 
     <TextView
-        android:id="@+id/titles"
+        android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
