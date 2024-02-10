@@ -104,9 +104,9 @@ class Register : AppCompatActivity() {
             Toast.makeText(this, "Welcome to OptiMate!", Toast.LENGTH_SHORT).show()
 
             // Navigate to the Login activity
-            val intent = Intent(this, ModuleChoosing::class.java)
-            intent.putExtra("USER_UID", user.uid)
-            startActivity(intent)
+            //val intent = Intent(this, ModuleChoosing::class.java)
+            //intent.putExtra("USER_UID", user.uid)
+            //startActivity(intent)
             finish() // Finish the current activity so the user can't go back to it
         } else {
             // User is null, stay on the register page or show an error message
