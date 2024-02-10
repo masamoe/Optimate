@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Button
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.optimate.loginAndRegister.GlobalUserData
@@ -78,7 +81,8 @@ fun SetupRoleUI(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    TitleInput(titleText) { titleText = it }
+                    TitleInput(titleText,{ titleText = it },modifier = Modifier.weight(2f))
+                    Spacer(modifier = Modifier.width(8.dp))
                     AddButton(
                         onClick = {
                             addTitleToDB(
@@ -94,7 +98,8 @@ fun SetupRoleUI(
                             )
                         },
                         context = context,
-                        titleText = titleText
+                        titleText = titleText,
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
@@ -141,11 +146,8 @@ fun SetupRoleUI(
     )
 }
 
-// Keep the rest of your composables (TitleInput, AddButton, AccessCardItem) and functions (addTitleToDB) as they are.
-
-
 @Composable
-fun TitleInput(titleText: String, onTitleChange: (String) -> Unit) {
+fun TitleInput(titleText: String, onTitleChange: (String) -> Unit, modifier: Modifier = Modifier) {
     var text by remember { mutableStateOf(titleText) }
 
     OutlinedTextField(
@@ -155,12 +157,13 @@ fun TitleInput(titleText: String, onTitleChange: (String) -> Unit) {
             onTitleChange(it)
         },
         label = { Text("Title") },
-        modifier = Modifier.padding(8.dp)
+        textStyle = TextStyle(fontSize = 18.sp),
+        modifier = modifier
     )
 }
 
 @Composable
-fun AddButton(onClick: () -> Unit, context: Context, titleText: String) {
+fun AddButton(onClick: () -> Unit, context: Context, titleText: String, modifier: Modifier = Modifier) {
     val buttonColor = MaterialTheme.colors.run { if (isLight) Color(0xFFC4F0E6) else Color(0xFF91C9B7) }
 
     Button(
@@ -174,10 +177,10 @@ fun AddButton(onClick: () -> Unit, context: Context, titleText: String) {
                 Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
             }
         },
-        modifier = Modifier.padding(8.dp),
+        modifier = modifier,
         elevation = ButtonDefaults.elevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
     ) {
-        Text("Add")
+        Text("Add", fontSize = 18.sp)
     }
 }
 

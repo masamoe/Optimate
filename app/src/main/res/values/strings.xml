@@ -51,5 +51,12 @@
     <string name="requests">Requests</string>
     <string name="notifications">Notifications</string>
     <string name="schedule">Schedule</string>
-
+    <string name="add_account">Add Account</string>
+    <string name="submit">Submit</string>
+    <string name="employee_email">Employee Email</string>
+    <string name="pick_a_title">Pick A Title</string>
+    <string name="employee_name">Employee Name</string>
+    <string name="wage">Wage</string>
+    <string name="edit_account">Edit Account</string>
+    <string name="delete">delete</string>
 </resources>
