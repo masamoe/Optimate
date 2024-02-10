@@ -1,4 +1,4 @@
-package com.example.optimate.EmployeeFlow
+package com.example.optimate.employeeFlow
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,7 +12,7 @@ import java.util.*
 
 
 
-class clockModule : AppCompatActivity() {
+class ClockModule : AppCompatActivity() {
     private lateinit var digitalClock: TextView
     private lateinit var clockInButton: Button
     private lateinit var clockOutButton: Button
@@ -58,47 +58,50 @@ class clockModule : AppCompatActivity() {
             clickedButton == clockInButton && clockInButton.text == getString(R.string.clock_in) -> {
                 // Clock In state
                 clockInButton.text = getString(R.string.start_break)
-                clockInButton.backgroundTintList = getColorStateList(R.color.break_color)
-                clockOutButton.backgroundTintList = getColorStateList(R.color.clock_out_color)
-                clockOutButton.setTextColor(getColor(R.color.clock_out_text))
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_yellow)
+                clockOutButton.backgroundTintList = getColorStateList(R.color.light_red)
+                clockOutButton.setTextColor(getColor(R.color.black))
                 clockOutButton.isEnabled = true
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.clock_out) -> {
                 // Clock In state
                 clockInButton.text = getString(R.string.clock_in)
-                clockInButton.backgroundTintList = getColorStateList(R.color.clock_in_color)
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_green)
                 clockOutButton.text = getString(R.string.clock_out)
                 clockOutButton.isEnabled = false
-                clockOutButton.backgroundTintList = getColorStateList(R.color.clock_out_color_disabled)
-                clockOutButton.setTextColor(getColor(R.color.clock_out_text_disabled))
+                clockOutButton.backgroundTintList = getColorStateList(R.color.light_grey)
+                clockOutButton.setTextColor(getColor(R.color.grey))
 
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.start_break) -> {
                 // Start Break state
                 clockInButton.text = getString(R.string.end_break)
-                clockInButton.backgroundTintList = getColorStateList(R.color.break_color)
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_yellow)
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.end_break) -> {
                 // End Break state
                 clockInButton.text = getString(R.string.clock_out)
-                clockInButton.backgroundTintList = getColorStateList(R.color.clock_out_color)
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_red)
                 clockOutButton.text = getString(R.string.start_break)
-                clockOutButton.backgroundTintList = getColorStateList(R.color.break_color)
+                clockOutButton.backgroundTintList = getColorStateList(R.color.light_yellow)
 
             }
             clickedButton == clockOutButton && clockOutButton.text == getString(R.string.start_break) -> {
                 // Start Break state for Clock Out button
                 clockInButton.text = getString(R.string.end_break)
                 clockOutButton.text = getString(R.string.clock_out)
-                clockInButton.backgroundTintList = getColorStateList(R.color.break_color)
-                clockOutButton.backgroundTintList = getColorStateList(R.color.clock_out_color)
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_yellow)
+                clockOutButton.backgroundTintList = getColorStateList(R.color.light_red)
             }
             clickedButton == clockOutButton && clockOutButton.text == getString(R.string.clock_out) -> {
                 // Clock Out state
                 clockOutButton.isEnabled = false
                 clockInButton.text = getString(R.string.clock_in)
-                clockInButton.backgroundTintList = getColorStateList(R.color.clock_in_color)
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_green)
                 clockOutButton.text = getString(R.string.clock_out)
+                clockOutButton.backgroundTintList = getColorStateList(R.color.light_grey)
+                clockOutButton.setTextColor(getColor(R.color.grey))
+
 
             }
         }

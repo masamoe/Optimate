@@ -55,6 +55,8 @@ android {
 
 dependencies {
 
+
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -97,6 +99,9 @@ dependencies {
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0")
     debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0")
     debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.0")
+
+
+
 
 
 }

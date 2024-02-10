@@ -1,4 +1,5 @@
 package com.example.optimate.loginAndRegister
+import java.util.*
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -70,9 +71,9 @@ class Register : AppCompatActivity() {
                     Log.d("RegisterActivity", "createUserWithEmail:success")
                     val user = auth.currentUser
                     if (user != null) {
-                        addUserToDB(email, address, name, user.uid)
+                        addUserToDB(email, address, name, user.uid , user)
                         // Update UI after user creation and addition to the database
-                        updateUI(user)
+
                     } else {
                         // Handle the case where user is null
                         Toast.makeText(this@Register, "User is null.", Toast.LENGTH_SHORT).show()
@@ -104,6 +105,7 @@ class Register : AppCompatActivity() {
 
             // Navigate to the Login activity
             val intent = Intent(this, Login::class.java)
+            intent.putExtra("USER_UID", user.uid)
             startActivity(intent)
             finish() // Finish the current activity so the user can't go back to it
         } else {
@@ -112,24 +114,31 @@ class Register : AppCompatActivity() {
         }
     }
 
-    private fun addUserToDB(email: String, address: String, name: String, uid: String){
+    private fun addUserToDB(email: String, address: String, name: String, uid: String, user: FirebaseUser){
 
         val bid = uid + name.substring(0,2)
-
-        val user = hashMapOf(
+        val currentDate = Calendar.getInstance().time
+        val timestamp = currentDate.time
+        val userToDB = hashMapOf(
             "email" to email,
             "address" to address,
             "name" to name,
             "title" to "businessOwner",
             "role" to "businessOwner",
             "UID" to uid,
-            "BID" to bid
+            "BID" to bid,
+            "firstTime" to false,
+            "wage" to 0,
+            "accountStatus" to "pending",
+            "dateOfCreation" to timestamp
+
         )
 
         db.collection("users")
-            .add(user)
+            .add(userToDB)
             .addOnSuccessListener { documentReference ->
                 Toast.makeText(this, "Register Success. ${documentReference.id}", Toast.LENGTH_SHORT).show()
+                updateUI(user)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Register failed. ${e.message}", Toast.LENGTH_SHORT).show()
