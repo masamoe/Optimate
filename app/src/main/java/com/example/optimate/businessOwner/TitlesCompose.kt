@@ -151,7 +151,7 @@ fun TitleRow(title: Title, index: Int, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)// Increased padding from 4.dp to 8.dp
+            .padding(vertical = 8.dp)
             .clickable (onClick = onClick ),
         elevation = 2.dp,
         backgroundColor = backgroundColor
@@ -177,7 +177,7 @@ fun TitleRow(title: Title, index: Int, onClick: () -> Unit) {
             // Right arrow icon at the end of the card
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = "Go to role details",
+                contentDescription = "Go to title details",
                 modifier = Modifier.size(24.dp)
             )
         }

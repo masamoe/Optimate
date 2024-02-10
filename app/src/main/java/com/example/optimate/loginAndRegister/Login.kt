@@ -48,6 +48,7 @@ class Login : AppCompatActivity(){
 
             // Sign in with Firebase
             signInWithEmail(email, password)
+            GlobalUserData.password = password
         }
 
         // Set up the register button click listener
