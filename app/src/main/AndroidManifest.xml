@@ -38,6 +38,8 @@
         <activity android:name=".employeeFlow.RequestTimeOff" />
         <activity android:name=".employeeFlow.ViewHistory" />
         <activity android:name=".employeeFlow.ClockModule" />
+        <activity android:name=".employeeFlow.ScheduleModule" />
+        <activity android:name=".loginAndRegister.LandingMain" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity android:name=".loginAndRegister.LandingMain"
             android:exported="true">
