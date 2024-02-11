@@ -21,12 +21,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Button
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.ButtonDefaults
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.MaterialTheme
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Scaffold
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
@@ -45,7 +52,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.optimate.R
 
 data class Title(val title: String, val category: String)
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TitlesScreen(titles: List<Title>) {
     val context = LocalContext.current
@@ -99,7 +105,7 @@ fun XmlTopBar(titleText: String = "Titles") {
 fun AddTitleButton(modifier: Modifier = Modifier) {
         val addTitleBtn = LocalContext.current
         val buttonColor = MaterialTheme.colors.run {
-            if (isLight) Color(0xFFC4F0E6) else Color(0xFF91C9B7)}
+            if (isLight) Color(0xFF75f8e2) else Color(0xFF91C9B7)}
         Button(
             onClick = {
                         val intent = Intent(addTitleBtn, AddTitle::class.java)
