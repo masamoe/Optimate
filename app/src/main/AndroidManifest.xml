@@ -16,7 +16,7 @@
 
         <activity
 
-            android:name=".employeeFlow.PayStub"
+            android:name=".employeeFlow.ViewAllPayStubs"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +36,7 @@
         <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".loginAndRegister.LandingMain" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
+        <activity android:name=".employeeFlow.PayStub" />
 
         <meta-data
             android:name="preloaded_fonts"

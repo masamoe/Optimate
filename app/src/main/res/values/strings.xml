@@ -46,5 +46,10 @@
     <string name="date_and_time_or_not_scheduled">Date and Time or not scheduled</string>
     <string name="view_time_requests">View Time Requests</string>
     <string name="request_time_off">Request time off</string>
+    <string name="netpayamount">amount</string>
+    <string name="taxesperpaystub">amount</string>
+    <string name="netpaypercentage">%</string>
+    <string name="taxespercentage">%</string>
+
 
 </resources>
