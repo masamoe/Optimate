@@ -18,7 +18,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="380dp"
         android:layout_height="665dp"
@@ -129,14 +128,14 @@
             </LinearLayout>
 
 
-            <ExpandableListView
+            <ListView
                 android:id="@+id/payStubList"
                 android:layout_width="match_parent"
-                android:layout_height="600dp"
+                android:layout_height="484dp"
                 tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="215dp">
+                tools:layout_editor_absoluteY="215dp" />
 
-            </ExpandableListView>
+
 
 
         </LinearLayout>

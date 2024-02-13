@@ -1,88 +1,133 @@
 package com.example.optimate.employeeFlow
 
+import android.content.Context
 import android.os.Bundle
-import android.widget.ExpandableListAdapter
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.BaseExpandableListAdapter
 import android.widget.ExpandableListView
-import android.widget.SimpleExpandableListAdapter
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ViewAllPayStubs : AppCompatActivity() {
-    private lateinit var expandableListView: ExpandableListView
-    private lateinit var expandableListAdapter: ExpandableListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_all_pay_stubs)
-        expandableListView = findViewById(R.id.payStubList)
 
-        // Generate biweekly list starting from the first Friday of the current year
-        val biweeklyList = generateBiweeklyList()
-
-        // Filter out future pay periods
-        val filteredBiweeklyList = filterBiweeklyList(biweeklyList)
-
-        expandableListAdapter = SimpleExpandableListAdapter(
-            this,
-            filteredBiweeklyList,
-            android.R.layout.simple_expandable_list_item_1,
-            arrayOf("Group"),
-            intArrayOf(android.R.id.text1),
-            ArrayList<List<Map<String, String>>>(), // Empty list for child data
-            android.R.layout.simple_expandable_list_item_1,
-            arrayOf("Child"),
-            intArrayOf(android.R.id.text1)
-        )
-
-        expandableListView.setAdapter(expandableListAdapter)
-    }
-
-    private fun generateBiweeklyList(): List<Map<String, String>> {
-        val biweeklyList = ArrayList<Map<String, String>>()
-
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_YEAR, 1) // Set to the first day of the year
-        while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
-        }
-
-        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
-        for (i in 1..26) { // Assuming 26 biweekly periods in a year
-            val startDate = calendar.time
-            calendar.add(Calendar.DAY_OF_YEAR, 13)
-            val endDate = calendar.time
-
-            val biweeklyPeriod = HashMap<String, String>()
-            biweeklyPeriod["Group"] = dateFormat.format(startDate) + " - " + dateFormat.format(endDate)
-            biweeklyList.add(biweeklyPeriod)
-
-            calendar.add(Calendar.DAY_OF_YEAR, 1) // Move to the next Friday
-        }
-
-        return biweeklyList
-    }
-
-    private fun filterBiweeklyList(biweeklyList: List<Map<String, String>>): List<Map<String, String>> {
-        val filteredList = ArrayList<Map<String, String>>()
+        // Sample data for demonstration
+        val payStubsData = generateBiweeklyDates()
 
         val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("MMMM dd, YYYY", Locale.getDefault())
+        val formattedDate = dateFormat.format(currentDate)
+        val todaysDate: TextView = findViewById(R.id.todaysDate)
+        todaysDate.text = "As of $formattedDate:"
 
-        for (item in biweeklyList) {
-            val periodString = item["Group"] ?: continue
-            val periodDates = periodString.split(" - ")
-            val startDate = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).parse(periodDates[0]) ?: continue
-            val endDate = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).parse(periodDates[1]) ?: continue
-
-            if (currentDate.after(endDate)) {
-                filteredList.add(item)
-            }
-        }
-
-        return filteredList
+        val myAdapter = MyAdapter(this, payStubsData)
+        val payStubList: ListView = findViewById(R.id.payStubList)
+        payStubList.adapter = myAdapter
     }
 
+    private fun generateBiweeklyDates(): ArrayList<Map<String, String>> {
+        val payStubsData = ArrayList<Map<String, String>>()
+
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val firstDayOfYear = Calendar.getInstance()
+        firstDayOfYear.set(Calendar.YEAR, year)
+        firstDayOfYear.set(Calendar.MONTH, Calendar.JANUARY)
+        firstDayOfYear.set(Calendar.DAY_OF_MONTH, 1)
+        var currentDayOfYear = firstDayOfYear.get(Calendar.DAY_OF_YEAR)
+
+        // Find the first Friday of the year
+        while (firstDayOfYear.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
+            firstDayOfYear.add(Calendar.DAY_OF_YEAR, 1)
+            currentDayOfYear++
+        }
+
+        val dateFormat = SimpleDateFormat("MMMM dd, YYYY", Locale.getDefault())
+
+        // Generate biweekly dates
+        while (currentDayOfYear <= calendar.getActualMaximum(Calendar.DAY_OF_YEAR)) {
+            val payStub = HashMap<String, String>()
+            val startDate = firstDayOfYear.time
+            val endDate = Calendar.getInstance()
+            endDate.time = startDate
+            endDate.add(Calendar.DAY_OF_YEAR, 13) // Add 13 days for a two-week period
+            payStub["Date"] = dateFormat.format(startDate) + " to " + dateFormat.format(endDate.time)
+            payStubsData.add(payStub)
+
+            firstDayOfYear.add(Calendar.DAY_OF_YEAR, 14) // Move to next two-week period
+            currentDayOfYear += 14
+        }
+
+        return payStubsData
+    }
+
+
+    private class MyAdapter(
+        private val context: Context,
+        private val data: ArrayList<Map<String, String>>
+    ) : BaseAdapter() {
+        private var expandedPosition = -1
+
+        override fun getCount(): Int {
+            return data.size
+        }
+
+        override fun getItem(position: Int): Any {
+            return data[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            val view: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.pay_stub_sub_list, parent, false)
+
+            val payStubDateTextView: TextView = view.findViewById(R.id.payStubDate)
+            val totalHoursTextView: TextView = view.findViewById(R.id.totalHoursPerPayStub)
+            val overTimeTextView: TextView = view.findViewById(R.id.overTimePerPayStub)
+            val grossPayTextView: TextView = view.findViewById(R.id.grossPayPerPayStub)
+            val netPayTextView: TextView = view.findViewById(R.id.netPayPerPayStub)
+            val taxesTextView: TextView = view.findViewById(R.id.taxesPerPayStub)
+            val arrowIcon: ImageView = view.findViewById(R.id.arrowIcon)
+            val payStubChildItem: LinearLayout = view.findViewById(R.id.payStubChildItem)
+
+            val item: Map<String, String> = getItem(position) as Map<String, String>
+            payStubDateTextView.text = item["Date"]
+            totalHoursTextView.text = item["TotalHours"]
+            overTimeTextView.text = item["Overtime"]
+            grossPayTextView.text = item["GrossPay"]
+            netPayTextView.text = item["NetPay"]
+            taxesTextView.text = item["Taxes"]
+
+            payStubChildItem.visibility = if (expandedPosition == position) View.VISIBLE else View.GONE
+
+            // Change arrow image based on visibility of child item
+            if (expandedPosition == position) {
+                arrowIcon.setImageResource(R.drawable.arrow_drop_up)
+            } else {
+                arrowIcon.setImageResource(R.drawable.arrow_drop_down)
+            }
+
+            // Set onClickListener to toggle visibility of child item and change arrow image
+            view.setOnClickListener {
+                expandedPosition = if (expandedPosition == position) -1 else position
+                notifyDataSetChanged()
+            }
+
+            return view
+        }
+    }
 }
