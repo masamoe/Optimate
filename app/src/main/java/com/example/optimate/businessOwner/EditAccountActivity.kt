@@ -58,7 +58,7 @@ class EditAccountActivity : AppCompatActivity() {
         val name = findViewById<TextInputEditText>(R.id.employeeName)
         val email = findViewById<TextInputEditText>(R.id.employeeEmail)
         val password = findViewById<TextInputEditText>(R.id.employeePassword)
-        val wage = findViewById<TextInputEditText>(R.id.wage)
+        val wage = findViewById<TextInputEditText>(R.id.amount)
         val submitBtn = findViewById<Button>(R.id.submitBtn)
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
         val deleteBtn = findViewById<ComposeView>(R.id.compose_view)

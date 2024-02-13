@@ -267,16 +267,16 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/guideline50"
         app:layout_constraintEnd_toStartOf="@+id/guideline52"
         app:layout_constraintStart_toStartOf="@+id/guideline51"
         app:layout_constraintTop_toTopOf="@+id/guideline49">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/wage"
+            android:id="@+id/amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
             android:hint="@string/wage"
             tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>

@@ -30,7 +30,7 @@ class AddAccountActivity : AppCompatActivity() {
         val name = findViewById<EditText>(R.id.employeeName)
         val email = findViewById<EditText>(R.id.employeeEmail)
         val password = findViewById<EditText>(R.id.employeePassword)
-        val wage = findViewById<EditText>(R.id.wage)
+        val wage = findViewById<EditText>(R.id.amount)
         val submitBtn = findViewById<Button>(R.id.submitBtn)
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
 
