@@ -1,15 +1,14 @@
 package com.example.optimate.businessOwner
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FloatingActionButtonDefaults.elevation
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +37,7 @@ fun FinancesScreen() {
                     AddRevenue()
                     AddExpense()
                 }
+                ViewMore()
 
             }
         }
@@ -82,6 +82,22 @@ fun AddExpense() {
 
     ) {
         Text("Add Expense", color = Color.Black, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+@Composable
+fun ViewMore(){
+    val viewMoreBtn = LocalContext.current
+    val buttonColor = colors.run { Color(0xFF75f8e2) }
+    Button(
+        onClick = {
+            val intent = Intent(viewMoreBtn, FinancesDetailActivity::class.java)
+            viewMoreBtn.startActivity(intent)
+        },
+        colors = ButtonDefaults.buttonColors(buttonColor),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+    ) {
+        Text("View More", color = Color.Black, fontWeight = FontWeight.SemiBold)
     }
 }
 

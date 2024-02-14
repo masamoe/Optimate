@@ -51,7 +51,7 @@ class AddRevenueOrExpenseActivity: AppCompatActivity() {
         val submitBtn = findViewById<Button>(R.id.submitBtn)
         submitBtn.setOnClickListener {
             val date = date.text.toString()
-            val amount = amount.text.toString().toFloat()
+            val amount = amount.text.toString().toDouble()
             val description = description.text.toString()
             addRevenueOrExpenseToDB(type, date, amount, description)
             val intent = Intent(this, FinancesActivity::class.java)
@@ -72,6 +72,7 @@ class AddRevenueOrExpenseActivity: AppCompatActivity() {
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, monthOfYear)
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                calendar.set(Calendar.HOUR_OF_DAY, 12)
                 updateLabel(calendar)
             }
 
@@ -87,15 +88,19 @@ class AddRevenueOrExpenseActivity: AppCompatActivity() {
     }
     private fun updateLabel(calendar: Calendar) {
         val myFormat = "MM/dd/yy" // Your desired format
-        val sdf = SimpleDateFormat(myFormat, Locale.CANADA)
+        val sdf = SimpleDateFormat("MM/dd/yy", Locale.getDefault()).apply {
+            timeZone = TimeZone.getDefault()
+        }
         date.setText(sdf.format(calendar.time))
     }
 
-    private fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Float, description: String) {
+    private fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Double, description: String) {
         val bid = GlobalUserData.bid
 
         // Convert the String date to a Date object
-        val sdf = SimpleDateFormat("MM/dd/yy", Locale.CANADA)
+        val sdf = SimpleDateFormat("MM/dd/yy", Locale.getDefault()).apply {
+            timeZone = TimeZone.getDefault()
+        }
         val date = sdf.parse(dateStr)
 
         val entry = hashMapOf(
