@@ -1,7 +1,10 @@
 package com.example.optimate.businessOwner
-
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +13,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Card
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,7 +37,7 @@ fun FinancesDetailScreen(finances: List<Finances>) {
     Scaffold(
         topBar = { XmlTopBar(titleText = "Finances Details") },
         content = { innerPadding ->
-            Column(modifier = Modifier.padding(innerPadding)) {
+            Column(modifier = Modifier.padding(innerPadding).padding(top = 16.dp)) {
                 FinancesList(finances = finances)
 
             }
@@ -59,28 +66,45 @@ fun FinancesRow(finance: Finances) {
     Card(
         backgroundColor = cardColor,
         modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(horizontal = 20.dp, vertical = 2.dp)
             .fillMaxWidth()
             .clickable { isExpanded = !isExpanded } // Toggle isExpanded on click
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(5.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = finance.amount, style = MaterialTheme.typography.bodyLarge)
-            Text(text = finance.date, style = MaterialTheme.typography.bodySmall)
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                if(finance.type =="Expenses"){
+                    Text(text = "-$" + finance.amount, style = MaterialTheme.typography.bodyLarge)
+                }
+                else{
+                    Text(text = "+$" + finance.amount, style = MaterialTheme.typography.bodyLarge)
+                }
+                Row {
+                    Text(text = finance.date, style = MaterialTheme.typography.bodyLarge)
+                    Icon(
+                        imageVector = if (isExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                        contentDescription = if (isExpanded) "Collapse" else "Expand",
+                        modifier = Modifier.clickable { isExpanded = !isExpanded }
+                    )
+                }
+            }
+
             // Expandable content
             if (isExpanded) {
-                Text(text = finance.description, style = MaterialTheme.typography.bodySmall)
-                Text(text = finance.name, style = MaterialTheme.typography.bodySmall)
+                Text(text = "'" + finance.description + "'", style = MaterialTheme.typography.bodySmall )
+                Text(text = "From: " + finance.name, style = MaterialTheme.typography.bodySmall)
             }
         }
     }
 }
-
-
-
 
 @Preview
 @Composable
