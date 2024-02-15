@@ -14,10 +14,14 @@
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
         <activity
+
             android:name=".loginAndRegister.PaymentConfirm"
             android:exported="false" />
         <activity
             android:name=".loginAndRegister.ModuleChoosingMain"
+
+            android:name=".loginAndRegister.PasswordReset"
+
             android:exported="false" />
         <activity android:name=".loginAndRegister.Login" />
         <activity android:name=".loginAndRegister.Register" />

@@ -3,6 +3,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
@@ -17,6 +18,7 @@ import com.google.firebase.Firebase
 class Login : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
     private var registerBtn: Button? = null
+    private lateinit var forgotPasswordClk: TextView
     private lateinit var loginBtn: Button
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -34,7 +36,7 @@ class Login : AppCompatActivity(){
         passwordEditText = findViewById(R.id.loginPassword)
         loginBtn = findViewById(R.id.loginBtn)
         registerBtn = findViewById(R.id.registerBtn)
-
+        forgotPasswordClk = findViewById(R.id.forgotPassword)
         // Set up the login button click listener
         loginBtn.setOnClickListener {
             val email = emailEditText.text.toString().trim()
@@ -55,6 +57,9 @@ class Login : AppCompatActivity(){
         registerBtn?.setOnClickListener {
             // Go to the Register activity
             startActivity(Intent(this, Register::class.java))
+        }
+        forgotPasswordClk.setOnClickListener {
+            startActivity(Intent(this, PasswordReset::class.java))
         }
     }
 
