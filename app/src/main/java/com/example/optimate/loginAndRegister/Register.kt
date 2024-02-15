@@ -103,8 +103,10 @@ class Register : AppCompatActivity() {
             // User is signed in, show success message
             Toast.makeText(this, "User Registered!", Toast.LENGTH_SHORT).show()
 
-            // Navigate to the Login activity
+        
+
             val intent = Intent(this, ModuleChoosingMain::class.java)
+
             intent.putExtra("USER_UID", user.uid)
             startActivity(intent)
             finish() // Finish the current activity so the user can't go back to it

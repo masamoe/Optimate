@@ -25,10 +25,6 @@
     <string name="add_title">Add Title</string>
     <string name="manager_button">manager button</string>
     <string name="employee_button">employee button</string>
-
-    <string name="modules">Choose Modules</string>
-    <string name="title_activity_module_choosing">ModuleChoosing</string>
-
     <string name="clock_in">Clock In</string>
     <string name="start_break">Start Break</string>
     <string name="end_break">End Break</string>
@@ -64,6 +60,7 @@
     <string name="wage">Wage</string>
     <string name="edit_account">Edit Account</string>
     <string name="delete">delete</string>
+
     <string name="amount">$0.00</string>
     <string name="module1">Basic</string>
     <string name="module2">Clock In/Out</string>
@@ -73,5 +70,6 @@
     <string name="module3price">$10.00</string>
     <string name="payButton">Pay</string>
     <string name="Paid">Paid</string>
+
 
 </resources>
