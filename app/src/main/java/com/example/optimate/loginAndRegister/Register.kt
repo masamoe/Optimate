@@ -101,10 +101,12 @@ class Register : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             // User is signed in, show success message
-            Toast.makeText(this, "Welcome to OptiMate!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "User Registered!", Toast.LENGTH_SHORT).show()
 
-            // Navigate to the Login activity
-            val intent = Intent(this, Login::class.java)
+        
+
+            val intent = Intent(this, ModuleChoosingMain::class.java)
+
             intent.putExtra("USER_UID", user.uid)
             startActivity(intent)
             finish() // Finish the current activity so the user can't go back to it
@@ -117,8 +119,8 @@ class Register : AppCompatActivity() {
     private fun addUserToDB(email: String, address: String, name: String, uid: String, user: FirebaseUser){
 
         val bid = uid + name.substring(0,2)
-        val currentDate = Calendar.getInstance().time
-        val timestamp = currentDate.time
+        data class AccountStatus(val date: Date, val status: String)
+        val accountStatus = AccountStatus(date = Date(), status = "Pending")
         val userToDB = hashMapOf(
             "email" to email,
             "address" to address,
@@ -129,8 +131,7 @@ class Register : AppCompatActivity() {
             "BID" to bid,
             "firstTime" to false,
             "wage" to 0,
-            "accountStatus" to "pending",
-            "dateOfCreation" to timestamp
+            "account_status" to accountStatus,
 
         )
 

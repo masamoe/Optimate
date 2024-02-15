@@ -83,7 +83,8 @@ class Login : AppCompatActivity(){
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             // Go to your main activity or another activity after login
-            val intent = Intent(this, BusinessLanding::class.java)
+            val intent = Intent(this, ModuleChoosingMain::class.java)
+            intent.putExtra("USER_UID", user.uid)
             startActivity(intent)
             finish()
         } else {
@@ -107,8 +108,10 @@ class Login : AppCompatActivity(){
                         GlobalUserData.role = (document.getString("role") ?: "").toString()
                         GlobalUserData.title = (document.getString("title") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
-
-                }
+                        GlobalUserData.account_status.status =
+                            (document.getString("status") ?: "").toString()
+                        GlobalUserData.modules = listOf((document.getString("modules") ?: "").toString())
+                    }
                     updateUI(user)
                 }
                 .addOnFailureListener {e ->

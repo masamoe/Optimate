@@ -14,7 +14,14 @@
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
         <activity
+
+            android:name=".loginAndRegister.PaymentConfirm"
+            android:exported="false" />
+        <activity
+            android:name=".loginAndRegister.ModuleChoosingMain"
+
             android:name=".loginAndRegister.PasswordReset"
+
             android:exported="false" />
         <activity android:name=".loginAndRegister.Login" />
         <activity android:name=".loginAndRegister.Register" />
@@ -31,9 +38,13 @@
         <activity android:name=".businessOwner.AddTitle" />
         <activity android:name=".businessOwner.AddTitleDetailsActivity" />
         <activity android:name=".businessOwner.EditTitleDetailsActivity" />
+
+        <activity android:name=".employeeFlow.ClockModule" />
+
         <activity android:name=".businessOwner.AccountsActivity" />
         <activity android:name=".businessOwner.AddAccountActivity" />
         <activity android:name=".businessOwner.EditAccountActivity" />
+
         <activity android:name=".employeeFlow.RequestTimeOff" />
         <activity android:name=".employeeFlow.ViewHistory" />
         <activity android:name=".employeeFlow.ClockModule" />
