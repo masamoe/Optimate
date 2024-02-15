@@ -59,4 +59,5 @@
     <string name="wage">Wage</string>
     <string name="edit_account">Edit Account</string>
     <string name="delete">delete</string>
+    <string name="reset">Reset</string>
 </resources>

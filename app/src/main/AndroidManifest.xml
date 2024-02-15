@@ -13,13 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
-
+        <activity
+            android:name=".loginAndRegister.PasswordReset"
+            android:exported="false" />
         <activity android:name=".loginAndRegister.Login" />
         <activity android:name=".loginAndRegister.Register" />
-        <activity android:name=".businessOwner.BusinessLanding"
+        <activity
+            android:name=".businessOwner.BusinessLanding"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.LANDING" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,10 +39,12 @@
         <activity android:name=".employeeFlow.ClockModule" />
         <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
-        <activity android:name=".loginAndRegister.LandingMain"
+        <activity
+            android:name=".loginAndRegister.LandingMain"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
