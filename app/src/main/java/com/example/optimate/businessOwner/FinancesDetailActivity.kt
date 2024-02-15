@@ -18,7 +18,7 @@ class FinancesDetailActivity: AppCompatActivity(){
     private val financesList = mutableStateListOf<Finances>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent() {
+        setContent {
             val finances = financesList
             finances.sortByDescending  { finance ->
                 SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).apply {
@@ -30,10 +30,10 @@ class FinancesDetailActivity: AppCompatActivity(){
     }
     override fun onResume() {
         super.onResume()
-        fetchFinances(bid)
+        fetchFinances()
     }
 
-    private fun fetchFinances(bid: String) {
+    private fun fetchFinances() {
         financesList.clear()
         fetchExpenseOrRevenue("Revenues")
         fetchExpenseOrRevenue("Expenses")
