@@ -41,7 +41,7 @@ class ModuleChoosingMain : AppCompatActivity() {
 
         container1.setOnClickListener {
             changeColor(container1)
-            Toast.makeText(this, "conatiner 1", Toast.LENGTH_SHORT).show()
+
             if (container1Picked) {
                 currentAmount -= module1Price
             } else {
@@ -53,7 +53,7 @@ class ModuleChoosingMain : AppCompatActivity() {
 
         container2.setOnClickListener {
             changeColor(container2)
-            Toast.makeText(this, "picked container 2", Toast.LENGTH_SHORT).show()
+
             if (container2Picked) {
                 currentAmount -= module2Price
             } else {
@@ -65,7 +65,7 @@ class ModuleChoosingMain : AppCompatActivity() {
 
         container3.setOnClickListener {
             changeColor(container3)
-            Toast.makeText(this, "choose container 3", Toast.LENGTH_SHORT).show()
+
             if (container3Picked) {
                 currentAmount -= module3Price
             } else {
@@ -112,11 +112,12 @@ class ModuleChoosingMain : AppCompatActivity() {
     private fun updateUI(user: String,newModules: List<String>, currentAmount: Double) {
         if (newModules != null) {
             // User is signed in, show success message
-            Toast.makeText(this, "Welcome to OptiMate!", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(this, PaymentConfirm::class.java)
             intent.putExtra("USER_UID", user)
             intent.putExtra("paymentAmount", currentAmount)
             // Navigate to the Login activity
-            val intent = Intent(this, PaymentConfirm::class.java)
+
 
             startActivity(intent)
             finish() // Finish the current activity so the user can't go back to it

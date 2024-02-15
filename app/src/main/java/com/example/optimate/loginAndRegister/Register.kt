@@ -101,7 +101,7 @@ class Register : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             // User is signed in, show success message
-            Toast.makeText(this, "Welcome to OptiMate!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "User Registered!", Toast.LENGTH_SHORT).show()
 
             // Navigate to the Login activity
             val intent = Intent(this, ModuleChoosingMain::class.java)

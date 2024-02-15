@@ -103,8 +103,10 @@ class Login : AppCompatActivity(){
                         GlobalUserData.role = (document.getString("role") ?: "").toString()
                         GlobalUserData.title = (document.getString("title") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
-
-                }
+                        GlobalUserData.account_status.status =
+                            (document.getString("status") ?: "").toString()
+                        GlobalUserData.modules = listOf((document.getString("modules") ?: "").toString())
+                    }
                     updateUI(user)
                 }
                 .addOnFailureListener {e ->

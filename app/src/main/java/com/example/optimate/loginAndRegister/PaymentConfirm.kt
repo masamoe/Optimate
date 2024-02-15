@@ -63,7 +63,7 @@ class PaymentConfirm : AppCompatActivity() {
     private fun updateUI(user: String) {
         if (user != null) {
             // User is signed in, show success message
-            Toast.makeText(this, "Welcome to OptiMate!", Toast.LENGTH_SHORT).show()
+            
 
             // Navigate to the Login activity
             val intent = Intent(this, Login::class.java)
