@@ -83,10 +83,24 @@ class Login : AppCompatActivity(){
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             // Go to your main activity or another activity after login
-            val intent = Intent(this, ModuleChoosingMain::class.java)
-            intent.putExtra("USER_UID", user.uid)
-            startActivity(intent)
-            finish()
+            if(GlobalUserData.account_status.status == "Active") {
+                val intent = Intent(this, BusinessLanding::class.java)
+                intent.putExtra("USER_UID", user.uid)
+                startActivity(intent)
+                finish()
+            }else if(GlobalUserData.role == "businesOwner" && GlobalUserData.account_status.status == "pending"){
+                val intent = Intent(this, ModuleChoosingMain::class.java)
+                intent.putExtra("USER_UID", user.uid)
+                startActivity(intent)
+                finish()
+            }else if(GlobalUserData.account_status.status == "Created" || GlobalUserData.first_time){
+                val intent = Intent(this, NewUserPasswordChange::class.java)
+                startActivity(intent)
+                finish()
+            }else if(GlobalUserData.account_status.status == "Deleted") {
+                auth.signOut()
+                Toast.makeText(this, "This Account has been Deleted, Please contact support", Toast.LENGTH_SHORT).show()
+            }
         } else {
             // Stay on the login page or show error
         }
@@ -111,6 +125,7 @@ class Login : AppCompatActivity(){
                         GlobalUserData.account_status.status =
                             (document.getString("status") ?: "").toString()
                         GlobalUserData.modules = listOf((document.getString("modules") ?: "").toString())
+                        GlobalUserData.first_time = (document.getBoolean("first_time") ?: false)
                     }
                     updateUI(user)
                 }
