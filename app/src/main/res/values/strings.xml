@@ -60,6 +60,8 @@
     <string name="wage">Wage</string>
     <string name="edit_account">Edit Account</string>
     <string name="delete">delete</string>
+    <string name="modules">Choose Modules</string>
+    <string name="changePass">Change Password</string>
 
 
     <string name="amount">$0.00</string>
@@ -71,7 +73,6 @@
     <string name="module3price">$10.00</string>
     <string name="payButton">Pay</string>
     <string name="Paid">Paid</string>
-
 
 
     <string name="reset">Reset</string>
