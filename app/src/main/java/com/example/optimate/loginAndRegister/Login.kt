@@ -88,7 +88,7 @@ class Login : AppCompatActivity(){
                 intent.putExtra("USER_UID", user.uid)
                 startActivity(intent)
                 finish()
-            }else if(GlobalUserData.role == "businesOwner" && GlobalUserData.account_status.status == "pending"){
+            }else if(GlobalUserData.role == "businessOwner" && GlobalUserData.account_status.status == "pending"){
                 val intent = Intent(this, ModuleChoosingMain::class.java)
                 intent.putExtra("USER_UID", user.uid)
                 startActivity(intent)
