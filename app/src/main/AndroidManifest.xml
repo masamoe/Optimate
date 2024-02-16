@@ -13,12 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
-        <activity
-            android:name=".loginAndRegister.NewUserPasswordChange"
-            android:exported="false" />
-        <activity
-            android:name=".loginAndRegister.PaymentConfirm"
-            android:exported="false" />
+        <activity android:name=".loginAndRegister.NewUserPasswordChange" />
+        <activity android:name=".loginAndRegister.PaymentConfirm" />
         <activity android:name=".loginAndRegister.ModuleChoosingMain" />
         <activity android:name=".loginAndRegister.PasswordReset" />
         <activity android:name=".loginAndRegister.Login" />
