@@ -14,9 +14,12 @@
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
 
+
         <activity
 
-            android:name=".employeeFlow.ViewAllPayStubs"
+            android:name=".employeeFlow.Availability"
+
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,6 +40,11 @@
         <activity android:name=".loginAndRegister.LandingMain" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity android:name=".employeeFlow.PayStub" />
+        <activity android:name=".employeeFlow.ViewAllPayStubs" />
+        <activity android:name=".employeeFlow.EditProfilePage" />
+        <activity android:name=".employeeFlow.ProfilePage" />
+        <activity android:name=".employeeFlow.SubmitExpenses" />
+
 
         <meta-data
             android:name="preloaded_fonts"

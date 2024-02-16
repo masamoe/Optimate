@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".employeeFlow.SubmitExpenses">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar7"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        style="?attr/materialCardViewElevatedStyle"
+        android:layout_width="380dp"
+        android:layout_height="560dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="86dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar7">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="238dp"
+                android:layout_height="37dp"
+                android:layout_margin="16dp"
+                android:text="Submit an Expense:"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/outlinedExpenseDate"
+                android:layout_width="340dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:hint="Date"
+                app:endIconDrawable="@drawable/date_icon"
+                app:endIconMode="custom"
+                app:helperTextEnabled="true"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/expenseDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MM/DD/YYYY"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false" />
+
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/outlinedExpenseAmount"
+                android:layout_width="340dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:hint="Amount"
+                app:endIconMode="clear_text"
+                app:expandedHintEnabled="true"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/expenseAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/outlinedReceiptPhoto"
+                app:endIconDrawable="@drawable/attach_icon"
+                app:endIconMode="custom"
+                android:layout_width="340dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:hint="Upload a photo">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/receiptPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/outlinedReasonField"
+                app:endIconMode="clear_text"
+                android:layout_width="340dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:hint="Add reason">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reasonField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp">
+
+            </com.google.android.material.divider.MaterialDivider>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:text="Send"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    >
+
+                </com.google.android.material.button.MaterialButton>
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    >
+
+                </com.google.android.material.button.MaterialButton>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

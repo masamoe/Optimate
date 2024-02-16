@@ -13,4 +13,9 @@
         <item name="android:thicknessRatio">1.0</item> <!-- Change thickness as needed -->
     </style>
 
+    <style name="CustomOutlinedBoxExposedDropdownMenu" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <!-- Override the default outline color -->
+        <item name="boxStrokeColor">@color/dark_purple</item>
+    </style>
+
 </resources>

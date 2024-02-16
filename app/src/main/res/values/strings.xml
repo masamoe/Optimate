@@ -50,6 +50,9 @@
     <string name="taxesperpaystub">amount</string>
     <string name="netpaypercentage">%</string>
     <string name="taxespercentage">%</string>
+    <string name="employeeAddress">Address</string>
+    <string name="employeePhoneNumber">XXX-XXX-XXXX</string>
+    <string name="employeeWage">$0,000.00</string>
 
 
 </resources>
