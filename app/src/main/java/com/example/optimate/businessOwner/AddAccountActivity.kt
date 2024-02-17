@@ -126,7 +126,6 @@ class AddAccountActivity : AppCompatActivity() {
 
     private fun addEmployeeToDatabase(uid: String?, name: String, email: String, password: String, wage: Float, title: String, role: String) {
         val bid = GlobalUserData.bid
-        val firstTime = true
         data class AccountStatus(val date: Date, val status: String)
         val accountStatus = AccountStatus(date = Date(), status = "Created")
 
@@ -140,7 +139,6 @@ class AddAccountActivity : AppCompatActivity() {
             "BID" to bid,
             "wage" to wage,
             "initial_password" to password,
-            "first_time" to firstTime,
             "account_status" to accountStatus
         )
         Log.d("Hison", "addEmployeeToDatabase: $user")

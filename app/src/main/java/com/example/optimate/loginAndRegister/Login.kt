@@ -1,6 +1,7 @@
 package com.example.optimate.loginAndRegister
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -94,7 +95,7 @@ class Login : AppCompatActivity(){
                 intent.putExtra("USER_UID", user.uid)
                 startActivity(intent)
                 finish()
-            }else if(GlobalUserData.account_status.status == "Created" || GlobalUserData.first_time){
+            }else if(GlobalUserData.account_status.status == "Created"){
                 val intent = Intent(this, NewUserPasswordChange::class.java)
                 startActivity(intent)
                 finish()
@@ -136,6 +137,7 @@ class Login : AppCompatActivity(){
                         GlobalUserData.first_time = (document.getBoolean("first_time") ?: false)
                     }
                     updateUI(user)
+
                 }
                 .addOnFailureListener {e ->
                     Toast.makeText(baseContext, "Get Failed $e",
@@ -145,6 +147,8 @@ class Login : AppCompatActivity(){
         }
 
     }
+
+
 }
 
 
