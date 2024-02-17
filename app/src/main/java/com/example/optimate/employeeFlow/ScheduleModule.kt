@@ -1,12 +1,14 @@
 package com.example.optimate.employeeFlow
 
 import android.os.Bundle
+import android.widget.Button
 import android.widget.CalendarView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
 import java.text.SimpleDateFormat
 import java.util.*
+import android.content.Intent
 
 class ScheduleModule : AppCompatActivity() {
     class ShiftInfo(val shiftDate: String,
@@ -41,6 +43,17 @@ class ScheduleModule : AppCompatActivity() {
             val selectedDate = getDateFormatted(year, month, dayOfMonth)
             selectedDateTextView.text = selectedDate
             checkScheduledShifts(calendarView.date)
+        }
+
+        val viewTimeRequestsBtn = findViewById<Button>(R.id.viewTimeRequests)
+        val requestTimeOffBtn = findViewById<Button>(R.id.requestTimeOff)
+
+        viewTimeRequestsBtn.setOnClickListener {
+            startActivity(Intent(this,ViewTimeOffRequests::class.java))
+        }
+
+        requestTimeOffBtn.setOnClickListener {
+            startActivity(Intent(this,RequestTimeOff::class.java))
         }
     }
 

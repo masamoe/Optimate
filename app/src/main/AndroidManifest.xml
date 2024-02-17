@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
-        <activity android:name=".employeeFlow.EditProfile" />
+
         <activity android:name=".loginAndRegister.NewUserPasswordChange" />
         <activity android:name=".loginAndRegister.PaymentConfirm" />
         <activity android:name=".loginAndRegister.ModuleChoosingMain" />
@@ -47,7 +47,8 @@
         <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity
-            android:name=".employeeFlow.ProfilePage"
+            android:name=".loginAndRegister.LandingMain"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,7 +58,8 @@
         </activity>
         <activity android:name=".employeeFlow.PayStub" />
         <activity android:name=".employeeFlow.ViewAllPayStubs" />
-        <activity android:name=".loginAndRegister.LandingMain" />
+        <activity android:name=".employeeFlow.EditProfile" />
+        <activity android:name=".employeeFlow.ProfilePage"  />
         <activity android:name=".employeeFlow.SubmitExpenses" />
 
         <meta-data

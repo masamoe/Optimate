@@ -20,13 +20,16 @@ class ProfilePage : AppCompatActivity() {
         val editProfileBtn = findViewById<Button>(R.id.editProfile)
 
 // Set OnClickListener for View Availability Button
-        viewAvailabilityBtn.setOnClickListener {
-            startActivity(Intent(this,Availability::class.java))
-        }
+
         // Set OnClickListener for Edit Profile Button
         editProfileBtn.setOnClickListener {
             startActivity(Intent(this,EditProfile::class.java))
         }
+
+        viewAvailabilityBtn.setOnClickListener {
+            startActivity(Intent(this,Availability::class.java))
+        }
+
 
     }
 }

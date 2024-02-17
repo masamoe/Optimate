@@ -306,7 +306,7 @@ android:layout_marginTop="30dp"
 
         android:layout_marginTop="50dp"
         android:layout_marginBottom="80dp"
-        app:layout_constraintBottom_toTopOf="@+id/Submit_expenses_btn"
+        app:layout_constraintBottom_toTopOf="@+id/submitExpensesBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/payStubCard">
@@ -422,7 +422,7 @@ android:layout_marginTop="30dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/view_More_pay_stubs_btn"
+                    android:id="@+id/viewMorePayStubsBtn"
                     style="?attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -438,7 +438,7 @@ android:layout_marginTop="30dp"
     </com.google.android.material.card.MaterialCardView>
 
     <Button
-        android:id="@+id/Submit_expenses_btn"
+        android:id="@+id/submitExpensesBtn"
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
