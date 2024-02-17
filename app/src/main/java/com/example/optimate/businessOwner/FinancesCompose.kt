@@ -1,13 +1,12 @@
 package com.example.optimate.businessOwner
-//noinspection UsingMaterialAndMaterial3Libraries
-//noinspection UsingMaterialAndMaterial3Libraries
-import android.annotation.SuppressLint
+
 import android.content.Intent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,11 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -33,35 +37,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-
-
-@SuppressLint("ConstantLocale")
-private val todayMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date())
-@SuppressLint("ConstantLocale")
-private val todayYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date())
-private fun monthToEnglish(month: String): String {
-    return when (month) {
-        "01" -> "January"
-        "02" -> "February"
-        "03" -> "March"
-        "04" -> "April"
-        "05" -> "May"
-        "06" -> "June"
-        "07" -> "July"
-        "08" -> "August"
-        "09" -> "September"
-        "10" -> "October"
-        "11" -> "November"
-        "12" -> "December"
-        else -> "Invalid month"
-    }
-}
 @Composable
+fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<FinancesActivity.AmountWithDate>) {
+    var fromDate by remember { mutableStateOf("") }
+    var toDate by remember { mutableStateOf("") }
+    var filteredRevenues by remember { mutableDoubleStateOf(revenues) }
+    var filteredExpenses by remember { mutableDoubleStateOf(expenses) }
+    var filteredAmountWithDate by remember { mutableStateOf(amountWithDate) }
+    var donutChartFromDate by remember { mutableStateOf("") }
+    var donutChartToDate by remember { mutableStateOf("") }
 
-fun FinancesScreen(monthlyRevenues: Double, monthlyExpenses: Double, yearlyRevenues: Double, yearlyExpenses: Double) {
     Scaffold(
         topBar = { XmlTopBar(titleText = "Finances") },
         content = { innerPadding ->
@@ -75,9 +60,27 @@ fun FinancesScreen(monthlyRevenues: Double, monthlyExpenses: Double, yearlyReven
                 ) {
                     AddRevenue()
                     AddExpense()
-                }
 
-                DonutChart(monthlyRevenues, monthlyExpenses)
+                }
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween) {
+                    DateInput(label = "From", date = fromDate, onDateChange = { fromDate = it }, modifier = Modifier.weight(1f))
+                    DateInput(label = "To", date = toDate, onDateChange = { toDate = it }, modifier = Modifier.weight(1f))
+                    Search(fromDate, toDate, amountWithDate) { revenues, expenses, filteredFinances, from, to ->
+                        filteredRevenues = revenues
+                        filteredExpenses = expenses
+                        filteredAmountWithDate = filteredFinances
+                        donutChartFromDate = from
+                        donutChartToDate = to
+
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                DonutChart(filteredRevenues, filteredExpenses, donutChartFromDate, donutChartToDate)
+                Spacer(modifier = Modifier.height(16.dp))
+                ViewMore(modifier = Modifier.align(Alignment.End).padding(16.dp))
 
             }
         }
@@ -126,6 +129,52 @@ fun AddExpense() {
 }
 
 @Composable
+fun Search(
+    from: String,
+    to: String,
+    amountWithDate: List<FinancesActivity.AmountWithDate>,
+    onFilterResult: (Double, Double, List<FinancesActivity.AmountWithDate>, String, String) -> Unit
+) {
+    val buttonColor = colors.run { Color(0xFF75f8e2) }
+    Button(
+        onClick = {
+            if (from.isNotEmpty() && to.isNotEmpty()) {
+                val format = java.text.SimpleDateFormat("MM/dd/yyyy", java.util.Locale.getDefault())
+                val fromDateParsed = format.parse(from)
+                val toDateParsed = format.parse(to)
+
+                val filteredFinances = if (fromDateParsed != null && toDateParsed != null) {
+                    amountWithDate.filter { finance ->
+                        val financeDate = format.parse(finance.date)
+                        financeDate != null && !financeDate.before(fromDateParsed) && !financeDate.after(toDateParsed)
+                    }
+                } else {
+                    amountWithDate
+                }
+
+                val expenses = filteredFinances
+                    .filter { it.type == "Expenses" }
+                    .sumOf { it.amount.toDouble() }
+
+                val revenues = filteredFinances
+                    .filter { it.type == "Revenues" }
+                    .sumOf { it.amount.toDouble() }
+
+                onFilterResult(revenues, expenses, filteredFinances, from, to)
+            }
+        },
+        modifier = Modifier
+            .padding(top = 20.dp, start = 4.dp, end = 4.dp, bottom = 4.dp)
+            .height(36.dp),
+        colors = ButtonDefaults.run { buttonColors(buttonColor) },
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+    ) {
+        Text("Search", fontSize = 10.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+
+@Composable
 fun ViewMore(modifier: Modifier = Modifier){
     val viewMoreBtn = LocalContext.current
     val buttonColor = colors.run { Color(0xFF75f8e2) }
@@ -144,29 +193,27 @@ fun ViewMore(modifier: Modifier = Modifier){
 
 
 @Composable
-fun DonutChart(monthlyRevenues: Double, monthlyExpenses: Double) {
-    val total = monthlyRevenues + monthlyExpenses
-    val revenueAngle = (monthlyRevenues / total * 360).toFloat()
-    val expensesAngle = 360f - revenueAngle
-    val revenueColor = Color(0xFFC4F0E6)
-    val expenseColor = Color(0xFFFFDFE7)
+fun DonutChart(revenues: Double, expenses: Double, from: String = "", to: String = "") {
+    val total = if (revenues == 0.0 && expenses == 0.0) 1.0 else revenues + expenses // Avoid division by zero
+    val revenueAngle = if (revenues == 0.0 && expenses == 0.0) 360f else (revenues / total * 360).toFloat()
+    val expensesAngle = if (revenues == 0.0 && expenses == 0.0) 0f else 360f - revenueAngle
+    val revenueColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else Color(0xFFC4F0E6)
+    val expenseColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else Color(0xFFFFDFE7)
 
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .height(300.dp),
+            .height(350.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-    )
-    {
-        Box(modifier = Modifier
-            .align(alignment = Alignment.CenterHorizontally))
-        {
-            val month = monthToEnglish(todayMonth)
-            val year = todayYear
-            Text("$month $year", color = colors.onSurface, fontSize = 25.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 16.dp))
-
+    ) {
+        Box(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
+            if (from.isEmpty() && to.isEmpty()) {
+                Text("Finances", color = colors.onSurface, fontSize = 25.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 16.dp))
+            } else {
+                Text("$from - $to", color = colors.onSurface, fontSize = 25.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 16.dp))
+            }
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -175,61 +222,56 @@ fun DonutChart(monthlyRevenues: Double, monthlyExpenses: Double) {
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Revenue: $${String.format("%.2f", monthlyRevenues)}", fontSize = 12.sp, fontWeight = FontWeight.Normal, modifier = Modifier.padding(bottom = 8.dp))
-                Text("Expenses: $${String.format("%.2f", monthlyExpenses)}", fontSize = 12.sp, fontWeight = FontWeight.Normal, modifier = Modifier.padding(bottom = 8.dp))
-                Text("Balance: $${String.format("%.2f", monthlyRevenues - monthlyExpenses)}", fontSize = 12.sp, fontWeight = FontWeight.Normal)
-
+                Text("Revenue: $${String.format("%.2f", revenues)}", fontSize = 12.sp, fontWeight = FontWeight.Normal, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Expenses: $${String.format("%.2f", expenses)}", fontSize = 12.sp, fontWeight = FontWeight.Normal, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Balance: $${String.format("%.2f", revenues - expenses)}", fontSize = 12.sp, fontWeight = FontWeight.Normal)
             }
-            ViewMore(modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(5.dp)
-                .height(40.dp)
 
-                )
-
-        Column (
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
-            ){
-
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
                 Canvas(modifier = Modifier.size(200.dp)) { // Set this to your desired size
                     val strokeWidth = 50f
                     val radius = size.minDimension / 2 - strokeWidth / 2
                     val center = Offset(size.width / 2, size.height / 2)
 
-                    // Draw the arc for monthly revenues
+                    // Draw the arc for revenues or the full grey donut if both are 0
                     drawArc(
                         color = revenueColor,
                         startAngle = -90f,
                         sweepAngle = revenueAngle,
                         useCenter = false,
-                        style = Stroke(width = strokeWidth + 20f),
+                        style = Stroke(width = strokeWidth + if (revenues == 0.0 && expenses == 0.0) 0f else 20f), // Remove the additional stroke width for the grey donut
                         topLeft = Offset(center.x - radius, center.y - radius),
                         size = Size(radius * 2, radius * 2)
                     )
 
-                    // Draw the arc for monthly expenses
-                    drawArc(
-                        color = expenseColor,
-                        startAngle = -90f + revenueAngle,
-                        sweepAngle = expensesAngle,
-                        useCenter = false,
-                        style = Stroke(width = strokeWidth),
-                        topLeft = Offset(center.x - radius, center.y - radius),
-                        size = Size(radius * 2, radius * 2)
-                    )
+                    // Draw the arc for expenses unless both revenues and expenses are 0
+                    if (revenues != 0.0 || expenses != 0.0) {
+                        drawArc(
+                            color = expenseColor,
+                            startAngle = -90f + revenueAngle,
+                            sweepAngle = expensesAngle,
+                            useCenter = false,
+                            style = Stroke(width = strokeWidth),
+                            topLeft = Offset(center.x - radius, center.y - radius),
+                            size = Size(radius * 2, radius * 2)
+                        )
+                    }
                 }
-
             }
-
+        }
     }
 }
-}
+
+
+
 @Preview
 @Composable
 fun FinancesScreenPreview() {
-    FinancesScreen(monthlyRevenues = 1000.0, monthlyExpenses = 500.0, yearlyRevenues = 12000.0, yearlyExpenses = 6000.0)
+    FinancesScreen(revenues = 1000.0, expenses = 500.0, amountWithDate = emptyList())
 }

@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -175,6 +176,7 @@ fun DateInput(label: String, date: String, onDateChange: (String) -> Unit, modif
         modifier = modifier
             .padding(4.dp),
         readOnly = true,
+        textStyle = TextStyle(fontSize = 11.sp),
         label = { Text(text = label, fontSize = 12.sp) },
         trailingIcon = {
             Icon(

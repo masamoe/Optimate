@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 
 import com.google.firebase.firestore.firestore
 import com.google.firebase.Firebase
+import java.util.Date
 
 
 class Login : AppCompatActivity(){
@@ -122,9 +123,16 @@ class Login : AppCompatActivity(){
                         GlobalUserData.role = (document.getString("role") ?: "").toString()
                         GlobalUserData.title = (document.getString("title") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
-                        GlobalUserData.account_status.status =
-                            (document.getString("status") ?: "").toString()
-                        GlobalUserData.modules = listOf((document.getString("modules") ?: "").toString())
+                        val accountStatusObject = document.get("account_status") as? Map<String, Any>
+                        if (accountStatusObject != null) {
+                            val date = accountStatusObject["date"] as? Date ?: Date()
+                            val status = accountStatusObject["status"] as? String ?: ""
+                            GlobalUserData.account_status = AccountStatus(date, status)
+                        } else {
+                            // Handle case where account_status is not found in the document
+                            GlobalUserData.account_status = AccountStatus(Date(), "")
+                        }
+                        GlobalUserData.modules = document.get("modules") as? List<String> ?: emptyList()
                         GlobalUserData.first_time = (document.getBoolean("first_time") ?: false)
                     }
                     updateUI(user)

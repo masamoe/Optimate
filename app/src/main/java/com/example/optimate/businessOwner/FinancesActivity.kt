@@ -4,18 +4,19 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
 class FinancesActivity : AppCompatActivity() {
 
     data class Amount(val type: String, val amount: String)
+    data class AmountWithDate(val type: String, val amount: String, val date: String)
 
     private val db = Firebase.firestore
     private val bid = GlobalUserData.bid
@@ -24,17 +25,16 @@ class FinancesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             // Use remember with mutableStateOf to initialize the state
-            val monthlyRevenues = remember { mutableDoubleStateOf(0.0) }
-            val monthlyExpenses = remember { mutableDoubleStateOf(0.0) }
-            val yearlyRevenues = remember { mutableDoubleStateOf(0.0) }
-            val yearlyExpenses = remember { mutableDoubleStateOf(0.0) }
+            val totalRevenues = remember { mutableDoubleStateOf(0.0) }
+            val totalExpenses = remember { mutableDoubleStateOf(0.0) }
+            val amountWithDate = remember { mutableStateListOf<AmountWithDate>() }
 
             // Update the UI with the latest values
             FinancesScreen(
-                monthlyRevenues = monthlyRevenues.doubleValue,
-                monthlyExpenses = monthlyExpenses.doubleValue,
-                yearlyRevenues = yearlyRevenues.doubleValue,
-                yearlyExpenses = yearlyExpenses.doubleValue
+                revenues = totalRevenues.doubleValue,
+                expenses = totalExpenses.doubleValue,
+                amountWithDate = amountWithDate
+
             )
         }
     }
@@ -45,15 +45,12 @@ class FinancesActivity : AppCompatActivity() {
     }
 
     private fun fetchFinances() {
-        val month = SimpleDateFormat("MM", Locale.getDefault()).format(Date())
-        val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date())
-
         db.collection("finances")
             .whereEqualTo("BID", bid)
             .get()
             .addOnSuccessListener { querySnapshot ->
-                val monthList = mutableListOf<Amount>()
-                val yearList = mutableListOf<Amount>()
+                val financesList = mutableListOf<Amount>()
+                val financesListWithDate = mutableListOf<AmountWithDate>()
 
                 querySnapshot.documents.forEach { documentSnapshot ->
                     listOf("Revenues", "Expenses").forEach { financesType ->
@@ -68,33 +65,33 @@ class FinancesActivity : AppCompatActivity() {
                                     }
                                     val date = timestamp?.toDate()?.let { sdf.format(it) } ?: "Unknown"
                                     val amounts = Amount(financesType, amount)
-                                    if (date.substring(0, 2) == month) monthList.add(amounts)
-                                    if (date.substring(6, 10) == year) yearList.add(amounts)
+                                    val amountsWithDate = AmountWithDate(financesType, amount, date)
+                                    financesList.add(amounts)
+                                    financesListWithDate.add(amountsWithDate)
+
                                 }
                             }
                         }
                     }
                 }
 
-                val totalExpensesInMonth = monthList.filter { it.type == "Expenses" }.sumOf { it.amount.toDouble() }
-                val totalRevenuesInMonth = monthList.filter { it.type == "Revenues" }.sumOf { it.amount.toDouble() }
-                val totalExpensesInYear = yearList.filter { it.type == "Expenses" }.sumOf { it.amount.toDouble() }
-                val totalRevenuesInYear = yearList.filter { it.type == "Revenues" }.sumOf { it.amount.toDouble() }
+                val totalExpenses = financesList.filter { it.type == "Expenses" }.sumOf { it.amount.toDouble() }
+                val totalRevenues = financesList.filter { it.type == "Revenues" }.sumOf { it.amount.toDouble() }
 
                 // Update your UI here with the fetched data
-                updateUI(totalRevenuesInMonth, totalExpensesInMonth, totalRevenuesInYear, totalExpensesInYear)
+                updateUI(totalRevenues, totalExpenses, financesListWithDate)
             }
     }
 
-    private fun updateUI(monthlyRevenues: Double, monthlyExpenses: Double, yearlyRevenues: Double, yearlyExpenses: Double) {
+    private fun updateUI(monthlyRevenues: Double, monthlyExpenses: Double, amountWithDate: List<AmountWithDate>) {
         // You need to use the main thread to update the UI
         runOnUiThread {
             setContent {
                 FinancesScreen(
-                    monthlyRevenues = monthlyRevenues,
-                    monthlyExpenses = monthlyExpenses,
-                    yearlyRevenues = yearlyRevenues,
-                    yearlyExpenses = yearlyExpenses
+                    revenues = monthlyRevenues,
+                    expenses = monthlyExpenses,
+                    amountWithDate = amountWithDate
+
                 )
             }
         }
