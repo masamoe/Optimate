@@ -30,7 +30,7 @@ class AccountsActivity : AppCompatActivity() {
     private fun fetchAccounts(bid: String) {
         db.collection("users")
             .whereEqualTo("BID", bid)
-            .whereEqualTo("account_status.status", "Created")
+            .whereIn("account_status.status", listOf("Created", "Active")) // Modified line
             .get()
             .addOnSuccessListener { documents ->
                 val fetchedAccounts = mutableListOf<Account>()
@@ -43,10 +43,10 @@ class AccountsActivity : AppCompatActivity() {
 
                 accountsList.clear()
                 accountsList.addAll(fetchedAccounts)
-
             }
             .addOnFailureListener { exception ->
                 // Handle the error appropriately
             }
     }
+
 }
