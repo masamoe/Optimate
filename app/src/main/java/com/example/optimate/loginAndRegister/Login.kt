@@ -94,7 +94,7 @@ class Login : AppCompatActivity(){
                 intent.putExtra("USER_UID", user.uid)
                 startActivity(intent)
                 finish()
-            }else if(GlobalUserData.account_status.status == "Created" || GlobalUserData.first_time){
+            }else if(GlobalUserData.account_status.status == "Created"){
                 val intent = Intent(this, NewUserPasswordChange::class.java)
                 startActivity(intent)
                 finish()
