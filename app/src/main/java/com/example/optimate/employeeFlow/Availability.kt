@@ -218,8 +218,8 @@ class Availability : AppCompatActivity() {
             disableEnableSundays
         )
 
-        for (i in toggleList.indices) {
-            toggleList[i].isEnabled = enable
+        for (i in switchList.indices) {
+            toggleList[i].isEnabled = enable && switchList[i].isChecked
             switchList[i].isEnabled = enable
         }
     }
