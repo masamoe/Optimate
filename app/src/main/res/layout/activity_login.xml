@@ -115,7 +115,6 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
@@ -170,13 +169,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/forgotPassword"
+        android:clickable="true"
         android:textColor="#007FFF"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline16"
         app:layout_constraintTop_toTopOf="@+id/guideline6"
         app:layout_constraintVertical_bias="0.0"
-        tools:ignore="TextContrastCheck" />
+        tools:ignore="TextContrastCheck"
+        android:focusable="true" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

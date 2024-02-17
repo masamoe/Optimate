@@ -41,11 +41,13 @@
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
     <string name="select_reason">Select a reason</string>
+
     <string name="selected_date">Selected date</string>
     <string name="shift_or_no">Shift or no shift</string>
     <string name="date_and_time_or_not_scheduled">Date and Time or not scheduled</string>
     <string name="view_time_requests">View Time Requests</string>
     <string name="request_time_off">Request time off</string>
+
     <string name="netpayamount">amount</string>
     <string name="taxesperpaystub">amount</string>
     <string name="netpaypercentage">%</string>
@@ -53,6 +55,37 @@
     <string name="employeeAddress">Address</string>
     <string name="employeePhoneNumber">XXX-XXX-XXXX</string>
     <string name="employeeWage">$0,000.00</string>
+
+
+    <string name="accounts">Accounts</string>
+    <string name="finances">Finances</string>
+    <string name="requests">Requests</string>
+    <string name="notifications">Notifications</string>
+    <string name="schedule">Schedule</string>
+    <string name="add_account">Add Account</string>
+    <string name="submit">Submit</string>
+    <string name="employee_email">Employee Email</string>
+    <string name="pick_a_title">Pick A Title</string>
+    <string name="employee_name">Employee Name</string>
+    <string name="wage">Wage</string>
+    <string name="edit_account">Edit Account</string>
+    <string name="delete">delete</string>
+    <string name="modules">Choose Modules</string>
+    <string name="changePass">Change Password</string>
+
+
+    <string name="amount">$0.00</string>
+    <string name="module1">Basic</string>
+    <string name="module2">Clock In/Out</string>
+    <string name="module3">Financial Tracker</string>
+    <string name="module1price">$10.00</string>
+    <string name="module2price">$10.00</string>
+    <string name="module3price">$10.00</string>
+    <string name="payButton">Pay</string>
+    <string name="Paid">Paid</string>
+
+
+    <string name="reset">Reset</string>
 
 
 </resources>

@@ -3,6 +3,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
@@ -17,6 +18,7 @@ import com.google.firebase.Firebase
 class Login : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
     private var registerBtn: Button? = null
+    private lateinit var forgotPasswordClk: TextView
     private lateinit var loginBtn: Button
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -34,7 +36,7 @@ class Login : AppCompatActivity(){
         passwordEditText = findViewById(R.id.loginPassword)
         loginBtn = findViewById(R.id.loginBtn)
         registerBtn = findViewById(R.id.registerBtn)
-
+        forgotPasswordClk = findViewById(R.id.forgotPassword)
         // Set up the login button click listener
         loginBtn.setOnClickListener {
             val email = emailEditText.text.toString().trim()
@@ -48,12 +50,16 @@ class Login : AppCompatActivity(){
 
             // Sign in with Firebase
             signInWithEmail(email, password)
+            GlobalUserData.password = password
         }
 
         // Set up the register button click listener
         registerBtn?.setOnClickListener {
             // Go to the Register activity
             startActivity(Intent(this, Register::class.java))
+        }
+        forgotPasswordClk.setOnClickListener {
+            startActivity(Intent(this, PasswordReset::class.java))
         }
     }
 
@@ -77,9 +83,24 @@ class Login : AppCompatActivity(){
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             // Go to your main activity or another activity after login
-            val intent = Intent(this, BusinessLanding::class.java)
-            startActivity(intent)
-            finish()
+            if(GlobalUserData.account_status.status == "Active") {
+                val intent = Intent(this, BusinessLanding::class.java)
+                intent.putExtra("USER_UID", user.uid)
+                startActivity(intent)
+                finish()
+            }else if(GlobalUserData.role == "businessOwner" && GlobalUserData.account_status.status == "pending"){
+                val intent = Intent(this, ModuleChoosingMain::class.java)
+                intent.putExtra("USER_UID", user.uid)
+                startActivity(intent)
+                finish()
+            }else if(GlobalUserData.account_status.status == "Created" || GlobalUserData.first_time){
+                val intent = Intent(this, NewUserPasswordChange::class.java)
+                startActivity(intent)
+                finish()
+            }else if(GlobalUserData.account_status.status == "Deleted") {
+                auth.signOut()
+                Toast.makeText(this, "This Account has been Deleted, Please contact support", Toast.LENGTH_SHORT).show()
+            }
         } else {
             // Stay on the login page or show error
         }
@@ -101,8 +122,11 @@ class Login : AppCompatActivity(){
                         GlobalUserData.role = (document.getString("role") ?: "").toString()
                         GlobalUserData.title = (document.getString("title") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
-
-                }
+                        GlobalUserData.account_status.status =
+                            (document.getString("status") ?: "").toString()
+                        GlobalUserData.modules = listOf((document.getString("modules") ?: "").toString())
+                        GlobalUserData.first_time = (document.getBoolean("first_time") ?: false)
+                    }
                     updateUI(user)
                 }
                 .addOnFailureListener {e ->

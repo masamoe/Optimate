@@ -15,11 +15,39 @@
         tools:targetApi="31">
 
 
+        <activity android:name=".loginAndRegister.NewUserPasswordChange" />
+        <activity android:name=".loginAndRegister.PaymentConfirm" />
+        <activity android:name=".loginAndRegister.ModuleChoosingMain" />
+        <activity android:name=".loginAndRegister.PasswordReset" />
+        <activity android:name=".loginAndRegister.Login" />
+        <activity android:name=".loginAndRegister.Register" />
         <activity
+            android:name=".businessOwner.BusinessLanding"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LANDING" />
 
             android:name=".employeeFlow.Availability"
 
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".businessOwner.TitlesActivity" />
+        <activity android:name=".businessOwner.AddTitle" />
+        <activity android:name=".businessOwner.AddTitleDetailsActivity" />
+        <activity android:name=".businessOwner.EditTitleDetailsActivity" />
+        <activity android:name=".employeeFlow.ClockModule" />
+        <activity android:name=".businessOwner.AccountsActivity" />
+        <activity android:name=".businessOwner.AddAccountActivity" />
+        <activity android:name=".businessOwner.EditAccountActivity" />
+        <activity android:name=".employeeFlow.RequestTimeOff" />
+        <activity android:name=".employeeFlow.ViewHistory" />
+        <activity android:name=".employeeFlow.ClockModule" />
+        <activity android:name=".employeeFlow.ScheduleModule" />
+        <activity android:name=".employeeFlow.ViewTimeOffRequests" />
+        <activity
+            android:name=".loginAndRegister.LandingMain"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
