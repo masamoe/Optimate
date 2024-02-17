@@ -60,6 +60,7 @@ class NewUserPasswordChange : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Password updated successfully
                     Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show()
+                     updateDB()
                 } else {
                     // Password update failed
                     Toast.makeText(this, "Password update failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
