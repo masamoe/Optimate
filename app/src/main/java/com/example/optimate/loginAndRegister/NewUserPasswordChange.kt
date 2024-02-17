@@ -104,7 +104,7 @@ class NewUserPasswordChange : AppCompatActivity() {
         if (user != null) {
             // User is signed in, show success message
             // Navigate to the Login activity
-            val intent = Intent(this, BusinessLanding::class.java)
+            val intent = Intent(this, DynamicLandingActivity::class.java)
 
             startActivity(intent)
             finish() // Finish the current activity so the user can't go back to it

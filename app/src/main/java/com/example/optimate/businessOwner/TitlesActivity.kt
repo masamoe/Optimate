@@ -27,8 +27,8 @@ class TitlesActivity : ComponentActivity() {
                     val title = document.getString("title") ?: ""
                     val role = document.getString("role") ?: ""
                     val category = when (role) {
-                        "manager" -> "Managers:"
-                        "employee" -> "Employees:"
+                        "Manager" -> "Managers:"
+                        "Employee" -> "Employees:"
                         else -> "Others:"
                     }
                     titlesList.add(Title(title, category))

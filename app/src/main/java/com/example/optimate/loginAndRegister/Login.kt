@@ -86,9 +86,10 @@ class Login : AppCompatActivity(){
         if (user != null) {
             // Go to your main activity or another activity after login
             if(GlobalUserData.account_status.status == "Active") {
-                val intent = Intent(this, BusinessLanding::class.java)
+                val intent = Intent(this, DynamicLandingActivity::class.java)
                 intent.putExtra("USER_UID", user.uid)
                 startActivity(intent)
+
                 finish()
             }else if(GlobalUserData.role == "businessOwner" && GlobalUserData.account_status.status == "pending"){
                 val intent = Intent(this, ModuleChoosingMain::class.java)
@@ -147,7 +148,6 @@ class Login : AppCompatActivity(){
         }
 
     }
-
 
 }
 

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -44,7 +45,7 @@ class AddRevenueOrExpenseActivity: AppCompatActivity() {
 
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
         homeBtn.setOnClickListener {
-            val intent = Intent(this, BusinessLanding::class.java)
+            val intent = Intent(this, DynamicLandingActivity::class.java)
             startActivity(intent)
             finish()
         }

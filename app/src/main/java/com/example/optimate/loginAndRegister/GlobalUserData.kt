@@ -18,3 +18,19 @@ object GlobalUserData {
     lateinit var modules: List<String>
 
 }
+
+fun signOut() {
+    GlobalUserData.access = emptyList()
+    GlobalUserData.uid = ""
+    GlobalUserData.bid = ""
+    GlobalUserData.address = ""
+    GlobalUserData.name = ""
+    GlobalUserData.email = ""
+    GlobalUserData.title = ""
+    GlobalUserData.role = ""
+    GlobalUserData.wage = 0F
+    GlobalUserData.password = ""
+    GlobalUserData.first_time = false
+    GlobalUserData.account_status = AccountStatus(Date(), "")
+    GlobalUserData.modules = emptyList()
+}

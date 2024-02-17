@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
@@ -73,7 +74,7 @@ class EditAccountActivity : AppCompatActivity() {
         }
 
         homeBtn.setOnClickListener {
-            val intent = Intent(this, BusinessLanding::class.java)
+            val intent = Intent(this, DynamicLandingActivity::class.java)
             startActivity(intent)
             finish()
         }

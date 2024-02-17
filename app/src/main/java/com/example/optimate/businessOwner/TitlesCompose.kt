@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 
 data class Title(val title: String, val category: String)
 @Composable
@@ -95,7 +96,7 @@ fun XmlTopBar(titleText: String = "Titles") {
             imageView.contentDescription = context.getString(R.string.home) // Set content description for accessibility
             imageView.setOnClickListener {
                 // Navigate to the BusinessLanding activity
-                val intent = Intent(context, BusinessLanding::class.java)
+                val intent = Intent(context, DynamicLandingActivity::class.java)
                 context.startActivity(intent)
             }
         }
@@ -112,7 +113,7 @@ fun AddTitleButton(modifier: Modifier = Modifier) {
                         addTitleBtn.startActivity(intent)
                       },
             colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
-            modifier = modifier.padding(end = 16.dp).height(30.dp),
+            modifier = modifier.padding(6.dp).height(40.dp),
             //add shadow to the button
             elevation = ButtonDefaults.elevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
         ) {

@@ -21,9 +21,6 @@ class BusinessLanding : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_business_landing)
-        Log.d("Business", "bid: ${GlobalUserData.bid}")
-        Log.d("Business", "access: ${GlobalUserData.access}")
-        Log.d("Business", "title: ${GlobalUserData.title}")
         businessName = GlobalUserData.name
         username = findViewById(R.id.username)
         username.text = businessName
