@@ -16,6 +16,7 @@ class BusinessLanding : AppCompatActivity() {
     private lateinit var accountsBtn: ImageView
     private lateinit var businessName: String
     private lateinit var username: TextView
+    private lateinit var financesBtn: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_business_landing)
@@ -31,6 +32,12 @@ class BusinessLanding : AppCompatActivity() {
         accountsBtn.setOnClickListener {
             // Go to the Accounts activity
             startActivity(Intent(this, AccountsActivity::class.java))
+        }
+
+        financesBtn = findViewById(R.id.finances_btn)
+        financesBtn.setOnClickListener {
+            // Go to the Finances activity
+            startActivity(Intent(this, FinancesActivity::class.java))
         }
     }
 }
