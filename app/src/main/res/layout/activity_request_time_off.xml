@@ -6,30 +6,88 @@
     android:layout_height="match_parent"
     tools:context=".employeeFlow.RequestTimeOff">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar4"
-        android:layout_width="409dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout9"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="34dp"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        tools:ignore="MissingConstraints">
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.03" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05109489" />
+
+        <View
+            android:id="@+id/baseline"
+            android:layout_width="370dp"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintStart_toStartOf="@id/guideline5"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/topBarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/guideline3"
+            tools:text="Request Time Off" />
+
+        <ImageView
+            android:id="@+id/homeBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/home"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toTopOf="@+id/guideline3"
+            app:srcCompat="@drawable/home_btn" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="360dp"
         android:layout_height="580dp"
         android:layout_marginStart="14dp"
-        android:layout_marginTop="14dp"
         android:layout_marginEnd="14dp"
         android:layout_marginBottom="47dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar4">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,8 +103,7 @@
                 android:text="@string/select_date"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                 app:layout_constraintBottom_toTopOf="@+id/outlinedStartDate"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
+                app:layout_constraintEnd_toEndOf="parent" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -60,16 +117,15 @@
                 app:endIconDrawable="@drawable/date_icon"
                 app:endIconMode="custom"
                 app:helperText="MM/DD/YYYY"
-                app:helperTextEnabled="true"
-                >
+                app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/startDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
-                    android:focusableInTouchMode="false" />
+                    android:focusableInTouchMode="false"
+                    android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,15 +140,15 @@
                 app:endIconDrawable="@drawable/date_icon"
                 app:endIconMode="custom"
                 app:helperText="MM/DD/YYYY"
-                app:helperTextEnabled="true"
-                >
+                app:helperTextEnabled="true">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/endDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
-                    android:focusableInTouchMode="false" />
+                    android:focusableInTouchMode="false"
+                    android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -120,17 +176,16 @@
                     app:layout_constraintVertical_bias="0.122" />
 
 
-
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/materialSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="30dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="30dp"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
                     android:checked="false"
+                    android:gravity="center_vertical"
                     android:text="@string/all_day" />
 
 
@@ -146,20 +201,20 @@
                     android:id="@+id/outlinedStartTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="30dp"
-                    android:layout_marginEnd="30dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_weight="1"
                     android:hint="@string/start_time"
-                    app:helperTextEnabled="true"
-                    >
+                    app:helperTextEnabled="true">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/startTime"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:inputType="none"
                         android:focusable="false"
-                        android:focusableInTouchMode="false"/>
+                        android:focusableInTouchMode="false"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -181,17 +236,13 @@
                         android:id="@+id/endTime"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:inputType="none"
                         android:focusable="false"
-                        android:focusableInTouchMode="false" />
+                        android:focusableInTouchMode="false"
+                        android:gravity="center_vertical"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-
-
-
-
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -199,11 +250,10 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="30dp"
+                android:layout_marginTop="16dp"
 
-                android:hint="@string/select_reason"
-                >
+                android:hint="@string/select_reason">
 
 
                 <AutoCompleteTextView
@@ -218,17 +268,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/sendButton"
                     style="@style/Widget.Material3.Button.ElevatedButton"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:text="Send"
-                    />
+                    android:text="Send" />
 
                 <Button
                     android:id="@+id/cancelButton"
@@ -238,8 +288,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:text="Cancel"
-                    />
+                    android:text="Cancel" />
 
             </LinearLayout>
 
