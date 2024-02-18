@@ -39,7 +39,17 @@
         <activity android:name=".businessOwner.AddTitle" />
         <activity android:name=".businessOwner.AddTitleDetailsActivity" />
         <activity android:name=".businessOwner.EditTitleDetailsActivity" />
-        <activity android:name=".employeeFlow.ClockModule" />
+        <activity android:name=".employeeFlow.ClockModule"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LANDING" />
+
+
+
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".businessOwner.AccountsActivity" />
         <activity android:name=".businessOwner.AddAccountActivity" />
         <activity android:name=".businessOwner.EditAccountActivity" />
