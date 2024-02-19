@@ -1,6 +1,9 @@
 package com.example.optimate.employeeFlow
 
 import android.content.ContentValues.TAG
+
+import android.content.Intent
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -58,6 +61,14 @@ class ClockModule : AppCompatActivity() {
                 handler.postDelayed(this, 1000)
             }
         })
+
+
+        val viewHistoryButton: Button = findViewById(R.id.viewHistory)
+
+        viewHistoryButton.setOnClickListener {
+            val intent = Intent(this, ViewHistory::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun toggleClockState(clickedButton: Button) {

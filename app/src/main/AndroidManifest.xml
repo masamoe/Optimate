@@ -14,7 +14,6 @@
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
 
-
         <activity android:name=".loginAndRegister.NewUserPasswordChange" />
         <activity android:name=".loginAndRegister.PaymentConfirm" />
         <activity android:name=".loginAndRegister.ModuleChoosingMain" />
@@ -28,13 +27,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.LANDING" />
 
-
-
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".employeeFlow.Availability"/>
+        <activity android:name=".employeeFlow.Availability" />
         <activity android:name=".businessOwner.TitlesActivity" />
         <activity android:name=".businessOwner.AddTitle" />
         <activity android:name=".businessOwner.AddTitleDetailsActivity" />
@@ -62,6 +58,7 @@
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity
             android:name=".loginAndRegister.LandingMain"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,10 +68,9 @@
         </activity>
         <activity android:name=".employeeFlow.PayStub" />
         <activity android:name=".employeeFlow.ViewAllPayStubs" />
-        <activity android:name=".employeeFlow.EditProfilePage" />
-        <activity android:name=".employeeFlow.ProfilePage" />
+        <activity android:name=".employeeFlow.EditProfile" />
+        <activity android:name=".employeeFlow.ProfilePage"  />
         <activity android:name=".employeeFlow.SubmitExpenses" />
-
 
         <meta-data
             android:name="preloaded_fonts"

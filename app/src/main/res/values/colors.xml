@@ -10,4 +10,5 @@
     <color name="light_red">#ffdad6</color>
     <color name="light_grey">#e7e0eb</color>
     <color name="grey">#7a757f</color>
+    <color name="screen_border_colors">#FEF7FF</color>
 </resources>

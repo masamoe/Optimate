@@ -2,10 +2,13 @@ package com.example.optimate.employeeFlow
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import org.checkerframework.common.returnsreceiver.qual.This
 
 class PayStub : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,6 +17,16 @@ class PayStub : AppCompatActivity() {
 
         // Example call to the function with sample values
         showPayStub("2024-02-10", 3000.0, 5000.0)
+
+        val viewMorePayStubsBtn = findViewById<Button>(R.id.viewMorePayStubsBtn)
+        val submitExpensesBtn = findViewById<Button>(R.id.submitExpensesBtn)
+
+        viewMorePayStubsBtn.setOnClickListener {
+            startActivity(Intent(this,ViewAllPayStubs::class.java))
+        }
+        submitExpensesBtn.setOnClickListener {
+            startActivity(Intent(this,SubmitExpenses::class.java))
+        }
     }
 
     private fun showPayStub(date: String, netIncome: Double, maxIncome: Double) {
