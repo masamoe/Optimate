@@ -2,7 +2,6 @@ package com.example.optimate.employeeFlow
 
 import android.content.ContentValues.TAG
 
-import android.content.Intent
 import android.os.Build
 
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +18,6 @@ import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 
@@ -39,29 +37,21 @@ class ClockModule : AppCompatActivity() {
     private var breakStart: Long? = null
     private var endTime: Long? = null
     private var breakEnd: Long? = null
-    @RequiresApi(Build.VERSION_CODES.O)
-    val currentDate = LocalDate.now()
-    @RequiresApi(Build.VERSION_CODES.O)
-    val day = currentDate.dayOfMonth
-    @RequiresApi(Build.VERSION_CODES.O)
-    val month = currentDate.monthValue
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    val year = currentDate.year
-    @RequiresApi(Build.VERSION_CODES.O)
-    val dayOfCheckin = "$month $day, $year"
-    @RequiresApi(Build.VERSION_CODES.O)
-    private var workLog = WorkLog(
-        uid = uid ?: "",
-        bid = bid,
-        name = GlobalUserData.name,
-        day = dayOfCheckin
-    )
+
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clock_module)
+
+        WorkLog.uid = uid ?: ""
+        WorkLog.bid = bid
+        WorkLog.name = GlobalUserData.name
+        WorkLog.clockInday = Date()
+
         digitalClock = findViewById(R.id.digitalClock)
         clockInButton = findViewById(R.id.clockIn)
         clockOutButton = findViewById(R.id.clockOut)
@@ -135,7 +125,7 @@ class ClockModule : AppCompatActivity() {
                 startTime = currentTime
                 val formattedStartTime = dateFormat.format(Date(startTime))
 
-                workLog = workLog.copy(clockIn = formattedStartTime)
+                WorkLog.clockIn = formattedStartTime
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.clock_out) -> {
                 // Clock In state
@@ -147,8 +137,8 @@ class ClockModule : AppCompatActivity() {
                 clockOutButton.setTextColor(getColor(R.color.grey))
                 endTime = currentTime
                 val formattedEndTime = dateFormat.format(Date(endTime!!))
-                workLog = workLog.copy(clockOut = formattedEndTime)
-                addWorkLogToFirestore(workLog)
+                WorkLog.clockOut = formattedEndTime
+                addWorkLogToFirestore(WorkLog)
 
 
             }
@@ -158,7 +148,7 @@ class ClockModule : AppCompatActivity() {
                 clockInButton.backgroundTintList = getColorStateList(R.color.light_yellow)
                 breakStart = currentTime
                 val formattedBreakSTime = dateFormat.format(Date(breakStart!!))
-                workLog = workLog.copy(breakStart = formattedBreakSTime)
+                WorkLog.breakStart = formattedBreakSTime
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.end_break) -> {
                 // End Break state
@@ -168,7 +158,7 @@ class ClockModule : AppCompatActivity() {
                 clockOutButton.backgroundTintList = getColorStateList(R.color.light_yellow)
                 breakEnd = currentTime
                 val formattedBreakETime = dateFormat.format(Date(breakEnd!!))
-                workLog = workLog.copy(breakEnd = formattedBreakETime)
+                WorkLog.breakEnd = formattedBreakETime
 
             }
             clickedButton == clockOutButton && clockOutButton.text == getString(R.string.start_break) -> {

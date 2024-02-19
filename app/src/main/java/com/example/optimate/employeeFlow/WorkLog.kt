@@ -1,13 +1,19 @@
 package com.example.optimate.employeeFlow
 
-data class WorkLog(
-    val uid: String,
-    val bid: String,
-    val name: String,
-    val day: String,
-    val clockIn: String = "",
-    val clockOut: String = "",
-    val breakStart: String = "",
-    val breakEnd: String = ""
-)
+import java.util.Date
+
+object WorkLog {
+    var uid: String = ""
+    var bid: String = ""
+    var name: String = ""
+    var clockInday: Date = Date()
+    var clockIn: String = ""
+    var clockOut: String = ""
+    var breakStart: String = ""
+    var breakEnd: String = ""
+
+
+}
+
+
 
