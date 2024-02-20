@@ -12,7 +12,7 @@ import com.example.optimate.R
 import java.text.SimpleDateFormat
 import java.util.*
 import android.content.SharedPreferences
-
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class ClockModule : AppCompatActivity() {
@@ -22,6 +22,23 @@ class ClockModule : AppCompatActivity() {
     private var isInClockInState = true
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var sharedPreferences: SharedPreferences
+    // Initialize Firestore
+    private val db = FirebaseFirestore.getInstance()
+    private var currentWorkLog: WorkLog? = null
+
+    // Function to save WorkLog object to Firestore
+    private fun saveWorkLogToFirestore(workLog: WorkLog) {
+        // Add the workLog object to Firestore
+        db.collection("workLogs")
+            .add(workLog)
+            .addOnSuccessListener { documentReference ->
+                println("DocumentSnapshot added with ID: ${documentReference.id}")
+                currentWorkLog = workLog // Update currentWorkLog after saving to Firestore
+            }
+            .addOnFailureListener { e ->
+                println("Error adding document: $e")
+            }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +50,11 @@ class ClockModule : AppCompatActivity() {
 
         // Load the clocking state
         isInClockInState = sharedPreferences.getBoolean("isInClockInState", true)
+        // Check if there's an existing work log
+        // If yes, load it and update UI accordingly
+        // Here, you need to implement a method to fetch the work log from Firestore based on your application logic
+        // I'll assume there's a method called fetchWorkLogFromFirestore() for this purpose
+        fetchWorkLogFromFirestore()
 
         // Update UI based on loaded clocking state
         if (!isInClockInState) {
@@ -62,12 +84,67 @@ class ClockModule : AppCompatActivity() {
 
         val viewHistoryButton: Button = findViewById(R.id.viewHistory)
 
-        viewHistoryButton.setOnClickListener {
+       /* viewHistoryButton.setOnClickListener {
             val intent = Intent(this, ViewHistory::class.java)
             startActivity(intent)
-        }
+        }*/
+    }
+
+    /*private fun fetchWorkLogFromFirestore(userId: String, businessId: String) {
+        // Construct the Firestore query to retrieve the work log document for the current user in the specified business
+        db.collection("workLogs")
+            .whereEqualTo("uid", userId) // Assuming 'uid' is the field that stores user ID
+            .whereEqualTo("bid", businessId) // Assuming 'bid' is the field that stores business ID
+            .get()
+            .addOnSuccessListener { documents ->
+                // Check if any document is returned
+                if (!documents.isEmpty) {
+                    // Get the first document (assuming there's only one work log per user in a business)
+                    val documentSnapshot = documents.documents[0]
+                    // Parse the data and update the currentWorkLog variable
+                    currentWorkLog = documentSnapshot.toObject(WorkLog::class.java)
+                    // You may also want to update the UI here based on the retrieved work log
+                } else {
+                    // No work log found for the user in the business, handle this case if needed
+                }
+            }
+            .addOnFailureListener { e ->
+                // Handle failure to fetch work log
+                println("Error fetching work log: $e")
+            }
+    }*/
+
+    private fun fetchWorkLogFromFirestore() {
+        // Get the current user's ID, replace this with your actual method to get the user ID
+        val userId = "asnckjsancjksankcas"
+        // Get the current business's ID, replace this with your actual method to get the business ID
+        val businessId = "business456"
+
+        // Construct the Firestore query to retrieve the work log document for the current user and business
+        db.collection("workLogs")
+            .whereEqualTo("UID", userId)
+            .whereEqualTo("BID", businessId)
+            .get()
+            .addOnSuccessListener { documents ->
+                // Check if any document is returned
+                if (!documents.isEmpty) {
+                    // Get the first document (assuming there's only one work log per user for a business)
+                    val documentSnapshot = documents.documents[0]
+                    // Parse the data and update the currentWorkLog variable
+                    currentWorkLog = documentSnapshot.toObject(WorkLog::class.java)
+                    // You may also want to update the UI here based on the retrieved work log
+                } else {
+                    // No work log found for the user and business, handle this case if needed
+                }
+            }
+            .addOnFailureListener { e ->
+                // Handle failure to fetch work log
+                println("Error fetching work log: $e")
+            }
     }
     private fun toggleClockState(clickedButton: Button) {
+
+
         // Toggle the clock state
         isInClockInState = !isInClockInState
 
@@ -90,6 +167,9 @@ class ClockModule : AppCompatActivity() {
                 clockOutButton.isEnabled = false
                 clockOutButton.backgroundTintList = getColorStateList(R.color.light_grey)
                 clockOutButton.setTextColor(getColor(R.color.grey))
+
+                // Save the work log to Firestore
+                currentWorkLog?.let { saveWorkLogToFirestore(it) }
 
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.start_break) -> {
@@ -120,6 +200,9 @@ class ClockModule : AppCompatActivity() {
                 clockOutButton.text = getString(R.string.clock_out)
                 clockOutButton.backgroundTintList = getColorStateList(R.color.light_grey)
                 clockOutButton.setTextColor(getColor(R.color.grey))
+
+                // Save the work log to Firestore
+                currentWorkLog?.let { saveWorkLogToFirestore(it) }
 
 
             }
