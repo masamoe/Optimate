@@ -1,5 +1,6 @@
 package com.example.optimate.employeeFlow
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.widget.TextView
 import com.example.optimate.R
 import java.text.SimpleDateFormat
 import java.util.*
+import android.content.SharedPreferences
 
 
 
@@ -19,6 +21,7 @@ class ClockModule : AppCompatActivity() {
     private lateinit var clockOutButton: Button
     private var isInClockInState = true
     private val handler = Handler(Looper.getMainLooper())
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,20 +29,19 @@ class ClockModule : AppCompatActivity() {
         digitalClock = findViewById(R.id.digitalClock)
         clockInButton = findViewById(R.id.clockIn)
         clockOutButton = findViewById(R.id.clockOut)
+        sharedPreferences = getSharedPreferences("ClockingState", Context.MODE_PRIVATE)
 
-        // Initially disable the Clock Out button
-        clockOutButton.isEnabled = false
+        // Load the clocking state
+        isInClockInState = sharedPreferences.getBoolean("isInClockInState", true)
 
-        // Set click listener for the Clock In button
-        clockInButton.setOnClickListener {
-            toggleClockState(clockInButton)
+        // Update UI based on loaded clocking state
+        if (!isInClockInState) {
+            // If not in clock in state, set clock out UI
+            clockInButton.text = getString(R.string.clock_out)
+            clockInButton.backgroundTintList = getColorStateList(R.color.light_red)
+            clockOutButton.text = getString(R.string.start_break)
+            clockOutButton.backgroundTintList = getColorStateList(R.color.light_yellow)
         }
-
-        // Set click listener for the Clock Out button
-        clockOutButton.setOnClickListener {
-            toggleClockState(clockOutButton)
-        }
-
 
         // Initialize the handler for the digital clock updates
         handler.post(object : Runnable {
@@ -49,6 +51,14 @@ class ClockModule : AppCompatActivity() {
             }
         })
 
+        // Set click listeners for Clock In and Clock Out buttons
+        clockInButton.setOnClickListener {
+            toggleClockState(clockInButton)
+        }
+
+        clockOutButton.setOnClickListener {
+            toggleClockState(clockOutButton)
+        }
 
         val viewHistoryButton: Button = findViewById(R.id.viewHistory)
 
@@ -57,12 +67,12 @@ class ClockModule : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
     private fun toggleClockState(clickedButton: Button) {
         // Toggle the clock state
         isInClockInState = !isInClockInState
 
-        // Update the UI based on the clock state
+        // Save the clocking state
+        sharedPreferences.edit().putBoolean("isInClockInState", isInClockInState).apply()
         when {
             clickedButton == clockInButton && clockInButton.text == getString(R.string.clock_in) -> {
                 // Clock In state
