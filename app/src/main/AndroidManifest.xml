@@ -45,7 +45,7 @@
         <activity android:name=".businessOwner.AddTitle" />
         <activity android:name=".businessOwner.AddTitleDetailsActivity" />
         <activity android:name=".businessOwner.EditTitleDetailsActivity" />
-        <activity android:name=".employeeFlow.ClockModule" />
+        <activity android:name=".loginAndRegister.LandingMain" />
         <activity android:name=".businessOwner.AccountsActivity" />
         <activity android:name=".businessOwner.AddAccountActivity" />
         <activity android:name=".businessOwner.EditAccountActivity" />
@@ -56,8 +56,11 @@
         <activity android:name=".employeeFlow.ViewHistory" />
         <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
+        <activity android:name=".employeeFlow.ClockModule" />
         <activity
             android:name=".loginAndRegister.LandingMain"
+
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
