@@ -2,22 +2,29 @@ package com.example.optimate.employeeFlow
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.TimeZone
 
 class RequestTimeOff : AppCompatActivity() {
 
     private var db = Firebase.firestore
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +34,11 @@ class RequestTimeOff : AppCompatActivity() {
         var endTime = ""
         var startDatetoDb: Date? = null
         var endDatetoDb: Date? = null
+        var reason = ""
+
+        val allDaySwitch: MaterialSwitch = findViewById(R.id.materialSwitch)
+
+
 
 
 
@@ -73,7 +85,7 @@ class RequestTimeOff : AppCompatActivity() {
             if (endDate != null && startDate.after(endDate)) {
                 outlinedStartDate.error = getString(R.string.start_date_after_end_date_error)
                 startDateEditText.text = null
-                startDatetoDb = null
+
             } else {
                 outlinedStartDate.error = null
                 startDateEditText.text = startDatePicker.headerText
@@ -90,12 +102,12 @@ class RequestTimeOff : AppCompatActivity() {
             if (endDate != null && startDate.after(endDate)) {
                 outlinedStartDate.error = getString(R.string.start_date_after_end_date_error)
                 startDateEditText.text = null // Clear text when error occurs
-                startDatetoDb = null
+
             } else {
                 outlinedStartDate.error = null
                 startDateEditText.text = startDatePicker.headerText
                 outlinedEndDate.error = null // Clear error for end date when start date is selected
-                startDatetoDb = null
+
 
             }
         }
@@ -109,11 +121,11 @@ class RequestTimeOff : AppCompatActivity() {
             if (startDate != null && endDate.before(startDate)) {
                 outlinedEndDate.error = getString(R.string.end_date_before_start_date_error)
                 endDateEditText.text = null // Clear text when error occurs
-                endDatetoDb = null
+
             } else {
                 outlinedEndDate.error = null
                 endDateEditText.text = endDatePicker.headerText
-                endDatetoDb = null
+
             }
         }
 
@@ -163,11 +175,37 @@ class RequestTimeOff : AppCompatActivity() {
             endTime = timeString
         }
 
+
+        val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
+        val autoCompleteTextView: AutoCompleteTextView = textInputLayout.editText as AutoCompleteTextView
+
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.reasons_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the AutoCompleteTextView
+            autoCompleteTextView.setAdapter(adapter)
+        }
+
+        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            reason = parent.getItemAtPosition(position).toString()
+            // Now the selected item is stored in the 'reason' variable
+        }
+
         sendButton.setOnClickListener{
             Toast.makeText(this, "button", Toast.LENGTH_SHORT).show()
+            if (allDaySwitch.isChecked) {
+                 startTime = "12:00 AM"
+                 endTime = "11:59 PM"
+            }
             if (startDatetoDb != null && endDatetoDb != null) {
+
                 Toast.makeText(this, "db", Toast.LENGTH_SHORT).show()
-                saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb!!, endDatetoDb!!)
+                saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb!!, endDatetoDb!!, reason )
 
             }else {
 
@@ -178,19 +216,20 @@ class RequestTimeOff : AppCompatActivity() {
 
     }
 
-    private fun saveTimeOffRequestToFirestore(startTime: String, endTime: String, startDate: Date, endDate: Date) {
+    private fun saveTimeOffRequestToFirestore(startTime: String, endTime: String, startDate: Date, endDate: Date, reason: String) {
 
 
 
         val timeOffRequest = hashMapOf(
-            //"startTime" to startTime,
-            //"endTime" to endTime,
+            "startTime" to startTime,
+            "endTime" to endTime,
             "uid" to "cankjlcnkjsanc",
             "bid" to "ncsakcnksajn",
             "name" to "sajknckjasn",
             "startDate" to startDate,
             "endDate" to endDate,
-            "status" to "pending"
+            "status" to "pending",
+            "Reason" to reason
         )
 
         db.collection("timeOffRequest")
