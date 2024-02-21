@@ -24,7 +24,7 @@ class DynamicLandingActivity : AppCompatActivity(){
 
         getAccountAccess(GlobalUserData.title, GlobalUserData.bid) {
             composeView.setContent {
-                DynamicLandingScreen(GlobalUserData.access)
+                DynamicLandingScreen(GlobalUserData.access, GlobalUserData.title)
             }
         }
     }
