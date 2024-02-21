@@ -3,16 +3,40 @@ package com.example.optimate.employeeFlow
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+
+enum class AvailabilityStatus {
+    MORNING,
+    EVENING,
+    ALL_DAY,
+    NOT_AVAILABLE
+}
 
 
 class Availability : AppCompatActivity() {
 
+    private var db = Firebase.firestore
+
     private var isEditing = false
+
+
+    private val availabilityMap = mutableMapOf(
+        "Monday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
+        "Tuesday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
+        "Wednesday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
+        "Thursday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
+        "Friday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
+        "Saturday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
+        "Sunday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE)
+    )
 
     private lateinit var toggleMondays: MaterialButtonToggleGroup
     private lateinit var toggleTuesdays: MaterialButtonToggleGroup
@@ -65,6 +89,8 @@ class Availability : AppCompatActivity() {
     private lateinit var sundaysM: MaterialButton
     private lateinit var sundaysE: MaterialButton
     private lateinit var sundaysA: MaterialButton
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,48 +158,277 @@ class Availability : AppCompatActivity() {
                 editButton.text = "Save"
                 editButton.icon = saveIcon
                 enableButtons(true)
+
             } else {
                 // Change to "Edit" and switch to edit icon
                 editButton.text = "Edit"
                 editButton.icon = editIcon
                 enableButtons(false)
+                updateUser(availabilityMap)
+
             }
         }
 
         // Monday
         disableEnableMondays.setOnCheckedChangeListener { buttonView, isChecked ->
             toggleState(isChecked, toggleMondays)
+            availabilityMap["Monday"]?.apply {
+                clear()
+                add(AvailabilityStatus.NOT_AVAILABLE)
+            }
         }
 
 // Tuesday
         disableEnableTuesdays.setOnCheckedChangeListener { buttonView, isChecked ->
             toggleState(isChecked, toggleTuesdays)
+            availabilityMap["Tuesday"]?.apply {
+                clear()
+                add(AvailabilityStatus.NOT_AVAILABLE)
+            }
         }
 
 // Wednesday
         disableEnableWednesdays.setOnCheckedChangeListener { buttonView, isChecked ->
             toggleState(isChecked, toggleWednesdays)
+            availabilityMap["Wednesday"]?.apply {
+                clear()
+                add(AvailabilityStatus.NOT_AVAILABLE)
+            }
         }
 
 // Thursday
         disableEnableThursdays.setOnCheckedChangeListener { buttonView, isChecked ->
             toggleState(isChecked, toggleThursdays)
+            availabilityMap["Thursday"]?.apply {
+                clear()
+                add(AvailabilityStatus.NOT_AVAILABLE)
+            }
         }
 
 // Friday
         disableEnableFridays.setOnCheckedChangeListener { buttonView, isChecked ->
             toggleState(isChecked, toggleFridays)
+            availabilityMap["Friday"]?.apply {
+                clear()
+                add(AvailabilityStatus.NOT_AVAILABLE)
+            }
         }
 
 // Saturday
         disableEnableSaturdays.setOnCheckedChangeListener { buttonView, isChecked ->
             toggleState(isChecked, toggleSaturdays)
+            availabilityMap["Saturday"]?.apply {
+                clear()
+                add(AvailabilityStatus.NOT_AVAILABLE)
+            }
         }
 
 // Sunday
         disableEnableSundays.setOnCheckedChangeListener { buttonView, isChecked ->
             toggleState(isChecked, toggleSundays)
+            availabilityMap["Sunday"]?.apply {
+                clear()
+                add(AvailabilityStatus.NOT_AVAILABLE)
+            }
         }
+
+
+        // Monday
+        mondaysM.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Monday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.MORNING)
+                }
+            }
+        }
+
+        mondaysE.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Monday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.EVENING)
+                }
+            }
+        }
+
+        mondaysA.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Monday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.ALL_DAY)
+                }
+            }
+        }
+
+// Tuesday
+        tuesdaysM.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Tuesday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.MORNING)
+                }
+            }
+        }
+
+        tuesdaysE.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Tuesday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.EVENING)
+                }
+            }
+        }
+
+        tuesdaysA.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Tuesday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.ALL_DAY)
+                }
+            }
+        }
+
+        // Wednesday
+        wednesdaysM.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Wednesday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.MORNING)
+                }
+            }
+        }
+
+        wednesdaysE.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Wednesday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.EVENING)
+                }
+            }
+        }
+
+        wednesdaysA.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Wednesday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.ALL_DAY)
+                }
+            }
+        }
+
+//Thursday
+        thursdaysM.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Thursday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.MORNING)
+                }
+            }
+        }
+
+        thursdaysE.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Thursday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.EVENING)
+                }
+            }
+        }
+
+        thursdaysA.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Thursday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.ALL_DAY)
+                }
+            }
+        }
+        // Friday
+        fridaysM.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Friday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.MORNING)
+                }
+            }
+        }
+
+        fridaysE.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Friday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.EVENING)
+                }
+            }
+        }
+
+        fridaysA.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Friday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.ALL_DAY)
+                }
+            }
+        }
+
+// Saturday
+        saturdaysM.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Saturday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.MORNING)
+                }
+            }
+        }
+
+        saturdaysE.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Saturday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.EVENING)
+                }
+            }
+        }
+
+        saturdaysA.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Saturday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.ALL_DAY)
+                }
+            }
+        }
+        // Sunday
+        sundaysM.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Sunday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.MORNING)
+                }
+            }
+        }
+
+        sundaysE.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Sunday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.EVENING)
+                }
+            }
+        }
+
+        sundaysA.setOnClickListener {
+            if (isEditing) {
+                availabilityMap["Sunday"]?.apply {
+                    clear()
+                    add(AvailabilityStatus.ALL_DAY)
+                }
+            }
+        }
+
+// Similarly, add click listeners for buttons representing other days and time slots...
+
 
 
 
@@ -181,9 +436,10 @@ class Availability : AppCompatActivity() {
 
     // Function to toggle the enabled state of a toggle and MaterialButtons based on the checked state of a checkbox
     private fun toggleState(isChecked: Boolean, toggle: MaterialButtonToggleGroup) {
+        if (!isChecked) {
+            toggle.clearChecked()
+        }
         toggle.isEnabled = isChecked
-
-
 
     }
 
@@ -220,6 +476,50 @@ class Availability : AppCompatActivity() {
             toggleList[i].isEnabled = enable && switchList[i].isChecked
             switchList[i].isEnabled = enable
         }
+    }
+
+
+    private fun updateUser(availabilityMap: MutableMap<String, MutableList<AvailabilityStatus>>) {
+        // Query the availability collection for documents with the specified UID
+        db.collection("availability")
+            .whereEqualTo("UID", GlobalUserData.uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // No matching document found for the provided UID
+                    Log.d("EditAccountActivity", "No matching account found. Creating new record.")
+                    // Create a new record with the provided UID and availability data
+                    val newAvailability = hashMapOf(
+                        "UID" to GlobalUserData.uid,
+                        "BID" to GlobalUserData.bid,
+                        "availability" to availabilityMap
+                    )
+                    db.collection("availability")
+                        .add(newAvailability)
+                        .addOnSuccessListener { documentReference ->
+                            Log.d("EditAccountActivity", "New record created with ID: ${documentReference.id}")
+                            // You may perform additional actions here if needed
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("EditAccountActivity", "Error creating new record", e)
+                        }
+                    return@addOnSuccessListener
+                }
+
+                // If at least one document is found, proceed with updating the existing record
+                val account = documents.first()
+                account.reference.update("availability", availabilityMap)
+                    .addOnSuccessListener {
+                        Log.d("EditAccountActivity", "Account updated successfully")
+                        // You may perform additional actions here if needed
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("EditAccountActivity", "Error updating account", e)
+                    }
+            }
+            .addOnFailureListener { e ->
+                Log.e("EditAccountActivity", "Error fetching account", e)
+            }
     }
 
 }
