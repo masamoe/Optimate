@@ -64,10 +64,10 @@ private val businessOwnerAccessList= listOf(
     "Requests",
 )
 @Composable
-fun DynamicLandingScreen(accessList: List<String>){
+fun DynamicLandingScreen(accessList: List<String>, title:String){
     Scaffold(
         content = {innerPadding ->
-            if (accessList.isEmpty()){
+            if (title == "businessOwner"){
                 ButtonList(AccessList = businessOwnerAccessList)
                 Log.d("compose", "access: $accessList")
             }else {
@@ -186,6 +186,6 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
 @Preview
 @Composable
 fun BusinessOwnerButtonListPreview() {
-    DynamicLandingScreen(managerAccessList)
+    DynamicLandingScreen(managerAccessList, GlobalUserData.title)
 }
 
