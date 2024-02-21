@@ -57,7 +57,13 @@
         <activity android:name=".businessOwner.AddRevenueOrExpenseActivity" />
         <activity android:name=".businessOwner.FinancesDetailActivity" />
         <activity android:name=".businessOwner.SchedulePlannerActivity" />
-        <activity android:name=".employeeFlow.RequestTimeOff" />
+        <activity android:name=".employeeFlow.RequestTimeOff" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LANDING" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".employeeFlow.ViewHistory" />
         <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
