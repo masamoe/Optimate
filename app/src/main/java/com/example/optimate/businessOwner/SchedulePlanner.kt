@@ -1,55 +1,109 @@
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+package com.example.optimate.businessOwner
+
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 
-data class Shift(val id: Int, val day: String, val employees: List<String>)
 
-val shiftsData = listOf(
-    Shift(1, "Monday", listOf("Alice", "Bob")),
-    Shift(2, "Tuesday", listOf("Charlie", "David")),
+data class Shift( val day: String, val startTime: String, val endTime: String, val employees: List<String>)
+
+var shiftsData = listOf(
+    Shift("2024-2-20", "08:00", "12:00:00", listOf("Alice", "Bob")),
+    Shift("2024-2-21", "08:00", "12:00:00", listOf("Alice", "Bob")),
     // Add more shifts as needed
 )
 
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleManagerPage() {
-    val shiftsData by remember { mutableStateOf(shiftsData) }
-    var selectedPage by remember { mutableStateOf(0) }
+    val pagerState = rememberPagerState()
 
-    // Use a ViewPager to enable swiping between days
-    ViewPager(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        count = shiftsData.size,
-        currentPage = selectedPage,
-        onPageChanged = { newPage ->
-            selectedPage = newPage
+    Scaffold(
+        topBar = { XmlTopBar(titleText = "Scheduler") },
+        content = { innerPadding ->
+            HorizontalPager(
+                state = pagerState,
+                count = shiftsData.size,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(innerPadding)
+            ) { page ->
+                Column(modifier = Modifier.padding(innerPadding)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+
+                    ) {
+                        ShiftDate(shift = shiftsData[page])
+                    }
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween) {
+                            ShiftsPage(shift = shiftsData[page])
+                        }
+                    }
+
+            }
         }
-    ) { page ->
-        ShiftsPage(shifts = shiftsData[page])
+    )
+}
+
+@Composable
+fun ShiftsPage(shift: Shift) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
+    ) {
+        ShiftCard(shift = shift)
     }
 }
 
 @Composable
-fun ShiftsPage(shifts: Shift) {
-    LazyColumn {
-        items(1) {
-            ShiftCard(shift = shifts)
+fun ShiftDate(shift: Shift) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
+    ) {
+        DateCard(shift = shift)
+    }
+}
+
+@Composable
+fun DateCard(shift: Shift) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(text = shift.day, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -71,24 +125,6 @@ fun ShiftCard(shift: Shift) {
             for (employee in shift.employees) {
                 Text(text = "- $employee")
             }
-        }
-    }
-}
-
-@Composable
-fun ViewPager(
-    modifier: Modifier = Modifier,
-    count: Int,
-    currentPage: Int,
-    onPageChanged: (Int) -> Unit,
-    content: @Composable (page: Int) -> Unit
-) {
-    LazyColumn(
-        modifier = modifier
-            .horizontalScroll(rememberScrollState())
-    ) {
-        items(count) { page ->
-            content(page)
         }
     }
 }

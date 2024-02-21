@@ -22,9 +22,9 @@ class ProfilePage : AppCompatActivity() {
 // Set OnClickListener for View Availability Button
 
         // Set OnClickListener for Edit Profile Button
-        editProfileBtn.setOnClickListener {
-            startActivity(Intent(this,EditProfile::class.java))
-        }
+//        editProfileBtn.setOnClickListener {
+//            startActivity(Intent(this,EditProfile::class.java))
+//        }
 
         viewAvailabilityBtn.setOnClickListener {
             startActivity(Intent(this,Availability::class.java))
