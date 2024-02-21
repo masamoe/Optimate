@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,14 +29,15 @@ import com.google.accompanist.pager.rememberPagerState
 data class Shift( val day: String, val startTime: String, val endTime: String, val employees: List<String>)
 
 var shiftsData = listOf(
-    Shift("2024-2-20", "08:00", "12:00:00", listOf("Alice", "Bob")),
-    Shift("2024-2-21", "08:00", "12:00:00", listOf("Alice", "Bob")),
+    Shift("2024-2-20", "08:00", "12:00", listOf("Alice", "Bob")),
+    Shift("2024-2-20", "12:00", "6:00", listOf("Alice", "Bob")),
+    Shift("2024-2-21", "08:00", "12:00", listOf("Alice", "Bob")),
     // Add more shifts as needed
 )
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleManagerPage() {
+fun SchedulePlanner() {
     val pagerState = rememberPagerState()
 
     Scaffold(
@@ -44,7 +47,7 @@ fun ScheduleManagerPage() {
                 state = pagerState,
                 count = shiftsData.size,
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .fillMaxSize()
                     .padding(innerPadding)
             ) { page ->
                 Column(modifier = Modifier.padding(innerPadding)) {
@@ -94,10 +97,11 @@ fun ShiftDate(shift: Shift) {
 
 @Composable
 fun DateCard(shift: Shift) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
             modifier = Modifier
@@ -110,16 +114,18 @@ fun DateCard(shift: Shift) {
 
 @Composable
 fun ShiftCard(shift: Shift) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .fillMaxHeight(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Text(text = shift.day, fontWeight = FontWeight.Bold)
+            Text(text = "${shift.startTime} - ${shift.endTime}", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Employees:")
             for (employee in shift.employees) {
@@ -131,6 +137,6 @@ fun ShiftCard(shift: Shift) {
 
 @Preview(showBackground = true)
 @Composable
-fun ScheduleManagerPagePreview() {
-    ScheduleManagerPage()
+fun SchedulePlannerPreview() {
+    SchedulePlanner()
 }

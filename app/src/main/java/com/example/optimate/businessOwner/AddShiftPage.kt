@@ -1,11 +1,17 @@
 package com.example.optimate.businessOwner
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +30,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddShiftPage(
+    employees: List<String>, // List of employees to display in the scrollable list
     onShiftAdded: (Shift) -> Unit
 ) {
     var selectedDate by remember { mutableStateOf<String?>(null) }
@@ -35,14 +42,6 @@ fun AddShiftPage(
         topBar = { XmlTopBar(titleText = "Scheduler") },
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-                TextField(
-                    value = selectedEmployee ?: "",
-                    onValueChange = { selectedEmployee = it },
-                    label = { Text("Select Employee") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                )
                 TextField(
                     value = selectedDate ?: "",
                     onValueChange = { selectedDate = it },
@@ -67,8 +66,35 @@ fun AddShiftPage(
                         .fillMaxWidth()
                         .padding(8.dp)
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .weight(1f)
+                        .height(350.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                ) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        items(items = employees) { employee ->
+                            Text(
+                                text = employee,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        selectedEmployee = employee
+                                    }
+                                    .padding(8.dp)
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
                 Button(
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp),
                     onClick = {
                         val newShift = Shift(
                             day = selectedDate ?: "Unknown",
@@ -78,10 +104,13 @@ fun AddShiftPage(
                         )
                         onShiftAdded(newShift)
                     },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp)
                 ) {
                     Text("Save Shift")
                 }
+
             }
         }
     )
@@ -90,7 +119,9 @@ fun AddShiftPage(
 @Preview(showBackground = true)
 @Composable
 fun AddShiftPagePreview() {
+    val employees = listOf("Employee 1", "Employee 2", "Employee 3") // Sample list of employees
     AddShiftPage(
+        employees = employees,
         onShiftAdded = {}
     )
 }

@@ -27,7 +27,7 @@ class SchedulePlannerActivity  : AppCompatActivity() {
             val amountWithDate = remember { mutableStateListOf<AmountWithDate>() }
 
             // Update the UI with the latest values
-            ScheduleManagerPage(
+            SchedulePlanner(
 
             )
         }
