@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputLayout
@@ -223,9 +224,9 @@ class RequestTimeOff : AppCompatActivity() {
         val timeOffRequest = hashMapOf(
             "startTime" to startTime,
             "endTime" to endTime,
-            "uid" to "cankjlcnkjsanc",
-            "bid" to "ncsakcnksajn",
-            "name" to "sajknckjasn",
+            "uid" to GlobalUserData.uid,
+            "bid" to GlobalUserData.bid,
+            "name" to GlobalUserData.name,
             "startDate" to startDate,
             "endDate" to endDate,
             "status" to "pending",
