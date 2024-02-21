@@ -118,7 +118,7 @@ class ClockModule : AppCompatActivity() {
         // Get the current user's ID, replace this with your actual method to get the user ID
         val userId = "asnckjsancjksankcas"
         // Get the current business's ID, replace this with your actual method to get the business ID
-        val businessId = "business456"
+        val businessId = "kasjnckjsanjcksan"
 
         // Construct the Firestore query to retrieve the work log document for the current user and business
         db.collection("workLogs")
@@ -150,6 +150,10 @@ class ClockModule : AppCompatActivity() {
 
         // Save the clocking state
         sharedPreferences.edit().putBoolean("isInClockInState", isInClockInState).apply()
+
+        // Get current date and time
+        val currentDateAndTime = Calendar.getInstance().time
+
         when {
             clickedButton == clockInButton && clockInButton.text == getString(R.string.clock_in) -> {
                 // Clock In state
@@ -158,6 +162,9 @@ class ClockModule : AppCompatActivity() {
                 clockOutButton.backgroundTintList = getColorStateList(R.color.light_red)
                 clockOutButton.setTextColor(getColor(R.color.black))
                 clockOutButton.isEnabled = true
+
+                // Save clock in time to work log
+                currentWorkLog?.clockIn = getCurrentTime()
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.clock_out) -> {
                 // Clock In state
@@ -169,6 +176,7 @@ class ClockModule : AppCompatActivity() {
                 clockOutButton.setTextColor(getColor(R.color.grey))
 
                 // Save the work log to Firestore
+                currentWorkLog?.clockOut = getCurrentTime()
                 currentWorkLog?.let { saveWorkLogToFirestore(it) }
 
             }
@@ -202,6 +210,7 @@ class ClockModule : AppCompatActivity() {
                 clockOutButton.setTextColor(getColor(R.color.grey))
 
                 // Save the work log to Firestore
+                currentWorkLog?.clockOut = getCurrentTime()
                 currentWorkLog?.let { saveWorkLogToFirestore(it) }
 
 
@@ -221,6 +230,11 @@ class ClockModule : AppCompatActivity() {
 
         // Update the TextView with the formatted time
         digitalClock.text = formattedTime
+    }
+
+    private fun getCurrentTime(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
     override fun onDestroy() {
