@@ -52,25 +52,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/startBtn"
         style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="177dp"
+        android:layout_width="200dp"
         android:layout_height="67dp"
         android:backgroundTint="@color/light_green"
-        android:elevation="10dp"
-        android:fontFamily="sans-serif-black"
         android:insetLeft="0dp"
+        android:elevation="12dp"
         android:text="@string/getStart"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:cornerRadius="10dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:strokeColor="@color/dark_purple"
-        app:strokeWidth="1dp" />
+
+         />
 
     <ImageView
         android:id="@+id/optimateLogo"

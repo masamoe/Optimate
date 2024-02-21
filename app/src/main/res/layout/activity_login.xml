@@ -58,43 +58,41 @@
         app:layout_constraintTop_toTopOf="@+id/guideline12"
         app:srcCompat="@drawable/optimate" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/loginBtn"
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:backgroundTint="@color/light_green"
         android:elevation="10dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/login"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:cornerRadius="10dp"
+
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:strokeColor="@color/dark_purple"
-        app:strokeWidth="1dp" />
+         />
 
     <Button
         android:id="@+id/registerBtn"
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:backgroundTint="@color/light_green"
         android:elevation="10dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/register"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:cornerRadius="10dp"
+
         app:layout_constraintBottom_toTopOf="@+id/guideline9"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:strokeColor="@color/dark_purple"
-        app:strokeWidth="1dp" />
+         />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10"
@@ -126,7 +124,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:ignore="TextContrastCheck"
-            android:hint="@string/email"/>
+            android:hint="@string/email"
+            android:imeOptions="actionNext"
+            android:singleLine="true"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -168,16 +168,30 @@
         android:id="@+id/forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/forgotPassword"
         android:clickable="true"
+        android:focusable="true"
+        android:text="@string/forgotPassword"
         android:textColor="#007FFF"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
+        app:layout_constraintHorizontal_bias="0.511"
         app:layout_constraintStart_toStartOf="@+id/guideline16"
         app:layout_constraintTop_toTopOf="@+id/guideline6"
-        app:layout_constraintVertical_bias="0.0"
-        tools:ignore="TextContrastCheck"
-        android:focusable="true" />
+        app:layout_constraintVertical_bias="0.166"
+        tools:ignore="TextContrastCheck" />
+
+    <CheckBox
+        android:id="@+id/rememberPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Remember password"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/forgotPassword"
+        app:layout_constraintHorizontal_bias="0.373"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginPasswordInputLayout"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

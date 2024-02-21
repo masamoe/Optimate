@@ -1,6 +1,8 @@
 package com.example.optimate.loginAndRegister
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -11,7 +13,6 @@ import com.example.optimate.R
 import com.example.optimate.businessOwner.BusinessLanding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-
 import com.google.firebase.firestore.firestore
 import com.google.firebase.Firebase
 import java.util.Date
@@ -63,6 +64,23 @@ class Login : AppCompatActivity(){
         forgotPasswordClk.setOnClickListener {
             startActivity(Intent(this, PasswordReset::class.java))
         }
+
+        // Add a TextWatcher to the email EditText
+        emailEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                // Check for spaces and remove them
+                if (s != null && s.contains(" ")) {
+                    val trimmedText = s.toString().replace(" ", "")
+                    emailEditText.setText(trimmedText)
+                    emailEditText.setSelection(trimmedText.length)
+                }
+            }
+        })
+
     }
 
     private fun signInWithEmail(email: String, password: String) {
