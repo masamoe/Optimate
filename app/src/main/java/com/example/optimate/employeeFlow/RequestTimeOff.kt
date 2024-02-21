@@ -222,6 +222,7 @@ class RequestTimeOff : AppCompatActivity() {
 
 
         val timeOffRequest = hashMapOf(
+            "dateOfRequest" to Date(),
             "startTime" to startTime,
             "endTime" to endTime,
             "uid" to GlobalUserData.uid,
