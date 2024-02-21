@@ -198,14 +198,14 @@ class RequestTimeOff : AppCompatActivity() {
         }
 
         sendButton.setOnClickListener{
-            Toast.makeText(this, "button", Toast.LENGTH_SHORT).show()
+
             if (allDaySwitch.isChecked) {
                  startTime = "12:00 AM"
                  endTime = "11:59 PM"
             }
             if (startDatetoDb != null && endDatetoDb != null) {
 
-                Toast.makeText(this, "db", Toast.LENGTH_SHORT).show()
+
                 saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb!!, endDatetoDb!!, reason )
 
             }else {
