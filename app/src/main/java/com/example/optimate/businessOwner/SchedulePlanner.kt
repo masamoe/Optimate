@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
@@ -66,7 +67,29 @@ fun SchedulePlanner() {
                             horizontalArrangement = Arrangement.SpaceEvenly
 
                         ) {
-                            ShiftDate(shift = shiftsData[page])
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .horizontalScroll(rememberScrollState())
+                            ) {
+                                ElevatedCard(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                    ) {
+                                        Text(
+                                            text = shiftsData[page].day,
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier
+                                                .fillMaxWidth())
+                                    }
+                                }
+                            }
                         }
                         Row(
                             modifier = Modifier
@@ -84,7 +107,7 @@ fun SchedulePlanner() {
         }
     )
 }
-
+//shift = shiftsData[page]
 @Composable
 fun ShiftsPage(shift: Shift) {
     Column(
@@ -136,10 +159,11 @@ fun ShiftCard(shift: Shift) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
+                .fillMaxWidth()
         ) {
             Text(text = "${shift.startTime} - ${shift.endTime}", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Employees:")
+            Text(text = "Employees:",modifier = Modifier.fillMaxWidth())
             for (employee in shift.employees) {
                 Text(text = "- $employee")
             }

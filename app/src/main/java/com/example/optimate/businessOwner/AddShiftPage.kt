@@ -48,7 +48,7 @@ fun AddShiftPage(
                     label = { Text("Select Date") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(16.dp)
                 )
                 TextField(
                     value = startTime,
@@ -56,7 +56,7 @@ fun AddShiftPage(
                     label = { Text("Start Time") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(16.dp)
                 )
                 TextField(
                     value = endTime,
@@ -64,7 +64,7 @@ fun AddShiftPage(
                     label = { Text("End Time") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(16.dp)
                 )
                 ElevatedCard(
                     modifier = Modifier
