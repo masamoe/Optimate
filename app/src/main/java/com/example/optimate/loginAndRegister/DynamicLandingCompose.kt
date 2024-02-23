@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults.elevation
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -37,8 +36,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.optimate.R
 import com.example.optimate.businessOwner.AccountsActivity
+import com.example.optimate.businessOwner.AddRevenueOrExpenseActivity
 import com.example.optimate.businessOwner.FinancesActivity
+import com.example.optimate.businessOwner.SchedulePlannerActivity
 import com.example.optimate.businessOwner.TitlesActivity
+import com.example.optimate.employeeFlow.ClockModule
+import com.example.optimate.employeeFlow.RequestTimeOff
+import com.example.optimate.employeeFlow.ScheduleModule
+import com.example.optimate.employeeFlow.ViewTimeOffRequests
+
 
 private val managerAccessList = listOf(
     "Scheduling",
@@ -111,6 +117,15 @@ fun ButtonList(AccessList: List<String>) {
                             "Titles" -> context.startActivity(Intent(context, TitlesActivity::class.java))
                             "Accounts" -> context.startActivity(Intent(context, AccountsActivity::class.java))
                             "Finances" -> context.startActivity(Intent(context, FinancesActivity::class.java))
+                            "Scheduling" -> context.startActivity(Intent(context,SchedulePlannerActivity::class.java))
+                            "Requests" -> context.startActivity(Intent(context, ViewTimeOffRequests::class.java))
+                            "Clock-in/out" -> context.startActivity(Intent(context, ClockModule::class.java))
+                            "Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
+                            "Add Expense" -> context.startActivity(Intent(context, AddRevenueOrExpenseActivity::class.java))
+                            "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
+                            "View Employees" ->  context.startActivity(Intent(context, AccountsActivity::class.java))
+                            "Request Time-off" -> context.startActivity(Intent(context, RequestTimeOff::class.java))
+
                         }},
                         modifier = Modifier.fillMaxWidth()
                     )
