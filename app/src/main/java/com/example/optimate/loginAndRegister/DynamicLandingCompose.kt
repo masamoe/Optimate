@@ -39,6 +39,7 @@ import com.example.optimate.R
 import com.example.optimate.businessOwner.AccountsActivity
 import com.example.optimate.businessOwner.FinancesActivity
 import com.example.optimate.businessOwner.TitlesActivity
+import com.example.optimate.employeeFlow.ClockModule
 
 private val managerAccessList = listOf(
     "Scheduling",
@@ -111,6 +112,8 @@ fun ButtonList(AccessList: List<String>) {
                             "Titles" -> context.startActivity(Intent(context, TitlesActivity::class.java))
                             "Accounts" -> context.startActivity(Intent(context, AccountsActivity::class.java))
                             "Finances" -> context.startActivity(Intent(context, FinancesActivity::class.java))
+                            "Clock-in/out" -> context.startActivity(Intent(context, ClockModule::class.java))
+
                         }},
                         modifier = Modifier.fillMaxWidth()
                     )

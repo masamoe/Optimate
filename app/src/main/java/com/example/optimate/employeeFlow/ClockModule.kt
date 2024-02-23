@@ -13,11 +13,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.content.SharedPreferences
 import android.util.Log
+import android.widget.ImageView
+import android.widget.Toast
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.gson.Gson
 import java.time.format.DateTimeFormatter
 class ClockModule : AppCompatActivity() {
     private lateinit var digitalClock: TextView
@@ -28,21 +34,38 @@ class ClockModule : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var sharedPreferences: SharedPreferences
     private val db = Firebase.firestore
+    private lateinit var uid: String // Assuming this is set after user logs in
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clock_module)
+
         digitalClock = findViewById(R.id.digitalClock)
         clockInButton = findViewById(R.id.clockIn)
         clockOutButton = findViewById(R.id.clockOut)
         sharedPreferences = getSharedPreferences("ClockingState", Context.MODE_PRIVATE)
 
-        // Load the clocking and break states
-        isInClockInState = sharedPreferences.getBoolean("isInClockInState", true)
-        isOnBreak = sharedPreferences.getBoolean("isOnBreak", false)
+        uid = GlobalUserData.uid // Set the current user's ID
+
+        // Load the clocking and break states for the current user
+        isInClockInState = sharedPreferences.getBoolean("${uid}_isInClockInState", true)
+        isOnBreak = sharedPreferences.getBoolean("${uid}_isOnBreak", false)
 
         // Update UI based on loaded states
         updateButtonStates()
+
+        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
+        homeBtn.setOnClickListener {
+            val intent = Intent(this, DynamicLandingActivity::class.java)
+            startActivity(intent)
+        }
+
+        val viewHistoryBtn = findViewById<Button>(R.id.viewHistory)
+        viewHistoryBtn.setOnClickListener {
+            val intent = Intent(this, ViewHistory::class.java)
+            startActivity(intent)
+        }
 
         // Initialize the handler for the digital clock updates
         handler.post(object : Runnable {
@@ -119,8 +142,8 @@ class ClockModule : AppCompatActivity() {
 
         // Save the clocking and break states
         sharedPreferences.edit().apply {
-            putBoolean("isInClockInState", isInClockInState)
-            putBoolean("isOnBreak", isOnBreak)
+            putBoolean("${uid}_isInClockInState", isInClockInState)
+            putBoolean("${uid}_isOnBreak", isOnBreak)
             apply()
         }
 

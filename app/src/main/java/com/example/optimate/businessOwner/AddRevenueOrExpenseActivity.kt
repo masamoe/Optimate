@@ -88,7 +88,6 @@ class AddRevenueOrExpenseActivity: AppCompatActivity() {
         }
     }
     private fun updateLabel(calendar: Calendar) {
-        val myFormat = "MM/dd/yy" // Your desired format
         val sdf = SimpleDateFormat("MM/dd/yy", Locale.getDefault()).apply {
             timeZone = TimeZone.getDefault()
         }

@@ -18,4 +18,12 @@
         <item name="boxStrokeColor">@color/dark_purple</item>
     </style>
 
+    <style name="CustomDatePickerStyle" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <!-- Customize other dialog properties if needed -->
+        <item name="android:windowMinWidthMajor">50%</item>
+        <item name="android:windowMinWidthMinor">50%</item>
+    </style>
+
+
+
 </resources>
