@@ -93,5 +93,6 @@
     <string name="description">Description</string>
     <string name="date">Date</string>
     <string name="clock_title">Clock In / Out</string>
+    <string name="already_clocked">You have already clocked out</string>
 
 </resources>

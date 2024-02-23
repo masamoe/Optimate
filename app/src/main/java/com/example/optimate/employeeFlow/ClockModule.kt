@@ -39,6 +39,7 @@ class ClockModule : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_clock_module)
 
         digitalClock = findViewById(R.id.digitalClock)
@@ -52,6 +53,7 @@ class ClockModule : AppCompatActivity() {
         isInClockInState = sharedPreferences.getBoolean("${uid}_isInClockInState", true)
         isOnBreak = sharedPreferences.getBoolean("${uid}_isOnBreak", false)
 
+        checkForExistingClockIn()
         // Update UI based on loaded states
         updateButtonStates()
 
@@ -171,6 +173,7 @@ class ClockModule : AppCompatActivity() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
+                    // No documents for today, create a new work log
                     val workLog = hashMapOf(
                         "uid" to uid,
                         "bid" to bid,
@@ -180,27 +183,23 @@ class ClockModule : AppCompatActivity() {
                         .add(workLog)
                         .addOnSuccessListener { documentReference ->
                             Log.d("WorkLog", "DocumentSnapshot added with ID: ${documentReference.id}")
+                            checkForExistingClockIn()
                         }
                         .addOnFailureListener { e ->
                             Log.w("WorkLog", "Error adding document", e)
                         }
                 } else {
+                    // Update existing document with the new entry
                     val documentSnapshot = documents.documents[0]
-                    val existingData = documentSnapshot.get(currentDate)
+                    val existingData = documentSnapshot.get(currentDate) as? List<*>
 
-                    if (existingData == null) {
-                        // currentDate key does not exist, create a new list for currentDate
-                        documentSnapshot.reference.update(currentDate, listOf(entry))
-                    } else {
-                        // currentDate key exists, append to its list
-                        val clocks: MutableList<HashMap<String, String>> = if (existingData is List<*>) {
-                            existingData.mapNotNull { it as? HashMap<String, String> }.toMutableList()
-                        } else {
-                            mutableListOf()
-                        }
+                    val updatedData = existingData?.toMutableList() ?: mutableListOf()
+                    updatedData.add(entry)
 
-                        clocks.add(entry)
-                        documentSnapshot.reference.update(currentDate, clocks)
+                    documentSnapshot.reference.update(mapOf(
+                        currentDate to updatedData
+                    )).addOnCompleteListener {
+                        checkForExistingClockIn()
                     }
                 }
             }
@@ -208,6 +207,48 @@ class ClockModule : AppCompatActivity() {
                 Log.w("WorkLog", "Error getting documents.", e)
             }
     }
+
+    // a function to check if the user has already clocked out, dont allow them to clock in again for the day
+    // set the clockin button to grey and disable it
+    private fun checkForExistingClockIn() {
+        val bid = GlobalUserData.bid
+        val uid = GlobalUserData.uid
+        val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+
+        db.collection("workLogs")
+            .whereEqualTo("uid", uid)
+            .whereEqualTo("bid", bid)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // No documents for today, enable clock in
+                    clockInButton.isEnabled = true
+                } else {
+                    //check if the user has already clocked out for current date,check current date list that has the clockout key
+                    val documentSnapshot = documents.documents[0]
+                    val existingData = documentSnapshot.get(currentDate) as? List<*>
+                    if (existingData != null) {
+                        for (entry in existingData) {
+                            if (entry is Map<*, *>) {
+                                if (entry.containsKey("clockOut")) {
+                                    // User has already clocked out, disable clock in
+                                    clockInButton.isEnabled = false
+                                    clockInButton.backgroundTintList = getColorStateList(R.color.light_grey)
+                                    clockInButton.setTextColor(getColor(R.color.grey))
+                                    clockInButton.text = getString(R.string.already_clocked)
+                                    return@addOnSuccessListener
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("WorkLog", "Error getting documents.", e)
+            }
+
+    }
+
 
     private fun updateDigitalClock() {
         // Get the current time
