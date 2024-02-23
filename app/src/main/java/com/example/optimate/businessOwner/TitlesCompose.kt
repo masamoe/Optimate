@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.optimate.R
+import com.example.optimate.employeeFlow.NoDataFound
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 
 data class Title(val title: String, val category: String)
@@ -60,15 +61,22 @@ fun TitlesScreen(titles: List<Title>) {
         topBar = { XmlTopBar() },
         content = { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
-                TitlesList(titles) { title ->
-                    // This lambda is called when a title is clicked
-                    val intent = Intent(context, EditTitleDetailsActivity::class.java).apply {
-                        putExtra("title_name", title.title) // Pass the title name to the EditTitleDetailsActivity
-                        Log.d("TitleTransfer", "Sending title_name: ${title.title}")
+                if (titles.isEmpty()) {
+                    NoDataFound(text = "No titles found")
+                } else {
+                    TitlesList(titles) { title ->
+                        // This lambda is called when a title is clicked
+                        val intent = Intent(context, EditTitleDetailsActivity::class.java).apply {
+                            putExtra("title_name", title.title) // Pass the title name to the EditTitleDetailsActivity
+                            Log.d("TitleTransfer", "Sending title_name: ${title.title}")
+                        }
+                        context.startActivity(intent)
                     }
-                    context.startActivity(intent)
+
                 }
-                AddTitleButton(modifier = Modifier.align(Alignment.TopEnd).padding(top = 5.dp)) // Button appears over the list
+                AddTitleButton(modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 5.dp)) // Button appears over the list
             }
         }
     )
@@ -113,7 +121,9 @@ fun AddTitleButton(modifier: Modifier = Modifier) {
                         addTitleBtn.startActivity(intent)
                       },
             colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
-            modifier = modifier.padding(6.dp).height(40.dp),
+            modifier = modifier
+                .padding(6.dp)
+                .height(40.dp),
             //add shadow to the button
             elevation = ButtonDefaults.elevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
         ) {
@@ -159,7 +169,7 @@ fun TitleRow(title: Title, index: Int, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable (onClick = onClick ),
+            .clickable(onClick = onClick),
         elevation = 2.dp,
         backgroundColor = backgroundColor
     ) {
@@ -193,22 +203,15 @@ fun TitleRow(title: Title, index: Int, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun TitlesScreenPreview() {
+    val emptyList= emptyList<Title>()
     val sampleTitles = listOf(
-        Title("Manager", "Managers:"),
-        Title("Head Chef", "Managers:"),
-        Title("Server", "Employees:"),
-        Title("Line Cook", "Employees:"),
-        Title("Dishwasher", "Employees:"),
-        Title("Manager", "Managers:"),
-        Title("Head Chef", "Managers:"),
-        Title("Server", "Employees:"),
-        Title("Line Cook", "Employees:"),
-        Title("Dishwasher", "Employees:"),
-        Title("Manager", "Managers:"),
-        Title("Head Chef", "Managers:"),
-        Title("Server", "Employees:"),
-        Title("Line Cook", "Employees:"),
-        Title("Dishwasher", "Employees:")
+        Title("Manager", "Management"),
+        Title("Supervisor", "Management"),
+        Title("Cashier", "Sales"),
+        Title("Sales Associate", "Sales"),
+        Title("Stock Clerk", "Sales"),
+        Title("Janitor", "Maintenance"),
+        Title("Security Guard", "Maintenance"),
     )
     MaterialTheme {
         TitlesScreen(sampleTitles)

@@ -37,8 +37,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.optimate.employeeFlow.NoDataFound
 
 data class Account(val name: String, val title: String, val uid: String)
 @Composable
@@ -56,13 +58,17 @@ fun AccountsScreen(accounts: List<Account>) {
                 ) {
                     AddAccountButton()
                 }
-                AccountsList(accounts) { account ->
-                    val intent = Intent(context, EditAccountActivity::class.java).apply {
-                        putExtra("account_name", account.name)
-                        putExtra("account_title", account.title)
-                        putExtra("account_uid", account.uid)
+                if (accounts.isEmpty()) {
+                    NoDataFound("No accounts found")
+                } else {
+                    AccountsList(accounts) { account ->
+                        val intent = Intent(context, EditAccountActivity::class.java).apply {
+                            putExtra("account_name", account.name)
+                            putExtra("account_title", account.title)
+                            putExtra("account_uid", account.uid)
+                        }
+                        context.startActivity(intent)
                     }
-                    context.startActivity(intent)
                 }
             }
         }
@@ -144,4 +150,34 @@ fun AccountRow(account: Account, index: Int, onClick:() ->Unit){
              )
          }
      }
+}
+
+@Preview
+@Composable
+fun PreviewAccountsScreen() {
+
+    val emptyList = emptyList<Account>()
+    val accounts = listOf(
+        Account("John Doe", "Accountant", "uid1"),
+        Account("Jane Doe", "Accountant", "uid2"),
+        Account("John Smith", "Accountant", "uid3"),
+        Account("Jane Smith", "Accountant", "uid4"),
+        Account("John Doe", "Accountant", "uid5"),
+        Account("Jane Doe", "Accountant", "uid6"),
+        Account("John Smith", "Accountant", "uid7"),
+        Account("Jane Smith", "Accountant", "uid8"),
+        Account("John Doe", "Accountant", "uid9"),
+        Account("Jane Doe", "Accountant", "uid10"),
+        Account("John Smith", "Accountant", "uid11"),
+        Account("Jane Smith", "Accountant", "uid12"),
+        Account("John Doe", "Accountant", "uid13"),
+        Account("Jane Doe", "Accountant", "uid14"),
+        Account("John Smith", "Accountant", "uid15"),
+        Account("Jane Smith", "Accountant", "uid16"),
+        Account("John Doe", "Accountant", "uid17"),
+        Account("Jane Doe", "Accountant", "uid18"),
+        Account("John Smith", "Accountant", "uid19"),
+        Account("Jane Smith", "Accountant", "uid20"),
+    )
+    AccountsScreen(emptyList)
 }

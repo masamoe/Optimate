@@ -129,6 +129,7 @@ class ViewHistory : AppCompatActivity() {
                 // If the filteredWorkLog is not empty, add it to the filteredWorkLogsList
                 if (filteredWorkLog.isNotEmpty()) {
                     filteredWorkLogsList.add(filteredWorkLog)
+
                 }
             }
         }

@@ -143,6 +143,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
         else -> painterResource(id =R.drawable.ic_roles_foreground)
     }
     val buttonText = when(text) {
+        "Scheduling" -> "Scheduler"
         "View Employees" -> "Employees"
         "View Schedule" -> "Schedule"
         "Clock-in/out" -> "Clock-In/Out"
