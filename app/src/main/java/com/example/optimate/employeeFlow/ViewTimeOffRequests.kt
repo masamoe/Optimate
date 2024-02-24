@@ -39,7 +39,7 @@ class ViewTimeOffRequests : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_time_off_requests)
-
+        
         // Sort timeRequests in descending order based on date
         val sortedTimeRequests = timeRequests.sortedByDescending { it.date }
 

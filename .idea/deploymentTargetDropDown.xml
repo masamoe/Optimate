@@ -5,16 +5,7 @@
       <entry key="Availability">
         <State />
       </entry>
-      <entry key="DynamicLandingActivity">
-        <State />
-      </entry>
-      <entry key="Login">
-        <State />
-      </entry>
-      <entry key="RequestTimeOff">
-        <State />
-      </entry>
-      <entry key="Unnamed">
+      <entry key="app">
         <State />
       </entry>
     </value>
