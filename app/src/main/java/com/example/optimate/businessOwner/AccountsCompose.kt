@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -144,4 +145,15 @@ fun AccountRow(account: Account, index: Int, onClick:() ->Unit){
              )
          }
      }
+}
+
+@Preview
+@Composable
+fun AccountsScreenPreview() {
+    val accounts = listOf(
+        Account("John Doe", "CEO", "1"),
+        Account("Jane Smith", "CTO", "2"),
+        // Add more sample accounts if needed
+    )
+    AccountsScreen(accounts = accounts)
 }

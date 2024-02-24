@@ -13,27 +13,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
-        <!--<activity
+
+        <!--
+        <activity
             android:name=".businessOwner.AddShiftPage"
             android:exported="false"
             android:label="@string/title_activity_add_shift_page"
-            android:theme="@style/Theme.Optimate" />-->
-<!--        <activity-->
-<!--            android:name=".businessOwner.SchedulerActivity"-->
-<!--            android:exported="true"-->
-<!--            android:label="@string/title_activity_schedule_maker"-->
-<!--            android:theme="@style/Theme.Optimate">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+            android:theme="@style/Theme.Optimate" />
+        -->
+        <!-- <activity -->
+        <!-- android:name=".businessOwner.SchedulerActivity" -->
+        <!-- android:exported="true" -->
+        <!-- android:label="@string/title_activity_schedule_maker" -->
+        <!-- android:theme="@style/Theme.Optimate"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity android:name=".loginAndRegister.NewUserPasswordChange" />
         <activity android:name=".loginAndRegister.PaymentConfirm" />
         <activity android:name=".loginAndRegister.ModuleChoosingMain" />
         <activity android:name=".loginAndRegister.PasswordReset" />
-        <activity android:name=".loginAndRegister.Login"  android:exported="true">
+        <activity
+            android:name=".loginAndRegister.Login"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.LANDING" />
 
@@ -63,13 +67,15 @@
         <activity android:name=".businessOwner.AddRevenueOrExpenseActivity" />
         <activity android:name=".businessOwner.FinancesDetailActivity" />
         <activity android:name=".businessOwner.SchedulePlannerActivity" />
+        <activity android:name=".loginAndRegister.LandingMain" />
         <activity android:name=".employeeFlow.RequestTimeOff" />
         <activity android:name=".employeeFlow.ViewHistory" />
         <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity android:name=".employeeFlow.ClockModule" />
         <activity
-            android:name=".loginAndRegister.LandingMain"
+            android:name=".businessOwner.ViewAvailability"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
