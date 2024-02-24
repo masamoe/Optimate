@@ -12,6 +12,8 @@ import com.example.optimate.R
 import java.text.SimpleDateFormat
 import java.util.*
 import android.content.SharedPreferences
+import android.widget.ImageView
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -47,7 +49,11 @@ class ClockModule : AppCompatActivity() {
         clockInButton = findViewById(R.id.clockIn)
         clockOutButton = findViewById(R.id.clockOut)
         sharedPreferences = getSharedPreferences("ClockingState", Context.MODE_PRIVATE)
-
+        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
+        homeBtn.setOnClickListener {
+            val intent = Intent(this, DynamicLandingActivity::class.java)
+            startActivity(intent)
+        }
         // Load the clocking state
         isInClockInState = sharedPreferences.getBoolean("isInClockInState", true)
         // Check if there's an existing work log
