@@ -9,6 +9,8 @@ import com.example.optimate.R
 import java.text.SimpleDateFormat
 import java.util.*
 import android.content.Intent
+import android.widget.ImageView
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 
 class ScheduleModule : AppCompatActivity() {
     class ShiftInfo(val shiftDate: String,
@@ -23,6 +25,12 @@ class ScheduleModule : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule_module)
+
+        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
+        homeBtn.setOnClickListener {
+            val intent = Intent(this, DynamicLandingActivity::class.java)
+            startActivity(intent)
+        }
 
         selectedDateTextView = findViewById(R.id.selectedDate)
         nextShiftOrNotScheduledTextView = findViewById(R.id.nextShiftOrNotScheduled)
