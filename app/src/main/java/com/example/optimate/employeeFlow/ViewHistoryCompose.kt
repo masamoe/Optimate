@@ -1,6 +1,5 @@
 package com.example.optimate.employeeFlow
 
-import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +24,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,20 +40,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.optimate.businessOwner.AccountRow
-import com.example.optimate.businessOwner.FinancesRow
 import com.example.optimate.businessOwner.XmlTopBar
 import java.text.SimpleDateFormat
-import java.time.Duration
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @Composable
 fun ViewHistoryScreen(showDateRangePicker: (updateDateRange: (String, String) -> Unit) -> Unit, workLogs: List<Map<String, Any>>)   {
     var dateRangeText by remember { mutableStateOf("") }
+    val totalHoursForPeriod = remember { mutableLongStateOf(0L) }
 
     Scaffold(
         topBar = { XmlTopBar(titleText = "View Clock In / Out History") },
@@ -81,14 +76,14 @@ fun ViewHistoryScreen(showDateRangePicker: (updateDateRange: (String, String) ->
 
                 }
 
-                TotalHours(workLogs)
+                TotalHours(totalHoursForPeriod.longValue)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 if (workLogs.isEmpty()) {
                     NoDataFound("No work logs found.")
                 } else {
-                    WorkLogList(workLogs)
+                    WorkLogList(workLogs, totalHoursForPeriod)
 
                 }
             }
@@ -108,9 +103,9 @@ fun SelectDatesButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun WorkLogList(workLogs: List<Map<String, Any>>) {
+fun WorkLogList(workLogs: List<Map<String, Any>>, totalHoursForPeriod: MutableState<Long>) {
     LazyColumn {
-        itemsIndexed(workLogs) { index, workLog ->
+        itemsIndexed(workLogs) { _, workLog ->
             // Cast the workLog item to the correct type
             val typedWorkLog = workLog.mapValues { entry ->
                 // Assuming the value is a List<*>, cast each item in the list to Map<String, String>
@@ -118,14 +113,20 @@ fun WorkLogList(workLogs: List<Map<String, Any>>) {
                 (entry.value as List<Map<String, String>>)
             }
 
-            WorkLogsRow(typedWorkLog)
+            WorkLogsRow(typedWorkLog, totalHoursForPeriod)
         }
     }
 }
 
 @Composable
-fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>) {
+fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>, totalHoursForPeriod: MutableState<Long>) {
     val dateFormat = SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault())
+    var totalHours: Long
+    var totalMinutes: Long
+    var totalSeconds: Long
+    var containsClockOut: Boolean
+    totalHoursForPeriod.value = 0L
+
 
     fun formatDate(dateString: String): String {
         return if (dateString.length == 8) {
@@ -139,31 +140,41 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>) {
     workLog.entries.toList().forEachIndexed { index, (date, logs) ->
         var isExpanded by remember { mutableStateOf(false) }
         var totalDurationInMillis = 0L
+        var clockInTime: Long? = null
+        var clockOutTime: Long? = null
+        var breakStartTime: Long? = null
+        var breakEndTime: Long? = null
+        containsClockOut = false
 
         logs.forEach { log ->
-            var clockInTime: Long? = null
-            var clockOutTime: Long? = null
-            var breakStartTime: Long? = null
-            var breakEndTime: Long? = null
-
             log.forEach { (key, value) ->
                 when (key) {
                     "clockIn" -> clockInTime = dateFormat.parse(value)?.time
-                    "clockOut" -> clockOutTime = dateFormat.parse(value)?.time
+                    "clockOut" -> {clockOutTime = dateFormat.parse(value)?.time
+                        containsClockOut = true}
                     "breakStart" -> breakStartTime = dateFormat.parse(value)?.time
                     "breakEnd" -> breakEndTime = dateFormat.parse(value)?.time
                 }
             }
 
-            val workDuration = (clockOutTime ?: 0L) - (clockInTime ?: 0L)
-            val breakDuration = (breakEndTime ?: 0L) - (breakStartTime ?: 0L)
-
-            totalDurationInMillis += (workDuration - breakDuration)
         }
 
-        val totalHours = TimeUnit.MILLISECONDS.toHours(totalDurationInMillis)
-        val totalMinutes = TimeUnit.MILLISECONDS.toMinutes(totalDurationInMillis) % 60
-        val totalSeconds = TimeUnit.MILLISECONDS.toSeconds(totalDurationInMillis) % 60
+
+        if(containsClockOut) {
+            val workDuration = (clockOutTime ?: 0L) - (clockInTime ?: 0L)
+            val breakDuration = (breakEndTime ?: 0L) - (breakStartTime ?: 0L)
+            totalDurationInMillis += (workDuration - breakDuration)
+            totalHours = TimeUnit.MILLISECONDS.toHours(totalDurationInMillis)
+            totalMinutes = TimeUnit.MILLISECONDS.toMinutes(totalDurationInMillis) % 60
+            totalSeconds = TimeUnit.MILLISECONDS.toSeconds(totalDurationInMillis) % 60
+            totalHoursForPeriod.value += totalDurationInMillis
+        }
+        else{
+            totalHours = 0L
+            totalMinutes = 0L
+            totalSeconds = 0L
+            totalHoursForPeriod.value += 0L
+        }
 
         // Determine the background color based on the index
         val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
@@ -186,6 +197,7 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
+                    if(containsClockOut){
                     val styledText = buildAnnotatedString {
                         append(formatDate(date) + " ")
                         // Apply a SpanStyle to "Total Hours" part
@@ -193,7 +205,19 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>) {
                             append("(Total Hours: %02d:%02d:%02d)".format(totalHours, totalMinutes, totalSeconds))
                         }
                     }
-                    Text(text = styledText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(text = styledText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    }
+                    else{
+                        val styledText = buildAnnotatedString {
+                            append(formatDate(date) + " ")
+                            // Apply a SpanStyle to "Total Hours" part
+                            withStyle(style = SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Light, color = Color.Blue)) {
+                                append("(Total Hours: 00:00:00)")
+                            }
+                        }
+                        Text(text = styledText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    }
+
                     Icon(
                         imageVector = if (isExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
                         contentDescription = if (isExpanded) "Collapse" else "Expand",
@@ -229,45 +253,9 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>) {
         }
     }
 }
-
-
 @Composable
-fun TotalHours(workLogs: List<Map<String, Any>>) {
-    val dateFormat = SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault())
-    var totalDurationInMillis = 0L
-
-    // Assuming all logs are within the first element of the list
-    if (workLogs.isNotEmpty()) {
-        val allLogs = workLogs.first() // Get the first (and presumably only) map
-
-        // Iterate through each date's logs in the map
-        allLogs.forEach { (_, logs) ->
-            @Suppress("UNCHECKED_CAST")
-            val logList = logs as List<Map<String, String>>
-
-            var clockInTime: Long? = null
-            var clockOutTime: Long? = null
-            var breakStartTime: Long? = null
-            var breakEndTime: Long? = null
-
-            logList.forEach { log ->
-                log.forEach { (key, value) ->
-                    when (key) {
-                        "clockIn" -> clockInTime = dateFormat.parse(value)?.time
-                        "clockOut" -> clockOutTime = dateFormat.parse(value)?.time
-                        "breakStart" -> breakStartTime = dateFormat.parse(value)?.time
-                        "breakEnd" -> breakEndTime = dateFormat.parse(value)?.time
-                    }
-                }
-            }
-
-            val workDuration = (clockOutTime ?: 0L) - (clockInTime ?: 0L)
-            val breakDuration = (breakEndTime ?: 0L) - (breakStartTime ?: 0L)
-
-            totalDurationInMillis += (workDuration - breakDuration)
-        }
-    }
-
+fun TotalHours(totalDurationInMillis: Long) {
+    // Convert the total duration from milliseconds to hours, minutes, and seconds
     val totalHours = TimeUnit.MILLISECONDS.toHours(totalDurationInMillis)
     val totalMinutes = TimeUnit.MILLISECONDS.toMinutes(totalDurationInMillis) % 60
     val totalSeconds = TimeUnit.MILLISECONDS.toSeconds(totalDurationInMillis) % 60
