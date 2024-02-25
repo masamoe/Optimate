@@ -14,17 +14,11 @@ import java.util.*
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.ImageView
-import android.widget.Toast
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.Firebase
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.google.gson.Gson
-import java.time.format.DateTimeFormatter
+
 class ClockModule : AppCompatActivity() {
     private lateinit var digitalClock: TextView
     private lateinit var clockInButton: Button
@@ -50,12 +44,13 @@ class ClockModule : AppCompatActivity() {
         uid = GlobalUserData.uid // Set the current user's ID
 
         // Load the clocking and break states for the current user
-        isInClockInState = sharedPreferences.getBoolean("${uid}_isInClockInState", true)
+        isInClockInState = sharedPreferences.getBoolean("${uid}_isInClockInState", false)
         isOnBreak = sharedPreferences.getBoolean("${uid}_isOnBreak", false)
 
         checkForExistingClockIn()
         // Update UI based on loaded states
         updateButtonStates()
+
 
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
         homeBtn.setOnClickListener {
@@ -117,28 +112,33 @@ class ClockModule : AppCompatActivity() {
                 // Clock In state
                 isInClockInState = true
                 isOnBreak = false // Ensure not on break when clocking in
-                saveWorkLogToDB("clockIn")
+                saveWorkLogToDB("clockIn"){}
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.clock_out) -> {
                 // Clock Out state
                 isInClockInState = false
                 isOnBreak = false // Ensure not on break when clocking out
-                saveWorkLogToDB("clockOut")
+                saveWorkLogToDB("clockOut"){
+                    calculateTotalHoursWorked()
+                }
+
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.start_break) -> {
                 // Start Break state
                 isOnBreak = true
-                saveWorkLogToDB("breakStart")
+                saveWorkLogToDB("breakStart"){}
+
+
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.end_break) -> {
                 // End Break state
                 isOnBreak = false
-                saveWorkLogToDB("breakEnd")
+                saveWorkLogToDB("breakEnd"){}
             }
             clickedButton == clockOutButton && clockOutButton.text == getString(R.string.start_break) -> {
                 // Start Break state for Clock Out button
                 isOnBreak = true
-                saveWorkLogToDB("breakStart")
+                saveWorkLogToDB("breakStart"){}
             }
         }
 
@@ -153,7 +153,7 @@ class ClockModule : AppCompatActivity() {
         updateButtonStates()
     }
 
-    private fun saveWorkLogToDB(type: String) {
+    private fun saveWorkLogToDB(type: String, onComplete: () -> Unit) {
         val bid = GlobalUserData.bid
         val uid = GlobalUserData.uid
         // Format the current Date and Time into a readable string
@@ -184,6 +184,7 @@ class ClockModule : AppCompatActivity() {
                         .addOnSuccessListener { documentReference ->
                             Log.d("WorkLog", "DocumentSnapshot added with ID: ${documentReference.id}")
                             checkForExistingClockIn()
+                            onComplete()
                         }
                         .addOnFailureListener { e ->
                             Log.w("WorkLog", "Error adding document", e)
@@ -200,6 +201,7 @@ class ClockModule : AppCompatActivity() {
                         currentDate to updatedData
                     )).addOnCompleteListener {
                         checkForExistingClockIn()
+                        onComplete()
                     }
                 }
             }
@@ -231,7 +233,6 @@ class ClockModule : AppCompatActivity() {
                         for (entry in existingData) {
                             if (entry is Map<*, *>) {
                                 if (entry.containsKey("clockOut")) {
-                                    // User has already clocked out, disable clock in
                                     clockInButton.isEnabled = false
                                     clockInButton.backgroundTintList = getColorStateList(R.color.light_grey)
                                     clockInButton.setTextColor(getColor(R.color.grey))
@@ -248,6 +249,116 @@ class ClockModule : AppCompatActivity() {
             }
 
     }
+    private fun saveTotalHoursToDB(date:String, totalHours: Long){
+        val bid = GlobalUserData.bid
+        val uid =GlobalUserData.uid
+
+        val entry = hashMapOf(
+            date to totalHours
+        )
+        db.collection("totalHours")
+            .whereEqualTo("bid", bid)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // No documents for today, create a new work log
+                    val hours = hashMapOf(
+                        "bid" to bid,
+                        uid to listOf(entry)
+                    )
+                    db.collection("totalHours")
+                        .add(hours)
+                        .addOnSuccessListener { documentReference ->
+                            Log.d("hours", "DocumentSnapshot added with ID: ${documentReference.id}")
+                            checkForExistingClockIn()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("hours", "Error adding document", e)
+                        }
+                } else {
+                    // Update existing document with the new entry
+                    val documentSnapshot = documents.documents[0]
+                    val existingData = documentSnapshot.get(uid) as? List<*>
+
+                    val updatedData = existingData?.toMutableList() ?: mutableListOf()
+                    updatedData.add(entry)
+
+                    documentSnapshot.reference.update(mapOf(
+                        uid to updatedData
+                    )).addOnCompleteListener {
+                        checkForExistingClockIn()
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("hours", "Error getting documents.", e)
+            }
+    }
+
+    // a function to calculate the total hours worked for the day
+    //(clockIn - clockOut) - (breakStart + breakEnd)
+    private fun calculateTotalHoursWorked() {
+        val bid = GlobalUserData.bid
+        val uid = GlobalUserData.uid
+        val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        val dateFormat = SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault())
+
+        db.collection("workLogs")
+            .whereEqualTo("uid", uid)
+            .whereEqualTo("bid", bid)
+            .get()
+            .addOnSuccessListener { documents ->
+                var totalDurationInMillis = 0L
+                val clockInTimes = mutableListOf<Long>()
+                val clockOutTimes = mutableListOf<Long>()
+                val breakStartTimes = mutableListOf<Long>()
+                val breakEndTimes = mutableListOf<Long>()
+
+                documents.forEach { document ->
+                    val existingData = document.get(currentDate) as? List<*>
+                    existingData?.forEach { entry ->
+                        if (entry is Map<*, *>) {
+                            entry["clockIn"]?.let { clockInString ->
+                                clockInTimes.add(dateFormat.parse(clockInString as String)?.time ?: 0)
+                            }
+                            entry["clockOut"]?.let { clockOutString ->
+                                clockOutTimes.add(dateFormat.parse(clockOutString as String)?.time ?: 0)
+                            }
+                            entry["breakStart"]?.let { breakStartString ->
+                                breakStartTimes.add(dateFormat.parse(breakStartString as String)?.time ?: 0)
+                            }
+                            entry["breakEnd"]?.let { breakEndString ->
+                                breakEndTimes.add(dateFormat.parse(breakEndString as String)?.time ?: 0)
+                            }
+                        }
+                    }
+                }
+
+                clockInTimes.forEachIndexed { index, clockInTime ->
+                    if (index < clockOutTimes.size) {
+                        var workDuration = clockOutTimes[index] - clockInTime
+
+                        // Subtract any breaks that occurred during this period
+                        breakStartTimes.forEachIndexed { breakIndex, breakStartTime ->
+                            if (breakIndex < breakEndTimes.size && breakStartTime >= clockInTime && breakEndTimes[breakIndex] <= clockOutTimes[index]) {
+                                workDuration -= (breakEndTimes[breakIndex] - breakStartTime)
+                            }
+                        }
+
+                        totalDurationInMillis += workDuration
+                    }
+                }
+
+                Log.d("calculateTotalHoursWorked", "Total Duration in Millis: $totalDurationInMillis")
+                saveTotalHoursToDB(currentDate, totalDurationInMillis)
+            }
+            .addOnFailureListener { e ->
+                Log.w("WorkLog", "Error getting documents.", e)
+            }
+    }
+
+
+
 
 
     private fun updateDigitalClock() {
