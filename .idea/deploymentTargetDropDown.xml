@@ -5,7 +5,10 @@
       <entry key="Availability">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="Login">
+        <State />
+      </entry>
+      <entry key="ViewAvailability">
         <State />
       </entry>
     </value>
