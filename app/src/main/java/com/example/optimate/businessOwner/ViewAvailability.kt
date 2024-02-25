@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.optimate.R
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,7 +31,7 @@ class ViewAvailability : AppCompatActivity() {
 
 
 
-    data class Account(val name: String)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +72,7 @@ class ViewAvailability : AppCompatActivity() {
     private fun fetchEmployeeNames(businessId: String) {
         val db = FirebaseFirestore.getInstance()
         val employeeAvailabilityLayout = findViewById<LinearLayout>(R.id.employeeAvailabilityLayout)
+
         // Fetch all users with the provided BID
         db.collection("users")
             .whereEqualTo("BID", businessId)
@@ -86,6 +88,14 @@ class ViewAvailability : AppCompatActivity() {
                         employeeNameTextView.text = it
                         // Add the card view to the LinearLayout
                         employeeAvailabilityLayout.addView(cardView)
+
+                        // Set click listener for each day card
+                        cardView.setOnClickListener { view ->
+                            val availability = document.get("availability") as Map<String, Any>
+                            val dayOfWeek = view.tag as String
+                            val availabilityForDay = availability[dayOfWeek] as List<String>
+                            updateToggleButtons(availabilityForDay)
+                        }
                     }
                 }
                 Log.d("ViewAvailability", "Fetched employee names and added cards dynamically")
@@ -94,6 +104,8 @@ class ViewAvailability : AppCompatActivity() {
                 Log.e("ViewAvailability", "Error getting employee names: ", exception)
             }
     }
+
+
 
     private fun setUpCalendar() {
         val tvDateMonth = findViewById<TextView>(R.id.tv_date_month)
@@ -114,26 +126,10 @@ class ViewAvailability : AppCompatActivity() {
 
     data class CalendarDateModel(var data: Date)
 
-    class CalendarAdapter :
-        RecyclerView.Adapter<CalendarAdapter.MyViewHolder>() {
+    class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.MyViewHolder>() {
         private val list = ArrayList<CalendarDateModel>()
 
-        inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            fun bind(calendarDateModel: CalendarDateModel) {
-
-                val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day)
-                val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date)
-                val cardView = itemView.findViewById<CardView>(R.id.card_calendar)
-
-                // Here you should set text for calendarDay and calendarDate using SimpleDateFormat
-                calendarDay.text = SimpleDateFormat("EEEE", Locale.ENGLISH).format(calendarDateModel.data)
-                calendarDate.text = SimpleDateFormat("d", Locale.ENGLISH).format(calendarDateModel.data)
-
-                cardView.setOnClickListener {
-                    // Handle click event
-                }
-            }
-        }
+        inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.row_calendar_date, parent, false)
@@ -141,8 +137,38 @@ class ViewAvailability : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.bind(list[position])
+            val calendarDay = holder.itemView.findViewById<TextView>(R.id.tv_calendar_day)
+            val calendarDate = holder.itemView.findViewById<TextView>(R.id.tv_calendar_date)
+            val tvToday = holder.itemView.findViewById<TextView>(R.id.tv_today)
+            val cardView = holder.itemView.findViewById<MaterialCardView>(R.id.card_calendar)
+
+            val currentDate = Date() // Get the current date
+
+            fun isSameDay(date1: Date, date2: Date): Boolean {
+                val sdf = SimpleDateFormat("yyyyMMdd", Locale.ENGLISH)
+                return sdf.format(date1) == sdf.format(date2)
+            }
+
+            // Set text for calendarDay and calendarDate using SimpleDateFormat
+            calendarDay.text = SimpleDateFormat("EEEE", Locale.ENGLISH).format(list[position].data)
+            calendarDate.text = SimpleDateFormat("d", Locale.ENGLISH).format(list[position].data)
+
+            // Check if the current date matches the date in the CalendarDateModel
+            if (isSameDay(list[position].data, currentDate)) {
+                // If it's the current date, show the "(Today)" TextView
+                tvToday.visibility = View.VISIBLE
+            } else {
+                // Otherwise, hide the "(Today)" TextView
+                tvToday.visibility = View.GONE
+            }
+
+            // Set tag for the cardView to the day of the week
+            cardView.tag = SimpleDateFormat("EEEE", Locale.ENGLISH).format(list[position].data)
+
+            // Enable clicking on the cardView
+            cardView.isClickable = true
         }
+
 
         override fun getItemCount(): Int {
             return list.size
@@ -156,4 +182,27 @@ class ViewAvailability : AppCompatActivity() {
     }
 
 
+
+    private fun updateToggleButtons(availabilityForDay: List<String>) {
+        val morningButton = findViewById<MaterialButton>(R.id.morning)
+        val eveningButton = findViewById<MaterialButton>(R.id.evening)
+        val anyButton = findViewById<MaterialButton>(R.id.anyT)
+
+        // Clear existing selection
+        morningButton.isChecked = false
+        eveningButton.isChecked = false
+        anyButton.isChecked = false
+
+        // Update toggle buttons according to availability for the day
+        availabilityForDay.forEach {
+            when (it) {
+                "MORNING" -> morningButton.isChecked = true
+                "EVENING" -> eveningButton.isChecked = true
+                "ANY" -> anyButton.isChecked = true
+            }
+        }
+    }
 }
+
+
+
