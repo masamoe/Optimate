@@ -179,6 +179,7 @@ class Login : AppCompatActivity(){
                         GlobalUserData.address = (document.getString("address") ?: "").toString()
                         GlobalUserData.role = (document.getString("role") ?: "").toString()
                         GlobalUserData.title = (document.getString("title") ?: "").toString()
+                        GlobalUserData.phone = (document.getString("phone") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
                         val accountStatusObject = document.get("account_status") as? Map<String, Any>
                         if (accountStatusObject != null) {
