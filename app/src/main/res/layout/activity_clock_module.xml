@@ -8,21 +8,21 @@
     tools:context=".employeeFlow.ClockModule">
 
     <Button
-        style="@style/Widget.Material3.Button.ElevatedButton"
         android:id="@+id/clockIn"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:backgroundTint="#C4F0E6"
-        app:elevation="8dp"
-        android:text= "@string/clock_in"
-        android:textColor="#000000"
         android:padding="8dp"
-
+        android:text="@string/clock_in"
+        android:textColor="#000000"
         android:textSize="35sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:elevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline58"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/guideline60" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout12"
@@ -100,51 +100,105 @@
         android:id="@+id/digitalClock"
         android:layout_width="177dp"
         android:layout_height="56dp"
-        android:layout_marginStart="142dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="151dp"
-        android:layout_marginBottom="40dp"
         android:text="@string/clock"
         android:textAlignment="center"
-        android:textSize="34sp"
 
-        app:layout_constraintBottom_toTopOf="@+id/clockIn"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline60"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout12" />
 
     <Button
-        style="@style/Widget.Material3.Button.ElevatedButton"
         android:id="@+id/viewHistory"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="130dp"
         android:layout_height="50dp"
         android:backgroundTint="#C4F0E6"
         android:elevation="8dp"
         android:text="@string/view_history"
         android:textColor="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.175"
+        app:layout_constraintBottom_toTopOf="@+id/guideline57"
+        app:layout_constraintEnd_toStartOf="@+id/guideline59"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clockIn"
-        app:layout_constraintVertical_bias="0.449" />
+        app:layout_constraintTop_toTopOf="@+id/guideline58" />
 
     <Button
-        style="@style/Widget.Material3.Button.ElevatedButton"
         android:id="@+id/clockOut"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="130dp"
         android:layout_height="50dp"
         android:elevation="8dp"
         android:text="@string/clock_out"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline57"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintStart_toEndOf="@+id/viewHistory"
-        app:layout_constraintTop_toBottomOf="@+id/clockIn"
-        app:layout_constraintVertical_bias="0.438" />
+        app:layout_constraintStart_toStartOf="@+id/guideline59"
+        app:layout_constraintTop_toTopOf="@+id/guideline58" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline57"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline58"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline59"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline60"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline63"
+        app:layout_constraintEnd_toStartOf="@+id/guideline62"
+        app:layout_constraintStart_toStartOf="@+id/guideline61"
+        app:layout_constraintTop_toTopOf="@+id/guideline64" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline61"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.09" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline62"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.91" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline63"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.96" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline64"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
