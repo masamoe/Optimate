@@ -50,13 +50,14 @@ fun SchedulePlanner() {
 
     Scaffold(
         topBar = { XmlTopBar(titleText = "Scheduler") },
+        modifier = Modifier
+            .fillMaxSize(),
         content = { innerPadding ->
-            Column(){
                 HorizontalPager(
                     state = pagerState,
                     count = shiftsData.size,
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxHeight()
                         .padding(innerPadding)
                 ) { page ->
                     Column(modifier = Modifier.padding(innerPadding)) {
@@ -99,11 +100,11 @@ fun SchedulePlanner() {
                         ) {
                             ShiftsPage(shift = shiftsData[page])
                         }
-
+                        AddShift(modifier = Modifier.padding(16.dp))
                     }
-                    AddShift(modifier = Modifier.padding(16.dp))
+
                 }
-            }
+
         }
     )
 }
@@ -152,8 +153,7 @@ fun ShiftCard(shift: Shift) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .fillMaxHeight(),
+            .padding(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
