@@ -21,7 +21,7 @@ class AddShiftActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_shift)
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)
-        topBar.setTitle("Your Title Here")
+        topBar.setTitle("Add Shift")
 
         val employeeListView: ListView = findViewById(R.id.employeeListView)
 

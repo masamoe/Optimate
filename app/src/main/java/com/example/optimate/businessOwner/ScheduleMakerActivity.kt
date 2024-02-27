@@ -16,7 +16,7 @@ class ScheduleMakerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_schedule_maker)
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)
-        topBar.setTitle("Your Title Here")
+        topBar.setTitle("Daily Schedule")
 
         // Find the dynamic content container
         val dynamicContentContainer: LinearLayout = findViewById(R.id.dynamicContentContainer)
