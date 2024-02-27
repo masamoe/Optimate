@@ -29,4 +29,5 @@ class XmlTopBar @JvmOverloads constructor(
     fun setOnHomeButtonClickListener(listener: OnClickListener?) {
         homeButton.setOnClickListener(listener)
     }
+
 }

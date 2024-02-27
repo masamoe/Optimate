@@ -28,6 +28,9 @@ class SchedulerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduler)
 
+        val topBar: XmlTopBar = findViewById(R.id.topBar)
+        topBar.setTitle("Schedule Overview")
+
         selectedDateTextView = findViewById(R.id.selectedDate)
         calendarView = findViewById(R.id.calendarView)
 

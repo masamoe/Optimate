@@ -23,17 +23,17 @@
             android:exported="false"
             android:label="@string/title_activity_add_shift_page"
             android:theme="@style/Theme.Optimate" />
-<!--        <activity-->
-<!--            android:name=".businessOwner.SchedulerActivity"-->
-<!--            android:exported="true"-->
-<!--            android:label="@string/title_activity_schedule_maker"-->
-<!--            android:theme="@style/Theme.Optimate">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+        <activity
+            android:name=".businessOwner.SchedulerActivity"
+            android:exported="true"
+            android:label="@string/title_activity_schedule_maker"
+            android:theme="@style/Theme.Optimate">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".loginAndRegister.NewUserPasswordChange" />
         <activity
             android:name=".loginAndRegister.LandingMain"
@@ -70,7 +70,6 @@
         <activity android:name=".businessOwner.FinancesActivity" />
         <activity android:name=".businessOwner.AddRevenueOrExpenseActivity" />
         <activity android:name=".businessOwner.FinancesDetailActivity" />
-        <activity android:name=".businessOwner.SchedulePlannerActivity" />
         <activity android:name=".employeeFlow.RequestTimeOff" />
         <activity android:name=".employeeFlow.ViewHistory" />
         <activity android:name=".employeeFlow.ScheduleModule" />

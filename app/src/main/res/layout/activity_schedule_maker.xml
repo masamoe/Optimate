@@ -8,14 +8,13 @@
     android:orientation="vertical"
     tools:context=".businessOwner.ScheduleMakerActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.example.optimate.businessOwner.XmlTopBar
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-
-        <include layout="@layout/topbar" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
