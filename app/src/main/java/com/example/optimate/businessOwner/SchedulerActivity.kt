@@ -52,7 +52,7 @@ class SchedulerActivity : AppCompatActivity() {
         val requestTimeOffBtn = findViewById<Button>(R.id.requestTimeOff)
 
         scheduleDateBtn.setOnClickListener {
-            startActivity(Intent(this, SchedulePlannerActivity::class.java))
+            startActivity(Intent(this, ScheduleMakerActivity::class.java))
         }
 
         viewTimeRequestsBtn.setOnClickListener {

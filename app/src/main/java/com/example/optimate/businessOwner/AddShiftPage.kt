@@ -31,7 +31,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @Composable
 fun AddShiftPage(
     employees: List<String>, // List of employees to display in the scrollable list
-    onShiftAdded: (Shift) -> Unit
+    onShiftAdded: (AddShiftActivity.Shift) -> Unit
 ) {
     var selectedDate by remember { mutableStateOf<String?>(null) }
     var selectedEmployee by remember { mutableStateOf<String?>(null) }
@@ -96,7 +96,7 @@ fun AddShiftPage(
                 Button(
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp),
                     onClick = {
-                        val newShift = Shift(
+                        val newShift = AddShiftActivity.Shift(
                             day = selectedDate ?: "Unknown",
                             employees = listOf(selectedEmployee ?: "Unknown"),
                             startTime = startTime,

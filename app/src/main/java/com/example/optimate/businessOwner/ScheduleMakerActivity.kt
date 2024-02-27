@@ -1,41 +1,37 @@
 package com.example.optimate.businessOwner
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.LayoutInflater
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.optimate.R
-import com.example.optimate.databinding.ActivityScheduleMakerBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ScheduleMakerActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityScheduleMakerBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_schedule_maker)
 
-        binding = ActivityScheduleMakerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        // Find the dynamic content container
+        val dynamicContentContainer: LinearLayout = findViewById(R.id.dynamicContentContainer)
 
-        setSupportActionBar(binding.toolbar)
-
-        val navController = findNavController(R.id.nav_host_fragment_content_schedule_maker)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        // Add multiple instances of content_schedule_maker dynamically
+        for (i in 1..4) {
+            val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
+            dynamicContentContainer.addView(contentView)
         }
-    }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_schedule_maker)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        // Find the FAB button
+        val addShiftBtn: FloatingActionButton = findViewById(R.id.addShiftBtn)
+
+        // Set click listener for the FAB button to navigate to the Add Shift page
+        addShiftBtn.setOnClickListener {
+            val intent = Intent(this, AddShiftActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
