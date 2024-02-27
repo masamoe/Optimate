@@ -139,5 +139,6 @@
     <string name="title_activity_add_shift_page">AddShiftPage</string>
     <string name="clock_title">Clock In / Out</string>
     <string name="already_clocked">Thank you!</string>
+    <string name="profile">Profile</string>
 
 </resources>
