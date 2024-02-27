@@ -14,27 +14,34 @@ import java.util.*
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.ImageView
+import androidx.compose.ui.platform.ComposeView
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class ClockModule : AppCompatActivity() {
     private lateinit var digitalClock: TextView
     private lateinit var clockInButton: Button
     private lateinit var clockOutButton: Button
     private var isInClockInState = true
-    private var isOnBreak = false // Added state to track break status
+    private var isOnBreak = false
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var sharedPreferences: SharedPreferences
     private val db = Firebase.firestore
-    private lateinit var uid: String // Assuming this is set after user logs in
+    private lateinit var uid: String
+    private var today = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+    private var workLogs = mutableListOf<Map<String, Any>>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("hi", "onCreate")
 
         setContentView(R.layout.activity_clock_module)
+        loadWorkLogs()
 
         digitalClock = findViewById(R.id.digitalClock)
         clockInButton = findViewById(R.id.clockIn)
@@ -47,10 +54,23 @@ class ClockModule : AppCompatActivity() {
         isInClockInState = sharedPreferences.getBoolean("${uid}_isInClockInState", false)
         isOnBreak = sharedPreferences.getBoolean("${uid}_isOnBreak", false)
 
-        checkForExistingClockIn()
+        //checkForExistingClockIn()
         // Update UI based on loaded states
         updateButtonStates()
 
+        val clockedInToday = sharedPreferences.getBoolean("${uid}_isClockedIn", false) &&
+                sharedPreferences.getString("${uid}_clockInDate", "") == today
+
+        if (clockedInToday) {
+            val composeView = findViewById<ComposeView>(R.id.compose_view)
+            composeView.setContent {
+                WorkLogsList(worklogs = workLogs)
+                Log.d("ClockedIn", "WorkLogs: $workLogs")
+            }
+        }else{
+            workLogs.clear()
+            saveWorkLogs()
+        }
 
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
         homeBtn.setOnClickListener {
@@ -74,6 +94,11 @@ class ClockModule : AppCompatActivity() {
 
         // Set click listeners for Clock In and Clock Out buttons
         clockInButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("${uid}_isClockedIn", true)
+                putString("${uid}_clockInDate", today)
+                apply()
+            }
             toggleClockState(clockInButton)
         }
 
@@ -83,26 +108,41 @@ class ClockModule : AppCompatActivity() {
     }
 
     private fun updateButtonStates() {
-        if (isOnBreak) {
-            // UI for break state
-            clockInButton.text = getString(R.string.end_break)
-            clockInButton.backgroundTintList = getColorStateList(R.color.light_yellow)
+        val clockedOutToday = sharedPreferences.getBoolean("${uid}_isClockedOut", false) &&
+                sharedPreferences.getString("${uid}_clockOutDate", "") == today
+
+        if (clockedOutToday) {
+            // User has clocked out today, disable the clock-in button
+            clockInButton.isEnabled = false
             clockOutButton.isEnabled = false
-        } else if (!isInClockInState) {
-            // UI for clocked out state
-            clockInButton.text = getString(R.string.clock_in)
-            clockInButton.backgroundTintList = getColorStateList(R.color.light_green)
-            clockOutButton.text = getString(R.string.clock_out)
-            clockOutButton.isEnabled = false
+            clockInButton.backgroundTintList = getColorStateList(R.color.light_grey)
             clockOutButton.backgroundTintList = getColorStateList(R.color.light_grey)
+            clockInButton.setTextColor(getColor(R.color.grey))
             clockOutButton.setTextColor(getColor(R.color.grey))
+            clockInButton.text = getString(R.string.already_clocked)
+            clockOutButton.text = getString(R.string.already_clocked)
         } else {
-            // UI for clocked in state
-            clockInButton.text = getString(R.string.clock_out)
-            clockInButton.backgroundTintList = getColorStateList(R.color.light_red)
-            clockOutButton.text = getString(R.string.start_break)
-            clockOutButton.isEnabled = true
-            clockOutButton.backgroundTintList = getColorStateList(R.color.light_yellow)
+            if (isOnBreak) {
+                // UI for break state
+                clockInButton.text = getString(R.string.end_break)
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_yellow)
+                clockOutButton.isEnabled = false
+            } else if (!isInClockInState) {
+                // UI for clocked out state
+                clockInButton.text = getString(R.string.clock_in)
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_green)
+                clockOutButton.text = getString(R.string.clock_out)
+                clockOutButton.isEnabled = false
+                clockOutButton.backgroundTintList = getColorStateList(R.color.light_grey)
+                clockOutButton.setTextColor(getColor(R.color.grey))
+            } else {
+                // UI for clocked in state
+                clockInButton.text = getString(R.string.clock_out)
+                clockInButton.backgroundTintList = getColorStateList(R.color.light_red)
+                clockOutButton.text = getString(R.string.start_break)
+                clockOutButton.isEnabled = true
+                clockOutButton.backgroundTintList = getColorStateList(R.color.light_yellow)
+            }
         }
     }
 
@@ -113,6 +153,7 @@ class ClockModule : AppCompatActivity() {
                 isInClockInState = true
                 isOnBreak = false // Ensure not on break when clocking in
                 saveWorkLogToDB("clockIn"){}
+
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.clock_out) -> {
                 // Clock Out state
@@ -121,7 +162,11 @@ class ClockModule : AppCompatActivity() {
                 saveWorkLogToDB("clockOut"){
                     calculateTotalHoursWorked()
                 }
-
+                sharedPreferences.edit().apply {
+                    putBoolean("${uid}_isClockedOut", true)
+                    putString("${uid}_clockOutDate", today)
+                    apply()
+                }
             }
             clickedButton == clockInButton && clockInButton.text == getString(R.string.start_break) -> {
                 // Start Break state
@@ -163,9 +208,21 @@ class ClockModule : AppCompatActivity() {
         val entry = hashMapOf(
             type to formattedDateTime
         )
-
+        workLogs.add(entry)
+        saveWorkLogs()
         // Get the current date
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+
+        val clockedInToday = sharedPreferences.getBoolean("${uid}_isClockedIn", false) &&
+                sharedPreferences.getString("${uid}_clockInDate", "") == today
+
+        if (clockedInToday) {
+            val composeView = findViewById<ComposeView>(R.id.compose_view)
+            composeView.setContent {
+                WorkLogsList(worklogs = workLogs)
+                Log.d("ClockedIn", "WorkLogs: $workLogs")
+            }
+        }
 
         db.collection("workLogs")
             .whereEqualTo("uid", uid)
@@ -183,7 +240,7 @@ class ClockModule : AppCompatActivity() {
                         .add(workLog)
                         .addOnSuccessListener { documentReference ->
                             Log.d("WorkLog", "DocumentSnapshot added with ID: ${documentReference.id}")
-                            checkForExistingClockIn()
+                            //checkForExistingClockIn()
                             onComplete()
                         }
                         .addOnFailureListener { e ->
@@ -200,7 +257,7 @@ class ClockModule : AppCompatActivity() {
                     documentSnapshot.reference.update(mapOf(
                         currentDate to updatedData
                     )).addOnCompleteListener {
-                        checkForExistingClockIn()
+                        //checkForExistingClockIn()
                         onComplete()
                     }
                 }
@@ -208,46 +265,6 @@ class ClockModule : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Log.w("WorkLog", "Error getting documents.", e)
             }
-    }
-
-    // a function to check if the user has already clocked out, dont allow them to clock in again for the day
-    // set the clockin button to grey and disable it
-    private fun checkForExistingClockIn() {
-        val bid = GlobalUserData.bid
-        val uid = GlobalUserData.uid
-        val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
-
-        db.collection("workLogs")
-            .whereEqualTo("uid", uid)
-            .whereEqualTo("bid", bid)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    // No documents for today, enable clock in
-                    clockInButton.isEnabled = true
-                } else {
-                    //check if the user has already clocked out for current date,check current date list that has the clockout key
-                    val documentSnapshot = documents.documents[0]
-                    val existingData = documentSnapshot.get(currentDate) as? List<*>
-                    if (existingData != null) {
-                        for (entry in existingData) {
-                            if (entry is Map<*, *>) {
-                                if (entry.containsKey("clockOut")) {
-                                    clockInButton.isEnabled = false
-                                    clockInButton.backgroundTintList = getColorStateList(R.color.light_grey)
-                                    clockInButton.setTextColor(getColor(R.color.grey))
-                                    clockInButton.text = getString(R.string.already_clocked)
-                                    return@addOnSuccessListener
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.w("WorkLog", "Error getting documents.", e)
-            }
-
     }
     private fun saveTotalHoursToDB(date:String, totalHours: Long){
         val bid = GlobalUserData.bid
@@ -270,7 +287,7 @@ class ClockModule : AppCompatActivity() {
                         .add(hours)
                         .addOnSuccessListener { documentReference ->
                             Log.d("hours", "DocumentSnapshot added with ID: ${documentReference.id}")
-                            checkForExistingClockIn()
+                            // checkForExistingClockIn()
                         }
                         .addOnFailureListener { e ->
                             Log.w("hours", "Error adding document", e)
@@ -286,7 +303,7 @@ class ClockModule : AppCompatActivity() {
                     documentSnapshot.reference.update(mapOf(
                         uid to updatedData
                     )).addOnCompleteListener {
-                        checkForExistingClockIn()
+                        //checkForExistingClockIn()
                     }
                 }
             }
@@ -357,9 +374,27 @@ class ClockModule : AppCompatActivity() {
             }
     }
 
+    private fun saveWorkLogs() {
+        val sharedPreferences = getSharedPreferences("ClockingState", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
 
+        val gson = Gson()
+        val json = gson.toJson(workLogs) // Convert workLogs to JSON
 
+        editor.putString("workLogs", json)
+        editor.apply() // Save the JSON string
+    }
 
+    private fun loadWorkLogs() {
+        val sharedPreferences = getSharedPreferences("ClockingState", Context.MODE_PRIVATE)
+        val json = sharedPreferences.getString("workLogs", null)
+
+        val gson = Gson()
+        if (json != null) {
+            val type = object : TypeToken<MutableList<Map<String, Any>>>() {}.type
+            workLogs = gson.fromJson(json, type) // Convert JSON string back to workLogs
+        }
+    }
 
     private fun updateDigitalClock() {
         // Get the current time
@@ -373,12 +408,31 @@ class ClockModule : AppCompatActivity() {
         digitalClock.text = formattedTime
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("hi", "onResume")
+        today = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        val clockedInToday = sharedPreferences.getBoolean("${uid}_isClockedIn", false) &&
+                sharedPreferences.getString("${uid}_clockInDate", "") == today
+
+        if (clockedInToday) {
+            val composeView = findViewById<ComposeView>(R.id.compose_view)
+            composeView.setContent {
+                WorkLogsList(worklogs = workLogs)
+                Log.d("ClockedIn", "WorkLogs: $workLogs")
+            }
+        }else{
+            workLogs.clear()
+            saveWorkLogs()
+        }
+        updateButtonStates()
+    }
+
     override fun onDestroy() {
         // Remove the callbacks to prevent memory leaks
         handler.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
-
 }
 
 

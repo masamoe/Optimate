@@ -138,6 +138,6 @@
     <string name="title_activity_schedule_planner">SchedulePlanner</string>
     <string name="title_activity_add_shift_page">AddShiftPage</string>
     <string name="clock_title">Clock In / Out</string>
-    <string name="already_clocked">Thank you for your hard work today!</string>
+    <string name="already_clocked">Thank you!</string>
 
 </resources>

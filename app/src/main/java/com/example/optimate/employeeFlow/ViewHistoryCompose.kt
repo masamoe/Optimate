@@ -142,8 +142,8 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>, totalHoursForPe
         var totalDurationInMillis = 0L
         var clockInTime: Long? = null
         var clockOutTime: Long? = null
-        var breakStartTime: Long? = null
-        var breakEndTime: Long? = null
+        val breakStartTimes = mutableListOf<Long>()
+        val breakEndTimes = mutableListOf<Long>()
         containsClockOut = false
 
         logs.forEach { log ->
@@ -152,8 +152,8 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>, totalHoursForPe
                     "clockIn" -> clockInTime = dateFormat.parse(value)?.time
                     "clockOut" -> {clockOutTime = dateFormat.parse(value)?.time
                         containsClockOut = true}
-                    "breakStart" -> breakStartTime = dateFormat.parse(value)?.time
-                    "breakEnd" -> breakEndTime = dateFormat.parse(value)?.time
+                    "breakStart" -> breakStartTimes.add(dateFormat.parse(value)?.time ?: 0L)
+                    "breakEnd" -> breakEndTimes.add(dateFormat.parse(value)?.time ?: 0L)
                 }
             }
 
@@ -162,7 +162,7 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>, totalHoursForPe
 
         if(containsClockOut) {
             val workDuration = (clockOutTime ?: 0L) - (clockInTime ?: 0L)
-            val breakDuration = (breakEndTime ?: 0L) - (breakStartTime ?: 0L)
+            val breakDuration = breakEndTimes.sum() - breakStartTimes.sum()
             totalDurationInMillis += (workDuration - breakDuration)
             totalHours = TimeUnit.MILLISECONDS.toHours(totalDurationInMillis)
             totalMinutes = TimeUnit.MILLISECONDS.toMinutes(totalDurationInMillis) % 60
