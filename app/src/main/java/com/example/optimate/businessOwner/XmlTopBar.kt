@@ -1,12 +1,14 @@
 package com.example.optimate.businessOwner
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 
 class XmlTopBar @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -20,14 +22,16 @@ class XmlTopBar @JvmOverloads constructor(
 
         titleTextView = findViewById(R.id.topBarTitle)
         homeButton = findViewById(R.id.homeBtn)
+
+        homeButton.setOnClickListener {
+            // Navigate to DynamicLandingActivity
+            val intent = Intent(context, DynamicLandingActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 
     fun setTitle(title: CharSequence) {
         titleTextView.text = title
-    }
-
-    fun setOnHomeButtonClickListener(listener: OnClickListener?) {
-        homeButton.setOnClickListener(listener)
     }
 
 }
