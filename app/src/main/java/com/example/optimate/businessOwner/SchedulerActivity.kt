@@ -55,7 +55,17 @@ class SchedulerActivity : AppCompatActivity() {
         val requestTimeOffBtn = findViewById<Button>(R.id.requestTimeOff)
 
         scheduleDateBtn.setOnClickListener {
-            startActivity(Intent(this, ScheduleMakerActivity::class.java))
+            // Get the selected date from selectedDateTextView
+            val selectedDate = selectedDateTextView.text.toString()
+
+            // Create an Intent to start ScheduleMakerActivity
+            val intent = Intent(this, ScheduleMakerActivity::class.java)
+
+            // Pass the selected date to ScheduleMakerActivity using Intent extras
+            intent.putExtra("SELECTED_DATE", selectedDate)
+
+            // Start ScheduleMakerActivity
+            startActivity(intent)
         }
 
         viewTimeRequestsBtn.setOnClickListener {

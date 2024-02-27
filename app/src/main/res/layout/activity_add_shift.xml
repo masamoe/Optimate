@@ -23,59 +23,70 @@
         app:layout_constraintTop_toBottomOf="@+id/topBar">
 
         <!-- Select Date -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editTextDate"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/light_purple"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="10dp"
-            app:contentPadding="8dp">
+            android:hint="@string/date"
+            app:boxStrokeColor="@color/dark_purple"
+            app:boxStrokeWidth="3dp"
+            app:endIconDrawable="@drawable/calendar"
+            app:endIconMode="custom"
+            app:helperText="MM/DD/YYYY"
+            app:helperTextEnabled="true">
 
-            <EditText
-                android:id="@+id/selectDateEditText"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/select_date"
-                android:hint="Select Date"
-                android:inputType="none"
-                android:singleLine="true" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/light_purple"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="10dp"
-            app:contentPadding="8dp">
-
-            <EditText
-                android:id="@+id/startTimeEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Start Time"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:inputType="none" />
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/startTimeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="@string/start_time"
+            app:boxStrokeColor="@color/dark_purple"
+            app:boxStrokeWidth="3dp"
+            app:endIconDrawable="@drawable/clock"
+            app:endIconMode="custom"
+            app:helperTextEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/startTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- End Time -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/endTimeEditText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/light_purple"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="10dp"
-            app:contentPadding="8dp">
+            android:hint="@string/end_time"
+            app:boxStrokeColor="@color/dark_purple"
+            app:boxStrokeWidth="3dp"
+            app:endIconDrawable="@drawable/clock"
+            app:endIconMode="custom"
+            app:helperTextEnabled="true">
 
-            <EditText
-                android:id="@+id/endTimeEditText"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/endTime"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="End Time"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:inputType="none" />
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Employee List -->
         <androidx.cardview.widget.CardView

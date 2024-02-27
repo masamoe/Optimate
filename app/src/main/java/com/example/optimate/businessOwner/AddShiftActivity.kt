@@ -3,6 +3,7 @@ package com.example.optimate.businessOwner
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
 
@@ -22,6 +23,15 @@ class AddShiftActivity : AppCompatActivity() {
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)
         topBar.setTitle("Add Shift")
+
+        val date: TextView = findViewById(R.id.date)
+
+        // Retrieve the selected date from the Intent extras
+        val selectedDate = intent.getStringExtra("SELECTED_DATE")
+
+        // Set the text of editTextDate to the selected date
+        date.text = selectedDate
+
 
         val employeeListView: ListView = findViewById(R.id.employeeListView)
 
