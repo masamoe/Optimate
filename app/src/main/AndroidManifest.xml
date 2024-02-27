@@ -69,9 +69,7 @@
         <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity android:name=".employeeFlow.ClockModule" />
-        <activity
-            android:name=".loginAndRegister.LandingMain"
-            />
+
         <activity android:name=".employeeFlow.PayStub" />
         <activity android:name=".employeeFlow.ViewAllPayStubs" />
         <activity android:name=".employeeFlow.EditProfile" android:exported="true">

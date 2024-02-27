@@ -45,8 +45,8 @@ class EditProfile : AppCompatActivity() {
         saveBtn.setOnClickListener {
             val userDataAuth = HashMap<String, String>()
             if(GlobalUserData.email != emailInput.text.toString()){
-                updateEmail(emailInput.text.toString())
-                userDataAuth["email"] = emailInput.text.toString()
+                //updateEmail(emailInput.text.toString())
+                //userDataAuth["email"] = emailInput.text.toString()
             }
             if (GlobalUserData.password != passwordInput.text.toString()){
                 updatePassword(passwordInput.text.toString())
@@ -54,8 +54,8 @@ class EditProfile : AppCompatActivity() {
             if (GlobalUserData.address != addressInput.text.toString()){
                 userDataAuth["address"] = addressInput.text.toString()
             }
-            if (GlobalUserData.phone != phoneInput.text.toString()){
-                userDataAuth["address"] = phoneInput.text.toString()
+            if (GlobalUserData.phone != phoneInput.text.toString()) {
+                userDataAuth["phone"] = phoneInput.text.toString()
             }
 
             if (userDataAuth.isEmpty()) {
@@ -68,7 +68,7 @@ class EditProfile : AppCompatActivity() {
         // Function to save data to local database
 
     }
-    private fun updateEmail(email: String) {
+   /* private fun updateEmail(email: String) {
         val user = Firebase.auth.currentUser
 
         user?.updateEmail(email)
@@ -85,7 +85,7 @@ class EditProfile : AppCompatActivity() {
 
                 }
             }
-    }
+    }*/
 
     private fun updatePassword(newPassword: String) {
         val user = Firebase.auth.currentUser
@@ -107,33 +107,53 @@ class EditProfile : AppCompatActivity() {
 
     private fun updateDB(updates : HashMap<String, String>) {
         if (GlobalUserData.uid != null) {
-            val userRef = db.collection("users").document(GlobalUserData.uid)
+            val userRef = db.collection("users").whereEqualTo("UID", GlobalUserData.uid)
 
             if (updates.isEmpty()) {
                 // No fields to update
                 return
             }
 
-            // Update only the specified fields in the document
-            userRef.update(updates as Map<String, Any>)
-                .addOnSuccessListener {
-                    // Update GlobalUserData with the updated fields
-                    if (updates.containsKey("email")) {
-                        GlobalUserData.email = updates["email"] as String
-                    }
-                    if (updates.containsKey("address")) {
-                        GlobalUserData.address = updates["address"] as String
-                    }
-                    if (updates.containsKey("phone")) {
-                        GlobalUserData.phone = updates["phone"] as String
+            userRef.get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        // No document found with the specified UID
+                        Log.e(
+                            "EditAccountActivity",
+                            "No document found for UID: ${GlobalUserData.uid}"
+                        )
+                        showToast("No document found for UID: ${GlobalUserData.uid}")
+                        return@addOnSuccessListener
                     }
 
-                    Log.d("EditAccountActivity", "User document updated successfully")
-                    showToast("Updated")
+                    // Assuming there's only one document with the specified UID
+                    val userDoc = documents.documents[0]
+
+                    // Update only the specified fields in the document
+                    userDoc.reference.update(updates as Map<String, Any>)
+                        .addOnSuccessListener {
+                            // Update GlobalUserData with the updated fields
+                            if (updates.containsKey("email")) {
+                                GlobalUserData.email = updates["email"] as String
+                            }
+                            if (updates.containsKey("address")) {
+                                GlobalUserData.address = updates["address"] as String
+                            }
+                            if (updates.containsKey("phone")) {
+                                GlobalUserData.phone = updates["phone"] as String
+                            }
+
+                            Log.d("EditAccountActivity", "User document updated successfully")
+                            showToast("Updated")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("EditAccountActivity", "Error updating user document", e)
+                            showToast("Update Failed")
+                        }
                 }
                 .addOnFailureListener { e ->
-                    Log.e("EditAccountActivity", "Error updating user document", e)
-                    showToast("Update Failed")
+                    Log.e("EditAccountActivity", "Error fetching user document", e)
+                    showToast("Error fetching user document")
                 }
         } else {
             Toast.makeText(this, "Error: No User Data", Toast.LENGTH_SHORT).show()
