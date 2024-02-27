@@ -1,12 +1,16 @@
 package com.example.optimate.loginAndRegister
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.optimate.R
+import com.example.optimate.employeeFlow.EditProfile
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
@@ -21,11 +25,16 @@ class DynamicLandingActivity : AppCompatActivity(){
         username = findViewById(R.id.username)
         username.text = businessName
         val composeView = findViewById<ComposeView>(R.id.compose_view)
-
+        val settingPage = findViewById<ImageView>(R.id.businessIcon)
         getAccountAccess(GlobalUserData.title, GlobalUserData.bid) {
             composeView.setContent {
                 DynamicLandingScreen(GlobalUserData.access, GlobalUserData.title)
             }
+        }
+        settingPage.setOnClickListener{
+            val intent = Intent(this, EditProfile::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 

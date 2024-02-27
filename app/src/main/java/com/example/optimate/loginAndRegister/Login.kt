@@ -1,6 +1,8 @@
 package com.example.optimate.loginAndRegister
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -11,10 +13,12 @@ import com.example.optimate.R
 import com.example.optimate.businessOwner.BusinessLanding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-
 import com.google.firebase.firestore.firestore
 import com.google.firebase.Firebase
 import java.util.Date
+import android.content.Context
+import android.content.SharedPreferences
+import android.widget.CheckBox
 
 
 class Login : AppCompatActivity(){
@@ -25,6 +29,8 @@ class Login : AppCompatActivity(){
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private val db = Firebase.firestore
+    private lateinit var rememberPasswordCheckBox: CheckBox
+    private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -39,6 +45,23 @@ class Login : AppCompatActivity(){
         loginBtn = findViewById(R.id.loginBtn)
         registerBtn = findViewById(R.id.registerBtn)
         forgotPasswordClk = findViewById(R.id.forgotPassword)
+        rememberPasswordCheckBox = findViewById(R.id.rememberPassword)
+
+        // Retrieve SharedPreferences
+        sharedPreferences = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
+
+        // Check if remember password was checked previously
+        if (sharedPreferences.getBoolean("rememberPassword", false)) {
+            emailEditText.setText(sharedPreferences.getString("email", ""))
+            passwordEditText.setText(sharedPreferences.getString("password", ""))
+            rememberPasswordCheckBox.isChecked = true
+        }
+
+
+
+
+
+
         // Set up the login button click listener
         loginBtn.setOnClickListener {
             val email = emailEditText.text.toString().trim()
@@ -53,6 +76,21 @@ class Login : AppCompatActivity(){
             // Sign in with Firebase
             signInWithEmail(email, password)
             GlobalUserData.password = password
+            if (rememberPasswordCheckBox.isChecked) {
+                // Save email and password to SharedPreferences if remember password is checked
+                val editor = sharedPreferences.edit()
+                editor.putString("email", email)
+                editor.putString("password", password)
+                editor.putBoolean("rememberPassword", true)
+                editor.apply()
+            } else {
+                // Clear email and password from SharedPreferences if remember password is unchecked
+                val editor = sharedPreferences.edit()
+                editor.remove("email")
+                editor.remove("password")
+                editor.remove("rememberPassword")
+                editor.apply()
+            }
         }
 
         // Set up the register button click listener
@@ -63,6 +101,23 @@ class Login : AppCompatActivity(){
         forgotPasswordClk.setOnClickListener {
             startActivity(Intent(this, PasswordReset::class.java))
         }
+
+        // Add a TextWatcher to the email EditText
+        emailEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                // Check for spaces and remove them
+                if (s != null && s.contains(" ")) {
+                    val trimmedText = s.toString().replace(" ", "")
+                    emailEditText.setText(trimmedText)
+                    emailEditText.setSelection(trimmedText.length)
+                }
+            }
+        })
+
     }
 
     private fun signInWithEmail(email: String, password: String) {
@@ -124,6 +179,7 @@ class Login : AppCompatActivity(){
                         GlobalUserData.address = (document.getString("address") ?: "").toString()
                         GlobalUserData.role = (document.getString("role") ?: "").toString()
                         GlobalUserData.title = (document.getString("title") ?: "").toString()
+                        GlobalUserData.phone = (document.getString("phone") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
                         val accountStatusObject = document.get("account_status") as? Map<String, Any>
                         if (accountStatusObject != null) {

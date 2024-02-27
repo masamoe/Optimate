@@ -13,24 +13,9 @@ object GlobalUserData {
     var role: String = ""
     var wage: Float = 0F
     var password: String = ""
+    var phone: String = ""
     var first_time: Boolean = false
     lateinit var account_status: AccountStatus
     lateinit var modules: List<String>
 
-}
-
-fun signOut() {
-    GlobalUserData.access = emptyList()
-    GlobalUserData.uid = ""
-    GlobalUserData.bid = ""
-    GlobalUserData.address = ""
-    GlobalUserData.name = ""
-    GlobalUserData.email = ""
-    GlobalUserData.title = ""
-    GlobalUserData.role = ""
-    GlobalUserData.wage = 0F
-    GlobalUserData.password = ""
-    GlobalUserData.first_time = false
-    GlobalUserData.account_status = AccountStatus(Date(), "")
-    GlobalUserData.modules = emptyList()
 }

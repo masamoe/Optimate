@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Optimate"
         tools:targetApi="31">
         <activity
-            android:name=".businessOwner.AddShiftPage"
+            android:name=".businessOwner.AddShiftActivity"
             android:exported="false"
             android:label="@string/title_activity_add_shift_page"
             android:theme="@style/Theme.Optimate" />
@@ -30,6 +30,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".loginAndRegister.NewUserPasswordChange" />
+        <activity android:name=".loginAndRegister.LandingMain" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".loginAndRegister.PaymentConfirm" />
         <activity android:name=".loginAndRegister.ModuleChoosingMain" />
         <activity android:name=".loginAndRegister.PasswordReset" />
@@ -62,18 +69,16 @@
         <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity android:name=".employeeFlow.ClockModule" />
-        <activity
-            android:name=".loginAndRegister.LandingMain"
-            android:exported="true">
+
+        <activity android:name=".employeeFlow.PayStub" />
+        <activity android:name=".employeeFlow.ViewAllPayStubs" />
+        <activity android:name=".employeeFlow.EditProfile" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".employeeFlow.PayStub" />
-        <activity android:name=".employeeFlow.ViewAllPayStubs" />
-        <activity android:name=".employeeFlow.EditProfile" />
         <activity android:name=".employeeFlow.ProfilePage" />
         <activity android:name=".employeeFlow.SubmitExpenses" />
 

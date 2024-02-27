@@ -2,13 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="Business Landing">
+      <entry key="All Tests">
         <State />
       </entry>
-      <entry key="ScheduleMakerActivity">
+      <entry key="EditProfile">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="LandingMain">
+        <State />
+      </entry>
+      <entry key="ViewAvailability">
         <State />
       </entry>
     </value>

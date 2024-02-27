@@ -38,7 +38,11 @@ import androidx.compose.ui.unit.sp
 import com.example.optimate.R
 import com.example.optimate.businessOwner.AccountsActivity
 import com.example.optimate.businessOwner.FinancesActivity
+import com.example.optimate.businessOwner.SchedulerActivity
 import com.example.optimate.businessOwner.TitlesActivity
+import com.example.optimate.employeeFlow.ClockModule
+import com.example.optimate.employeeFlow.ScheduleModule
+import com.example.optimate.employeeFlow.ViewTimeOffRequests
 
 private val managerAccessList = listOf(
     "Scheduling",
@@ -111,6 +115,14 @@ fun ButtonList(AccessList: List<String>) {
                             "Titles" -> context.startActivity(Intent(context, TitlesActivity::class.java))
                             "Accounts" -> context.startActivity(Intent(context, AccountsActivity::class.java))
                             "Finances" -> context.startActivity(Intent(context, FinancesActivity::class.java))
+                            "Clock-in/out" -> context.startActivity(Intent(context, ClockModule::class.java))
+                            "Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
+                            "Scheduling" -> context.startActivity(Intent(context, SchedulerActivity::class.java))
+                            "Requests" -> context.startActivity(Intent(context, ViewTimeOffRequests::class.java))
+                            "View Employees" -> context.startActivity(Intent(context, AccountsActivity::class.java))
+                            "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
+
+
                         }},
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -140,6 +152,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
         else -> painterResource(id =R.drawable.ic_roles_foreground)
     }
     val buttonText = when(text) {
+        "Scheduling" -> "Scheduler"
         "View Employees" -> "Employees"
         "View Schedule" -> "Schedule"
         "Clock-in/out" -> "Clock-In/Out"
@@ -152,17 +165,17 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .wrapContentSize()
-            .height(80.dp)
-            .width(80.dp),
-        shape = RoundedCornerShape(15.dp),
-        colors = ButtonDefaults.buttonColors(buttonColor),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 16.dp)
+        Button(
+            onClick = onClick,
+            modifier = modifier
+                .wrapContentSize()
+                .height(80.dp)
+                .width(80.dp),
+            shape = RoundedCornerShape(15.dp),
+            colors = ButtonDefaults.buttonColors(buttonColor),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 16.dp)
 
-    ) {
+        ) {
 
             Icon(
                 painter = buttonImg,
@@ -186,6 +199,6 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
 @Preview
 @Composable
 fun BusinessOwnerButtonListPreview() {
-    DynamicLandingScreen(managerAccessList, GlobalUserData.title)
+    DynamicLandingScreen(managerAccessList, "businessOwner")
 }
 
