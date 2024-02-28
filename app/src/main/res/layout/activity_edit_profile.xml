@@ -113,12 +113,13 @@
                     android:src="@drawable/placeholder" />
 
                 <!-- Overlay layer -->
+
+                <!-- Icon -->
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#8000" />
-
-                <!-- Icon -->
 
                 <Button
                     android:id="@+id/iconButton"

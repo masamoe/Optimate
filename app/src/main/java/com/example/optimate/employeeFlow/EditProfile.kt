@@ -30,10 +30,14 @@ class EditProfile : AppCompatActivity() {
         val passwordInput = findViewById<TextView>(R.id.passwordUpdate)
         val addressInput = findViewById<TextView>(R.id.addresUpdate)
         val phoneInput = findViewById<TextView>(R.id.phoneUpdate)
+        val roleText = findViewById<TextView>(R.id.textView7)
+        val nameText = findViewById<TextView>(R.id.textView6)
         emailInput.text = GlobalUserData.email
         passwordInput.text = GlobalUserData.password
         addressInput.text = GlobalUserData.address
         phoneInput.text = GlobalUserData.phone
+        roleText.text = GlobalUserData.role
+        nameText.text = GlobalUserData.name
 
 
 
