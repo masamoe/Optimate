@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 <com.google.android.material.card.MaterialCardView
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/timeRequestCard"
+    android:id="@+id/availabilityCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="?attr/materialCardViewElevatedStyle"
@@ -22,40 +22,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="name"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
+            android:textAppearance="?attr/textAppearanceTitleLarge" />
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/toggle"
-            android:layout_width="315dp"
-            android:layout_height="wrap_content"
+       <TextView
+           android:id="@+id/availability"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="availability"
+           android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+           android:layout_marginStart="20dp"
+           >
 
-            android:layout_marginStart="25dp"
-            app:singleSelection="true">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/morning"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/button_toggle_color"
-                android:text="Morning" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/evening"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/button_toggle_color"
-                android:text="Evening" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/anyT"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/button_toggle_color"
-                android:text="Any" />
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+       </TextView>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

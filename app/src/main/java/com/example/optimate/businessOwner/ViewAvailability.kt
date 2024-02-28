@@ -27,7 +27,7 @@ class ViewAvailability : AppCompatActivity() {
     private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
     private val cal = Calendar.getInstance(Locale.ENGLISH)
     private val dates = ArrayList<Date>()
-    private val adapter = CalendarAdapter()
+    private val adapter = CalendarAdapter(emptyMap(), {})
 
 
 
@@ -41,9 +41,11 @@ class ViewAvailability : AppCompatActivity() {
         val ivCalendarNext = findViewById<ImageView>(R.id.iv_calendar_next)
         val ivCalendarPrevious = findViewById<ImageView>(R.id.iv_calendar_previous)
 
-
-
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+
+        // Initialize the adapter with availability and updateAvailabilityTextView
+        adapter.availability = availability
+        adapter.updateAvailabilityTextView = this::updateAvailabilityTextView
         recyclerView.adapter = adapter
 
         setUpCalendar()
@@ -57,30 +59,28 @@ class ViewAvailability : AppCompatActivity() {
             setUpCalendar()
         }
 
-
-
-
-
         // Fetch employee names for the current user's BID
         val currentUser = FirebaseAuth.getInstance().currentUser
-        currentUser?.let { fetchEmployeeNames("d89RXe3xFjNNCEAftuslt3pGWR23ab") }
-
-
-
+        currentUser?.let { fetchEmployeeAvailability("d89RXe3xFjNNCEAftuslt3pGWR23ab") }
     }
 
-    private fun fetchEmployeeNames(businessId: String) {
+
+    private fun fetchEmployeeAvailability(businessId: String) {
         val db = FirebaseFirestore.getInstance()
         val employeeAvailabilityLayout = findViewById<LinearLayout>(R.id.employeeAvailabilityLayout)
 
-        // Fetch all users with the provided BID
-        db.collection("users")
+        // Clear existing views to avoid duplicates
+        employeeAvailabilityLayout.removeAllViews()
+
+        // Fetch availability data for the provided BID
+        db.collection("availability")
             .whereEqualTo("BID", businessId)
             .get()
             .addOnSuccessListener { documents ->
                 val inflater = LayoutInflater.from(this@ViewAvailability)
                 for (document in documents) {
                     val name = document.getString("name")
+                    val availabilityData = document.data // Retrieve availability data for the employee
                     name?.let {
                         // Inflate the employee_availability_card.xml layout
                         val cardView = inflater.inflate(R.layout.employee_availability_card, null) as LinearLayout
@@ -89,12 +89,13 @@ class ViewAvailability : AppCompatActivity() {
                         // Add the card view to the LinearLayout
                         employeeAvailabilityLayout.addView(cardView)
 
-                        // Set click listener for each day card
                         cardView.setOnClickListener { view ->
-                            val availability = document.get("availability") as Map<String, Any>
-                            val dayOfWeek = view.tag as String
-                            val availabilityForDay = availability[dayOfWeek] as List<String>
-                            updateToggleButtons(availabilityForDay)
+                            val dayOfWeek = view.tag as? String
+                            // Retrieve availability data for the clicked day of the week and update UI
+                            dayOfWeek?.let { availabilityForDay ->
+                                // Pass availability data specific to the employee to the update method
+                                updateAvailabilityTextView(availabilityData, availabilityForDay)
+                            }
                         }
                     }
                 }
@@ -104,6 +105,29 @@ class ViewAvailability : AppCompatActivity() {
                 Log.e("ViewAvailability", "Error getting employee names: ", exception)
             }
     }
+
+    private fun updateAvailabilityTextView(availabilityData: Map<String, Any>, availabilityForDay: String) {
+        val availabilityTextView = findViewById<TextView>(R.id.availability)
+
+        // Map availability status to corresponding strings
+        val availabilityMap = mapOf(
+            "MORNING" to "Morning",
+            "EVENING" to "Evening",
+            "ANY" to "Any",
+            "NOT_AVAILABLE" to "Not Available"
+        )
+
+        // Retrieve availability status for the selected day for the specific employee
+        val availabilityForEmployee = availabilityData[availabilityForDay] as? List<String>
+        // If availabilityForEmployee is not null and not empty, get the availability status from the first item
+        // Otherwise, set availability status as "Unknown"
+        val availabilityStatus = availabilityForEmployee?.firstOrNull()?.let { availabilityMap[it] } ?: "Unknown"
+
+        // Set the availability text
+        availabilityTextView.text = availabilityStatus
+    }
+
+
 
 
 
@@ -126,7 +150,10 @@ class ViewAvailability : AppCompatActivity() {
 
     data class CalendarDateModel(var data: Date)
 
-    class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.MyViewHolder>() {
+    class CalendarAdapter(
+        var availability: Map<String, Any>,
+        var updateAvailabilityTextView: (List<String>) -> Unit
+    ) : RecyclerView.Adapter<CalendarAdapter.MyViewHolder>() {
         private val list = ArrayList<CalendarDateModel>()
 
         inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
@@ -140,7 +167,6 @@ class ViewAvailability : AppCompatActivity() {
             val calendarDay = holder.itemView.findViewById<TextView>(R.id.tv_calendar_day)
             val calendarDate = holder.itemView.findViewById<TextView>(R.id.tv_calendar_date)
             val tvToday = holder.itemView.findViewById<TextView>(R.id.tv_today)
-            val cardView = holder.itemView.findViewById<MaterialCardView>(R.id.card_calendar)
 
             val currentDate = Date() // Get the current date
 
@@ -163,11 +189,22 @@ class ViewAvailability : AppCompatActivity() {
             }
 
             // Set tag for the cardView to the day of the week
-            cardView.tag = SimpleDateFormat("EEEE", Locale.ENGLISH).format(list[position].data)
+            val dayOfWeek = SimpleDateFormat("EEEE", Locale.ENGLISH).format(list[position].data)
+            holder.itemView.tag = dayOfWeek
 
-            // Enable clicking on the cardView
-            cardView.isClickable = true
+            // Set click listener for the cardView
+            holder.itemView.setOnClickListener { view ->
+                val dayOfWeek = view.tag as? String
+                // Retrieve availability data for the clicked day of the week and update UI
+                dayOfWeek?.let { availabilityForDay ->
+                    updateAvailabilityTextView(availability[availabilityForDay] as? List<String> ?: emptyList())
+                }
+            }
         }
+
+
+
+
 
 
         override fun getItemCount(): Int {
@@ -180,28 +217,39 @@ class ViewAvailability : AppCompatActivity() {
             notifyDataSetChanged()
         }
     }
+    private fun updateAvailabilityTextView(availabilityForDay: List<String>) {
+        val availabilityTextView = findViewById<TextView>(R.id.availability)
 
+        // Map availability status to corresponding strings
+        val availabilityMap = mapOf(
+            "MORNING" to "Morning",
+            "EVENING" to "Evening",
+            "ANY" to "Any",
+            "NOT_AVAILABLE" to "Not Available"
+        )
 
-
-    private fun updateToggleButtons(availabilityForDay: List<String>) {
-        val morningButton = findViewById<MaterialButton>(R.id.morning)
-        val eveningButton = findViewById<MaterialButton>(R.id.evening)
-        val anyButton = findViewById<MaterialButton>(R.id.anyT)
-
-        // Clear existing selection
-        morningButton.isChecked = false
-        eveningButton.isChecked = false
-        anyButton.isChecked = false
-
-        // Update toggle buttons according to availability for the day
-        availabilityForDay.forEach {
-            when (it) {
-                "MORNING" -> morningButton.isChecked = true
-                "EVENING" -> eveningButton.isChecked = true
-                "ANY" -> anyButton.isChecked = true
-            }
+        // If availabilityForDay is not empty, get the availability status from the first item
+        // Otherwise, set availability status as "Unknown"
+        val availabilityStatus = if (availabilityForDay.isNotEmpty()) {
+            // Retrieve the availability status from the first item
+            val availability = availabilityForDay[0]
+            // Map the availability status to the corresponding string
+            availabilityMap[availability] ?: "Unknown"
+        } else {
+            // If availabilityForDay is empty, set availability status as "Unknown"
+            "Unknown"
         }
+
+        // Set the availability text
+        availabilityTextView.text = availabilityStatus
     }
+
+    companion object {
+        // Define availability as a static variable so that it can be accessed from the adapter
+        var availability: Map<String, Any> = emptyMap()
+    }
+
+
 }
 
 
