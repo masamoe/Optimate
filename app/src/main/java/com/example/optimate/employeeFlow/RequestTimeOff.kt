@@ -239,11 +239,13 @@ class RequestTimeOff : AppCompatActivity() {
             .add(timeOffRequest)
             .addOnSuccessListener { documentReference ->
                 Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
+                Toast.makeText(this, "Sent to Manager", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, ScheduleModule::class.java))
 
             }
             .addOnFailureListener { e ->
                 Log.e("EditAccountActivity", "Error creating new record", e)
+                Toast.makeText(this, "Error in Sending", Toast.LENGTH_SHORT).show()
                 // Handle the error, for example, show an error message to the user
             }
     }
