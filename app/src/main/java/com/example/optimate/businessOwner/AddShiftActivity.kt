@@ -93,7 +93,7 @@ class AddShiftActivity : AppCompatActivity() {
 
         // Create shiftMap for Firebase
         val shiftMap = hashMapOf(
-            "BID" to GlobalUserData.bid,
+            "BID" to "kj;nbvknjbadsvkjn,mvdsankjl.vadsdvsanlk;dvsa",
             "day" to shift.day,
             "employees" to shift.employees,
             "startTime" to shift.startTime,
