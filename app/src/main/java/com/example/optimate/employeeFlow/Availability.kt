@@ -492,6 +492,7 @@ class Availability : AppCompatActivity() {
                     val newAvailability = hashMapOf(
                         "UID" to GlobalUserData.uid,
                         "BID" to GlobalUserData.bid,
+                        "name" to GlobalUserData.name,
                         "availability" to availabilityMap
                     )
                     db.collection("availability")

@@ -181,3 +181,14 @@ fun PreviewAccountsScreen() {
     )
     AccountsScreen(emptyList)
 }
+
+@Preview
+@Composable
+fun AccountsScreenPreview() {
+    val accounts = listOf(
+        Account("John Doe", "CEO", "1"),
+        Account("Jane Smith", "CTO", "2"),
+        // Add more sample accounts if needed
+    )
+    AccountsScreen(accounts = accounts)
+}
