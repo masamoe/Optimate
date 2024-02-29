@@ -40,9 +40,9 @@
                 android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:inputType="none" />
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="datetime|date" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -61,9 +61,9 @@
                 android:id="@+id/startTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:inputType="none" />
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="datetime|time" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- End Time -->
@@ -83,9 +83,9 @@
                 android:id="@+id/endTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:inputType="none" />
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="datetime|time" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Employee List -->
