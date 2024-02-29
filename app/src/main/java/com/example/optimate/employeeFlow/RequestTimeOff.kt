@@ -16,6 +16,7 @@ import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -40,7 +41,7 @@ class RequestTimeOff : AppCompatActivity() {
         var endDatetoDb = ""
         var reason = ""
 
-        val allDaySwitch: MaterialSwitch = findViewById(R.id.materialSwitch)
+        val allDaySwitch: MaterialSwitch = findViewById(R.id.allDaySwitch)
 
 
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
@@ -67,6 +68,10 @@ class RequestTimeOff : AppCompatActivity() {
         val startDateEditText = findViewById<TextView>(R.id.startDate)
         val endDateEditText = findViewById<TextView>(R.id.endDate)
         val sendButton = findViewById<Button>(R.id.sendButton)
+        val outlinedStartTime = findViewById<TextInputLayout>(R.id.outlinedStartTime)
+        val outlinedEndTime = findViewById<TextInputLayout>(R.id.outlinedEndTime)
+        val textInputLayoutReason = findViewById<TextInputLayout>(R.id.textInputLayout)
+
 
         // Set click listeners to open date pickers
         outlinedStartDate.setEndIconOnClickListener {
@@ -77,11 +82,15 @@ class RequestTimeOff : AppCompatActivity() {
         }
 
         startDateEditText.setOnClickListener {
-                startDatePicker.show(supportFragmentManager, "START_DATE_PICKER_TAG")}
+            outlinedStartDate.error = null
+            startDatePicker.show(supportFragmentManager, "START_DATE_PICKER_TAG")}
 
         endDateEditText.setOnClickListener {
+            outlinedEndDate.error = null
                 endDatePicker.show(supportFragmentManager, "END_DATE_PICKER_TAG")
             }
+
+
 
 
         // Set positive button click listeners to handle date selection
@@ -93,36 +102,18 @@ class RequestTimeOff : AppCompatActivity() {
             startDatetoDb = formattedDate
 
             if (endDate != null && startDate.after(endDate)) {
-                outlinedStartDate.error = getString(R.string.start_date_after_end_date_error)
-                startDateEditText.text = null
-
+                // If an end date is selected and it's before the start date, show an error
+                outlinedEndDate.error = getString(R.string.end_date_before_start_date_error)
+                endDateEditText.text = null // Clear text when error occurs
             } else {
-                outlinedStartDate.error = null
-                startDateEditText.text = startDatePicker.headerText
-
+                outlinedEndDate.error = null // Clear error if no issue with the end date
             }
+
+            startDateEditText.text = startDatePicker.headerText
+            outlinedStartDate.error = null // Clear any previous errors for start date
         }
 
-        startDatePicker.addOnPositiveButtonClickListener { startTimestamp ->
-            val startDate = Date(startTimestamp)
-            val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
-            val formattedDate = dateFormat.format(startDate)
-            val endDate = endDatePicker.selection?.let { Date(it) }
-            startDatetoDb = formattedDate
 
-
-            if (endDate != null && startDate.after(endDate)) {
-                outlinedStartDate.error = getString(R.string.start_date_after_end_date_error)
-                startDateEditText.text = null // Clear text when error occurs
-
-            } else {
-                outlinedStartDate.error = null
-                startDateEditText.text = startDatePicker.headerText
-                outlinedEndDate.error = null // Clear error for end date when start date is selected
-
-
-            }
-        }
 
         endDatePicker.addOnPositiveButtonClickListener { endTimestamp ->
             val endDate = Date(endTimestamp)
@@ -133,14 +124,15 @@ class RequestTimeOff : AppCompatActivity() {
             endDatetoDb = formattedDate
 
             if (startDate != null && endDate.before(startDate)) {
+                // If a start date is selected and the end date is before it, show an error
                 outlinedEndDate.error = getString(R.string.end_date_before_start_date_error)
                 endDateEditText.text = null // Clear text when error occurs
-
             } else {
-                outlinedEndDate.error = null
-                endDateEditText.text = endDatePicker.headerText
-
+                outlinedEndDate.error = null // Clear error if no issue with the end date
             }
+
+            endDateEditText.text = endDatePicker.headerText
+            outlinedStartDate.error = null // Clear any previous errors for start date
         }
 
 // Create MaterialDatePicker instances for start and end dates
@@ -161,13 +153,37 @@ class RequestTimeOff : AppCompatActivity() {
         val startTimeEditText = findViewById<TextView>(R.id.startTime)
         val endTimeEditText = findViewById<TextView>(R.id.endTime)
 
+        val startTimeTextInputLayout = findViewById<TextInputLayout>(R.id.outlinedStartTime)
+
+        val endTimeTextInputLayout = findViewById<TextInputLayout>(R.id.outlinedEndTime)
+
+
+
+        allDaySwitch.setOnCheckedChangeListener { _, isChecked ->
+            // Enable/disable the time fields based on the checked state of the switch
+            startTimeTextInputLayout.isEnabled = !isChecked
+            startTimeEditText.isEnabled = !isChecked
+            endTimeTextInputLayout.isEnabled = !isChecked
+            endTimeEditText.isEnabled = !isChecked
+
+            // Clear the text when switching to all day
+            if (isChecked) {
+                outlinedEndTime.error = null
+                outlinedStartTime.error = null
+                startTimeEditText.text = null
+                endTimeEditText.text = null
+            }
+        }
+
         // Set OnClickListener for the Start Time EditText
         startTimeEditText.setOnClickListener{
+            outlinedStartTime.error = null
             startTimePicker.show(supportFragmentManager, "START_Time_PICKER_TAG")
         }
 
 // Set OnClickListener for the End Time EditText
         endTimeEditText.setOnClickListener{
+            outlinedEndTime.error = null
             endTimePicker.show(supportFragmentManager, "END_Time_PICKER_TAG")
         }
 
@@ -207,25 +223,63 @@ class RequestTimeOff : AppCompatActivity() {
 
         autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             reason = parent.getItemAtPosition(position).toString()
+            textInputLayoutReason.error = null
             // Now the selected item is stored in the 'reason' variable
         }
 
+
+
         sendButton.setOnClickListener{
 
+            // Reset error messages to null
+            findViewById<TextInputLayout>(R.id.outlinedStartDate).error = null
+            findViewById<TextInputLayout>(R.id.outlinedEndDate).error = null
+            findViewById<TextInputLayout>(R.id.outlinedStartTime).error = null
+            findViewById<TextInputLayout>(R.id.outlinedEndTime).error = null
+            findViewById<TextInputLayout>(R.id.textInputLayout).error = null
+
+            // Check if all-day switch is checked
             if (allDaySwitch.isChecked) {
-                 startTime = "00:00"
-                 endTime = "23:59"
+                // If all-day switch is checked, set start time to "00:00" and end time to "23:59"
+                startTime = "00:00"
+                endTime = "23:59"
+            } else {
+                // If all-day switch is not checked, ensure both start and end times are selected
+                if (startTime.isEmpty()) {
+                    // Show error for start time field
+                    findViewById<TextInputLayout>(R.id.outlinedStartTime).error = "Please select a start time"
+                }
+                if (endTime.isEmpty()) {
+                    // Show error for end time field
+                    findViewById<TextInputLayout>(R.id.outlinedEndTime).error = "Please select an end time"
+                }
             }
-            if (startDatetoDb != null && endDatetoDb != null) {
 
+            // Check if start date, end date, and reason are filled
+            val isAllFieldsFilled = startDatetoDb.isNotEmpty() && endDatetoDb.isNotEmpty() && reason.isNotEmpty()
 
-                saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb!!, endDatetoDb!!, reason )
-
-            }else {
-
+            // If any field is not filled, show an error message
+            if (!isAllFieldsFilled) {
+                if (startDatetoDb.isEmpty()) {
+                    // Show error for start date field
+                    findViewById<TextInputLayout>(R.id.outlinedStartDate).error = "Please select a start date"
+                }
+                if (endDatetoDb.isEmpty()) {
+                    // Show error for end date field
+                    findViewById<TextInputLayout>(R.id.outlinedEndDate).error = "Please select an end date"
+                }
+                if (reason.isEmpty()) {
+                    // Show error for reason field
+                    findViewById<TextInputLayout>(R.id.textInputLayout).error = "Please select a reason"
+                }
                 return@setOnClickListener
             }
+
+            // If all fields are filled, proceed to save the request
+            saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb, endDatetoDb, reason)
         }
+
+
 
 
     }
@@ -244,14 +298,14 @@ class RequestTimeOff : AppCompatActivity() {
             "startDate" to startDate,
             "endDate" to endDate,
             "status" to "pending",
-            "Reason" to reason
+            "reason" to reason
         )
 
         db.collection("timeOffRequest")
             .add(timeOffRequest)
             .addOnSuccessListener { documentReference ->
                 Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
-                Toast.makeText(this, "Sent to Manager", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, ScheduleModule::class.java))
 
             }

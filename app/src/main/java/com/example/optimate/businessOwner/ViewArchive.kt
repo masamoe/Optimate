@@ -116,6 +116,7 @@ class ViewArchive : AppCompatActivity() {
                 for (document in documents) {
                     // Convert Firestore document to TimeRequest object
                     val timeRequest = document.toObject(TimeRequest::class.java)
+                    Log.d("fetchTimeOffRequests", "TimeRequest reason: ${timeRequest.reason}")
                     timeRequests.add(timeRequest)
                 }
                 displayTimeOffRequests(timeRequests)
@@ -151,7 +152,7 @@ class ViewArchive : AppCompatActivity() {
                 val timeRequestCard = layoutInflater.inflate(R.layout.archive_card, null)
 
                 // Set values to the views inside the card
-                timeRequestCard.findViewById<TextView>(R.id.empName).text = timeRequest.name
+                timeRequestCard.findViewById<TextView>(R.id.empName).text = "${timeRequest.name} - ${timeRequest.reason}"
                 timeRequestCard.findViewById<TextView>(R.id.requestStartDate).text =
                     timeRequest.startDate
                 timeRequestCard.findViewById<TextView>(R.id.requestEndDate).text = timeRequest.endDate
@@ -164,7 +165,7 @@ class ViewArchive : AppCompatActivity() {
                 val backgroundColor = when (timeRequest.status) {
                     TimeRequestStatus.APPROVED -> ContextCompat.getColor(this, R.color.light_green)
                     TimeRequestStatus.REJECTED -> ContextCompat.getColor(this, R.color.light_red)
-                    else -> Color.TRANSPARENT
+                    else -> ContextCompat.getColor(this, R.color.light_grey)
                 }
                 cardView.setCardBackgroundColor(backgroundColor)
 

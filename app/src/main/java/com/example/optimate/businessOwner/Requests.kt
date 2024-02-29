@@ -150,7 +150,7 @@ class Requests : AppCompatActivity() {
                 val timeRequestCard = layoutInflater.inflate(R.layout.requests_card, null)
 
                 // Set values to the views inside the card
-                timeRequestCard.findViewById<TextView>(R.id.empName).text = timeRequest.name
+                timeRequestCard.findViewById<TextView>(R.id.empName).text = "${timeRequest.name} - ${timeRequest.reason}"
                 timeRequestCard.findViewById<TextView>(R.id.requestStartDate).text =
                     timeRequest.startDate
                 timeRequestCard.findViewById<TextView>(R.id.requestEndDate).text = timeRequest.endDate
