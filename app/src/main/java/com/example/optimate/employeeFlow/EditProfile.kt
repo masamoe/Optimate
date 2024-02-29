@@ -1,16 +1,22 @@
 package com.example.optimate.employeeFlow
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
@@ -19,10 +25,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
+import java.util.UUID
 
 class EditProfile : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private var db = Firebase.firestore
+    private var storageRef = Firebase.storage.reference;
+
 
     companion object {
         private const val REQUEST_IMAGE_CAPTURE = 1
@@ -42,6 +51,7 @@ class EditProfile : AppCompatActivity() {
         val roleText = findViewById<TextView>(R.id.textView7)
         val nameText = findViewById<TextView>(R.id.textView6)
         val iconButton = findViewById<Button>(R.id.iconButton)
+
         emailInput.text = GlobalUserData.email
         passwordInput.text = GlobalUserData.password
         addressInput.text = GlobalUserData.address
@@ -50,8 +60,11 @@ class EditProfile : AppCompatActivity() {
         nameText.text = GlobalUserData.name
 
         iconButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, REQUEST_IMAGE_PICK)
+            val galleryIntent = Intent(Intent.ACTION_PICK)
+            // here item is type of image
+            galleryIntent.type = "image/*"
+            // ActivityResultLauncher callback
+            imagePickerActivityResult.launch(galleryIntent)
         }
 
 
@@ -106,30 +119,59 @@ class EditProfile : AppCompatActivity() {
             }
     }*/
 
+    private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result != null) {
+                val imageUri: Uri? = result.data?.data
 
 
-    private fun doPhotoUpload(photoUri: Uri) {
-        val storage = Firebase.storage
+                // Generate a unique filename for the uploaded image
+                val fileName = getFileName(applicationContext, imageUri!!)
 
-// Create a reference to the location where you want to store the photo
-        val photoRef = storage.reference.child("images/${GlobalUserData.uid}")
+                // Upload Task with upload to directory 'file'
+                val uploadTask = storageRef.child("profileImage/$fileName").putFile(imageUri!!)
 
-// Upload the photo to Firebase Storage
-        val uploadTask = photoRef.putFile(photoUri) // 'photoUri' is the URI of the photo
+                // On success, download the file URL and display it
+                uploadTask.addOnSuccessListener { _ ->
+                    // using glide library to display the image
+                    storageRef.child("profileImage/$fileName").downloadUrl.addOnSuccessListener { uri ->
+                        // Load the image into ImageView
+                        val imageInput = findViewById<ImageView>(R.id.imageProfile)
+                        Glide.with(this)
+                            .load(uri)
+                            .into(imageInput)
 
-// Listen for upload success or failure
-        uploadTask.addOnSuccessListener { taskSnapshot ->
-            // Photo uploaded successfully
-            // Now, update the user document in Firestore with the URL of the uploaded photo
-            val downloadUrl = taskSnapshot.storage.downloadUrl.toString()
-            updateUserProfilePhotoInFirestore(GlobalUserData.uid, downloadUrl)
-        }.addOnFailureListener { exception ->
-            Toast.makeText(this, "Upload Failed", Toast.LENGTH_SHORT).show()
-            // Handle any errors
+                        Log.e("Firebase", "Download passed")
+                        // Pass the URL to the updateUserProfilePhotoInFirestore function
+                        updateUserProfilePhotoInFirestore(uri.toString())
+                    }.addOnFailureListener {
+                        Log.e("Firebase", "Failed in downloading")
+                    }
+                }.addOnFailureListener {
+                    Log.e("Firebase", "Image Upload fail")
+                }
+            }
         }
+
+
+
+    @SuppressLint("Range")
+    private fun getFileName(context: Context, uri: Uri): String? {
+        if (uri.scheme == "content") {
+            val cursor = context.contentResolver.query(uri, null, null, null, null)
+            cursor.use {
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    }
+                }
+            }
+        }
+        return uri.path?.lastIndexOf('/')?.let { uri.path?.substring(it) }
     }
 
-    private fun updateUserProfilePhotoInFirestore(userId: String, photoUrl: String) {
+
+    private fun updateUserProfilePhotoInFirestore( photoUrl: String) {
         val db = Firebase.firestore
         val updates = HashMap<String, String>()
         updates["profilePic"] = photoUrl
@@ -175,7 +217,7 @@ class EditProfile : AppCompatActivity() {
                 showToast("Error fetching user document")
             }
     }
-}
+
 
     private fun updatePassword(newPassword: String) {
         val user = Firebase.auth.currentUser
