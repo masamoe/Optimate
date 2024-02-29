@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.NewUserPasswordChange
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -98,7 +99,7 @@ class AddShiftActivity : AppCompatActivity() {
         )
 
         val shiftMap = hashMapOf(
-            "BID" to "your_BID_value_here",
+            "BID" to GlobalUserData.bid,
             "day" to shift.day,
             "employees" to shift.employees,
             "startTime" to shift.startTime,

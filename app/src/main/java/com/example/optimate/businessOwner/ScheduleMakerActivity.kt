@@ -3,21 +3,35 @@ package com.example.optimate.businessOwner
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 class ScheduleMakerActivity : AppCompatActivity() {
+    private var db = Firebase.firestore
+    data class Shift(
+        val day: CharSequence,
+        val employees: List<String>,
+        val startTime: String,
+        val endTime: String
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule_maker)
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)
         topBar.setTitle("Daily Schedule")
+        val selectedDate = intent.getStringExtra("SELECTED_DATE")
 
         // Find the dynamic content container
         val dynamicContentContainer: LinearLayout = findViewById(R.id.dynamicContentContainer)
@@ -27,12 +41,21 @@ class ScheduleMakerActivity : AppCompatActivity() {
             val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
             dynamicContentContainer.addView(contentView)
+
+            // Assuming each shift data is represented by a model class named Shift
+            // Retrieve shift data from Firestore and populate the TextViews
+            if (selectedDate != null) {
+                getShiftData(selectedDate) { shift ->
+                    contentView.findViewById<TextView>(R.id.shiftHours).text = "${shift.startTime} - ${shift.endTime}"
+                    // Set other TextViews with relevant shift data
+                }
+            }
         }
 
         val editTextDate: TextView = findViewById(R.id.editTextDate)
 
         // Retrieve the selected date from the Intent extras
-        val selectedDate = intent.getStringExtra("SELECTED_DATE")
+
 
         // Set the text of editTextDate to the selected date
         editTextDate.setText(selectedDate)
@@ -51,5 +74,22 @@ class ScheduleMakerActivity : AppCompatActivity() {
             // Start ScheduleMakerActivity
             startActivity(intent)
         }
+    }
+
+    private fun getShiftData(selectedDate: String, callback: (Shift) -> Unit) {
+        db.collection("schedule")
+            .whereEqualTo("BID", GlobalUserData.bid)
+            .whereEqualTo("day", selectedDate)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    // Assuming Shift is a model class representing your shift data
+                    val shift = document.toObject(Shift::class.java)
+                    callback(shift)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ScheduleMakerActivity", "Error getting shift data", exception)
+            }
     }
 }
