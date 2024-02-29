@@ -129,12 +129,12 @@ class EditProfile : AppCompatActivity() {
                 val fileName = getFileName(applicationContext, imageUri!!)
 
                 // Upload Task with upload to directory 'file'
-                val uploadTask = storageRef.child("profileImage/$fileName").putFile(imageUri!!)
+                val uploadTask = storageRef.child("profileImage/${GlobalUserData.uid}/$fileName").putFile(imageUri!!)
 
                 // On success, download the file URL and display it
                 uploadTask.addOnSuccessListener { _ ->
                     // using glide library to display the image
-                    storageRef.child("profileImage/$fileName").downloadUrl.addOnSuccessListener { uri ->
+                    storageRef.child("profileImage/${GlobalUserData.uid}/$fileName").downloadUrl.addOnSuccessListener { uri ->
                         // Load the image into ImageView
                         val imageInput = findViewById<ImageView>(R.id.imageProfile)
                         Glide.with(this)
