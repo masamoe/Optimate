@@ -2,8 +2,10 @@ package com.example.optimate.employeeFlow
 
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
@@ -16,10 +18,17 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.storage
 
 class EditProfile : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private var db = Firebase.firestore
+
+    companion object {
+        private const val REQUEST_IMAGE_CAPTURE = 1
+        private const val REQUEST_IMAGE_PICK = 2
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
@@ -32,12 +41,18 @@ class EditProfile : AppCompatActivity() {
         val phoneInput = findViewById<TextView>(R.id.phoneUpdate)
         val roleText = findViewById<TextView>(R.id.textView7)
         val nameText = findViewById<TextView>(R.id.textView6)
+        val iconButton = findViewById<Button>(R.id.iconButton)
         emailInput.text = GlobalUserData.email
         passwordInput.text = GlobalUserData.password
         addressInput.text = GlobalUserData.address
         phoneInput.text = GlobalUserData.phone
         roleText.text = GlobalUserData.role
         nameText.text = GlobalUserData.name
+
+        iconButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, REQUEST_IMAGE_PICK)
+        }
 
 
 
@@ -48,14 +63,14 @@ class EditProfile : AppCompatActivity() {
 
         saveBtn.setOnClickListener {
             val userDataAuth = HashMap<String, String>()
-            if(GlobalUserData.email != emailInput.text.toString()){
+            if (GlobalUserData.email != emailInput.text.toString()) {
                 //updateEmail(emailInput.text.toString())
                 //userDataAuth["email"] = emailInput.text.toString()
             }
-            if (GlobalUserData.password != passwordInput.text.toString()){
+            if (GlobalUserData.password != passwordInput.text.toString()) {
                 updatePassword(passwordInput.text.toString())
             }
-            if (GlobalUserData.address != addressInput.text.toString()){
+            if (GlobalUserData.address != addressInput.text.toString()) {
                 userDataAuth["address"] = addressInput.text.toString()
             }
             if (GlobalUserData.phone != phoneInput.text.toString()) {
@@ -64,7 +79,7 @@ class EditProfile : AppCompatActivity() {
 
             if (userDataAuth.isEmpty()) {
                 return@setOnClickListener
-            }else{
+            } else {
                 updateDB(userDataAuth)
             }
         }
@@ -72,7 +87,7 @@ class EditProfile : AppCompatActivity() {
         // Function to save data to local database
 
     }
-   /* private fun updateEmail(email: String) {
+    /* private fun updateEmail(email: String) {
         val user = Firebase.auth.currentUser
 
         user?.updateEmail(email)
@@ -90,6 +105,77 @@ class EditProfile : AppCompatActivity() {
                 }
             }
     }*/
+
+
+
+    private fun doPhotoUpload(photoUri: Uri) {
+        val storage = Firebase.storage
+
+// Create a reference to the location where you want to store the photo
+        val photoRef = storage.reference.child("images/${GlobalUserData.uid}")
+
+// Upload the photo to Firebase Storage
+        val uploadTask = photoRef.putFile(photoUri) // 'photoUri' is the URI of the photo
+
+// Listen for upload success or failure
+        uploadTask.addOnSuccessListener { taskSnapshot ->
+            // Photo uploaded successfully
+            // Now, update the user document in Firestore with the URL of the uploaded photo
+            val downloadUrl = taskSnapshot.storage.downloadUrl.toString()
+            updateUserProfilePhotoInFirestore(GlobalUserData.uid, downloadUrl)
+        }.addOnFailureListener { exception ->
+            Toast.makeText(this, "Upload Failed", Toast.LENGTH_SHORT).show()
+            // Handle any errors
+        }
+    }
+
+    private fun updateUserProfilePhotoInFirestore(userId: String, photoUrl: String) {
+        val db = Firebase.firestore
+        val updates = HashMap<String, String>()
+        updates["profilePic"] = photoUrl
+        val userRef = db.collection("users").whereEqualTo("UID", GlobalUserData.uid)
+
+        // Update the 'photoUrl' field of the user document
+        if (updates.isEmpty()) {
+            // No fields to update
+            return
+        }
+
+        userRef.get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // No document found with the specified UID
+                    Log.e(
+                        "EditAccountActivity",
+                        "No document found for UID: ${GlobalUserData.uid}"
+                    )
+                    showToast("No document found for UID: ${GlobalUserData.uid}")
+                    return@addOnSuccessListener
+                }
+
+                // Assuming there's only one document with the specified UID
+                val userDoc = documents.documents[0]
+
+                // Update only the specified fields in the document
+                userDoc.reference.update(updates as Map<String, Any>)
+                    .addOnSuccessListener {
+                        // Update GlobalUserData with the updated fields
+                       GlobalUserData.profilePic = photoUrl
+
+                        Log.d("EditAccountActivity", "User document updated successfully")
+                        showToast("Updated")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("EditAccountActivity", "Error updating user document", e)
+                        showToast("Update Failed")
+                    }
+            }
+            .addOnFailureListener { e ->
+                Log.e("EditAccountActivity", "Error fetching user document", e)
+                showToast("Error fetching user document")
+            }
+    }
+}
 
     private fun updatePassword(newPassword: String) {
         val user = Firebase.auth.currentUser
@@ -110,6 +196,7 @@ class EditProfile : AppCompatActivity() {
     }
 
     private fun updateDB(updates : HashMap<String, String>) {
+       var db = Firebase.firestore
         if (GlobalUserData.uid != null) {
             val userRef = db.collection("users").whereEqualTo("UID", GlobalUserData.uid)
 
@@ -167,4 +254,6 @@ class EditProfile : AppCompatActivity() {
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
+
 }
