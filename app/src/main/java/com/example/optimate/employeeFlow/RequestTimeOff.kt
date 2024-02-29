@@ -7,10 +7,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -21,7 +23,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.TimeZone
+import java.util.Locale
 
 class RequestTimeOff : AppCompatActivity() {
 
@@ -34,14 +36,18 @@ class RequestTimeOff : AppCompatActivity() {
         setContentView(R.layout.activity_request_time_off)
         var startTime = ""
         var endTime = ""
-        var startDatetoDb: Date? = null
-        var endDatetoDb: Date? = null
+        var startDatetoDb = ""
+        var endDatetoDb = ""
         var reason = ""
 
         val allDaySwitch: MaterialSwitch = findViewById(R.id.materialSwitch)
 
 
-
+        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
+        homeBtn.setOnClickListener {
+            val intent = Intent(this, DynamicLandingActivity::class.java)
+            startActivity(intent)
+        }
 
 
 
@@ -81,8 +87,10 @@ class RequestTimeOff : AppCompatActivity() {
         // Set positive button click listeners to handle date selection
         startDatePicker.addOnPositiveButtonClickListener { startTimestamp ->
             val startDate = Date(startTimestamp)
+            val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+            val formattedDate = dateFormat.format(startDate)
             val endDate = endDatePicker.selection?.let { Date(it) }
-            startDatetoDb = startDate
+            startDatetoDb = formattedDate
 
             if (endDate != null && startDate.after(endDate)) {
                 outlinedStartDate.error = getString(R.string.start_date_after_end_date_error)
@@ -97,8 +105,10 @@ class RequestTimeOff : AppCompatActivity() {
 
         startDatePicker.addOnPositiveButtonClickListener { startTimestamp ->
             val startDate = Date(startTimestamp)
+            val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+            val formattedDate = dateFormat.format(startDate)
             val endDate = endDatePicker.selection?.let { Date(it) }
-            startDatetoDb = startDate
+            startDatetoDb = formattedDate
 
 
             if (endDate != null && startDate.after(endDate)) {
@@ -116,9 +126,11 @@ class RequestTimeOff : AppCompatActivity() {
 
         endDatePicker.addOnPositiveButtonClickListener { endTimestamp ->
             val endDate = Date(endTimestamp)
+            val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+            val formattedDate = dateFormat.format(endDate)
             val startDate = startDatePicker.selection?.let { Date(it) }
 
-            endDatetoDb = endDate
+            endDatetoDb = formattedDate
 
             if (startDate != null && endDate.before(startDate)) {
                 outlinedEndDate.error = getString(R.string.end_date_before_start_date_error)
@@ -201,8 +213,8 @@ class RequestTimeOff : AppCompatActivity() {
         sendButton.setOnClickListener{
 
             if (allDaySwitch.isChecked) {
-                 startTime = "12:00 AM"
-                 endTime = "11:59 PM"
+                 startTime = "00:00"
+                 endTime = "23:59"
             }
             if (startDatetoDb != null && endDatetoDb != null) {
 
@@ -218,7 +230,7 @@ class RequestTimeOff : AppCompatActivity() {
 
     }
 
-    private fun saveTimeOffRequestToFirestore(startTime: String, endTime: String, startDate: Date, endDate: Date, reason: String) {
+    private fun saveTimeOffRequestToFirestore(startTime: String, endTime: String, startDate: String, endDate: String, reason: String) {
 
 
 
