@@ -1,5 +1,6 @@
 package com.example.optimate.employeeFlow
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.AdapterView
@@ -238,6 +239,7 @@ class RequestTimeOff : AppCompatActivity() {
             .add(timeOffRequest)
             .addOnSuccessListener { documentReference ->
                 Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
+                startActivity(Intent(this, ScheduleModule::class.java))
 
             }
             .addOnFailureListener { e ->

@@ -193,10 +193,11 @@
                         </TextView>
 
                         <TextView
+                            android:id="@+id/addressText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/employeeAddress"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:text="@string/employeeAddress">
 
                         </TextView>
 
@@ -219,10 +220,11 @@
                         </TextView>
 
                         <TextView
+                            android:id="@+id/phoneText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/employeePhoneNumber"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:text="@string/employeePhoneNumber">
 
                         </TextView>
 
@@ -236,19 +238,22 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         >
+
                         <TextView
+                            android:id="@+id/hourlyText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="HourlyWage: "
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:text="HourlyWage: ">
 
                         </TextView>
 
                         <TextView
+                            android:id="@+id/wageText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/employeeWage"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:text="@string/employeeWage">
 
                         </TextView>
 
@@ -308,7 +313,9 @@
 
 
             </com.google.android.material.card.MaterialCardView>
+
             <Button
+                android:id="@+id/signOutBtn"
                 style="@style/Widget.Material3.Button.ElevatedButton"
                 android:layout_width="300dp"
                 android:layout_height="60dp"

@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.optimate.R
 import com.example.optimate.employeeFlow.EditProfile
+import com.example.optimate.employeeFlow.ProfilePage
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
@@ -32,7 +33,7 @@ class DynamicLandingActivity : AppCompatActivity(){
             }
         }
         settingPage.setOnClickListener{
-            val intent = Intent(this, EditProfile::class.java)
+            val intent = Intent(this, ProfilePage::class.java)
             startActivity(intent)
             finish()
         }
