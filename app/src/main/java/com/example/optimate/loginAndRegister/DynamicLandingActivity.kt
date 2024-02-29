@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
+import com.bumptech.glide.Glide
 import com.example.optimate.R
 import com.example.optimate.employeeFlow.EditProfile
 import com.example.optimate.employeeFlow.ProfilePage
@@ -32,6 +33,10 @@ class DynamicLandingActivity : AppCompatActivity(){
                 DynamicLandingScreen(GlobalUserData.access, GlobalUserData.title)
             }
         }
+        Glide.with(this)
+            .load(GlobalUserData.profilePic)
+            .into(settingPage)
+
         settingPage.setOnClickListener{
             val intent = Intent(this, ProfilePage::class.java)
             startActivity(intent)

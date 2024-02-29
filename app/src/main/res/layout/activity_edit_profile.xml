@@ -107,16 +107,19 @@
 
                 <!-- Image with overlay -->
                 <ImageView
+                    android:id="@+id/imageProfile"
                     android:layout_width="230dp"
                     android:layout_height="230dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/placeholder" />
+
 
                 <!-- Overlay layer -->
 
                 <!-- Icon -->
 
                 <View
+                    android:id="@+id/imageInput"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#8000" />
