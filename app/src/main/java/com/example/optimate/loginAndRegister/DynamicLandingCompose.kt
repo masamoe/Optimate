@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.optimate.R
 import com.example.optimate.businessOwner.AccountsActivity
 import com.example.optimate.businessOwner.FinancesActivity
+import com.example.optimate.businessOwner.Requests
 import com.example.optimate.businessOwner.SchedulerActivity
 import com.example.optimate.businessOwner.TitlesActivity
 import com.example.optimate.employeeFlow.ClockModule
@@ -118,7 +119,7 @@ fun ButtonList(AccessList: List<String>) {
                             "Clock-in/out" -> context.startActivity(Intent(context, ClockModule::class.java))
                             "Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
                             "Scheduling" -> context.startActivity(Intent(context, SchedulerActivity::class.java))
-                            "Requests" -> context.startActivity(Intent(context, ViewTimeOffRequests::class.java))
+                            "Requests" -> context.startActivity(Intent(context, Requests::class.java))
                             "View Employees" -> context.startActivity(Intent(context, AccountsActivity::class.java))
                             "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
 
