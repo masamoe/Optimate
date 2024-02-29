@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.GlobalUserData
@@ -17,11 +18,23 @@ import com.google.firebase.firestore.firestore
 class ScheduleMakerActivity : AppCompatActivity() {
     private var db = Firebase.firestore
     data class Shift(
-        val day: CharSequence,
-        val employees: List<String>,
+        val day: String,
+        val employees: List<String>?,
         val startTime: String,
         val endTime: String
-    )
+    ) {
+
+
+        // Add a no-argument constructor
+        constructor() : this(
+            // Initialize your properties here if needed
+            day = "",
+            employees = null,
+            startTime = "",
+            endTime = ""
+        )
+    }
+    val shiftsList = mutableListOf<Shift>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -37,19 +50,17 @@ class ScheduleMakerActivity : AppCompatActivity() {
         val dynamicContentContainer: LinearLayout = findViewById(R.id.dynamicContentContainer)
 
         // Add multiple instances of content_schedule_maker dynamically
-        for (i in 1..4) {
-            val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
-            dynamicContentContainer.addView(contentView)
+        if (selectedDate != null) {
+            getShiftData(selectedDate) { shifts ->
+                for (shift in shiftsList) {
+                    val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                    val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
+                    dynamicContentContainer.addView(contentView)
 
-            // Assuming each shift data is represented by a model class named Shift
-            // Retrieve shift data from Firestore and populate the TextViews
-            if (selectedDate != null) {
-                getShiftData(selectedDate) { shift ->
                     contentView.findViewById<TextView>(R.id.shiftHours).text = "${shift.startTime} - ${shift.endTime}"
-                    // Set other TextViews with relevant shift data
                 }
-            }
+             }
+
         }
 
         val editTextDate: TextView = findViewById(R.id.editTextDate)
@@ -83,13 +94,17 @@ class ScheduleMakerActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
+                    Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
                     // Assuming Shift is a model class representing your shift data
                     val shift = document.toObject(Shift::class.java)
+                    shiftsList.add(shift)
                     callback(shift)
                 }
             }
             .addOnFailureListener { exception ->
                 Log.e("ScheduleMakerActivity", "Error getting shift data", exception)
+                Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show()
+
             }
     }
 }
