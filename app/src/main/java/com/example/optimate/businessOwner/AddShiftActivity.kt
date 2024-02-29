@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,10 +18,10 @@ class AddShiftActivity : AppCompatActivity() {
     private val employeeNames = arrayOf("Bob", "Sue", "Jim", "Alice", "John")
     private var db = Firebase.firestore
     data class Shift(
-        val day: String,
+        val day: CharSequence,
         val employees: List<String>,
-        val startTime: String,
-        val endTime: String
+        val startTime: EditText,
+        val endTime: EditText
     )
 
     private val selectedEmployees = mutableListOf<String>()
@@ -42,6 +43,9 @@ class AddShiftActivity : AppCompatActivity() {
         // Set the text of editTextDate to the selected date
         date.text = selectedDate
 
+        val startTime = findViewById<EditText>(R.id.startTime)
+
+        val endTime = findViewById<EditText>(R.id.endTime)
 
         val employeeListView: ListView = findViewById(R.id.employeeListView)
 
@@ -69,19 +73,19 @@ class AddShiftActivity : AppCompatActivity() {
         }
 
         saveShiftBtn.setOnClickListener {
-            saveShiftToFirebase()
+            saveShiftToFirebase(date.text, startTime, endTime)
         }
     }
 
 
-    private fun saveShiftToFirebase() {
-        val selectedDate = intent.getStringExtra("SELECTED_DATE") ?: ""
-        val startTime = "09:00" // Example start time
-        val endTime = "17:00" // Example end time
+    private fun saveShiftToFirebase(date: CharSequence, startTime: EditText, endTime: EditText) {
+        //val selectedDate = intent.getStringExtra("SELECTED_DATE") ?: ""
+        //val startTime = "09:00" // Example start time
+        //val endTime = "17:00" // Example end time
 
         // Create Shift instance
         val shift = Shift(
-            day = selectedDate,
+            day = date,
             employees = selectedEmployees,
             startTime = startTime,
             endTime = endTime
