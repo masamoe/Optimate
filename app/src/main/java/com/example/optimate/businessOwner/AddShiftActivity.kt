@@ -10,6 +10,7 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.mutableStateListOf
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.NewUserPasswordChange
@@ -18,8 +19,10 @@ import com.google.firebase.firestore.firestore
 
 class AddShiftActivity : AppCompatActivity() {
 
-    private val employeeNames = arrayOf("Bob", "Sue", "Jim", "Alice", "John")
+    private var employeeNames = mutableStateListOf<String>()
+
     private var db = Firebase.firestore
+    private lateinit var adapter: ArrayAdapter<String>
 
     data class Shift(
         val day: CharSequence,
@@ -35,25 +38,20 @@ class AddShiftActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_shift)
         val saveShiftBtn = findViewById<Button>(R.id.saveShiftButton)
 
-
         val topBar: XmlTopBar = findViewById(R.id.topBar)
         topBar.setTitle("Add Shift")
 
         val date: TextView = findViewById(R.id.date)
-
         // Retrieve the selected date from the Intent extras
         val selectedDate = intent.getStringExtra("SELECTED_DATE")
-
         // Set the text of editTextDate to the selected date
         date.text = selectedDate
 
         val startTime = findViewById<EditText>(R.id.startTime)
-
         val endTime = findViewById<EditText>(R.id.endTime)
-
         val employeeListView: ListView = findViewById(R.id.employeeListView)
 
-        val adapter = ArrayAdapter<String>(
+        adapter = ArrayAdapter<String>(
             this,
             android.R.layout.simple_list_item_multiple_choice,
             android.R.id.text1,
@@ -73,13 +71,14 @@ class AddShiftActivity : AppCompatActivity() {
                 selectedEmployees.add(employeeName)
             }
             // Perform any additional actions based on selection/deselection
-
         }
 
         saveShiftBtn.setOnClickListener {
             saveShiftToFirebase(date.text, startTime, endTime)
-
         }
+
+        // Now, call getEmployeesFromDB() after adapter initialization
+        getEmployeesFromDB()
     }
 
 
@@ -128,4 +127,41 @@ class AddShiftActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to add shift", Toast.LENGTH_SHORT).show()
             }
     }
+
+    private fun getEmployeesFromDB() {
+        db.collection("users")
+            .whereEqualTo("BID", GlobalUserData.bid)
+            .whereIn("account_status.status", listOf("Created", "Active"))
+            .get()
+            .addOnSuccessListener { documents ->
+                val employeeNamesList = mutableListOf<String>()
+
+                for (document in documents) {
+                    val name = document.getString("name") ?: "N/A"
+                    if (name != null) {
+                        employeeNamesList.add(name)
+                        Toast.makeText(this, "${name}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                employeeNames.clear()
+                employeeNames.addAll(employeeNamesList)
+
+
+                adapter.notifyDataSetChanged()
+
+
+                Toast.makeText(this, "${employeeNames}", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ScheduleMakerActivity", "Error getting employee data", exception)
+                Toast.makeText(this, "Failed to retrieve employees", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+
+
+
+
+
 }
