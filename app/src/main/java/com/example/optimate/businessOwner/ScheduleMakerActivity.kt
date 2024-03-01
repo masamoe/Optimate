@@ -34,7 +34,8 @@ class ScheduleMakerActivity : AppCompatActivity() {
             endTime = ""
         )
     }
-    val shiftsList = mutableListOf<Shift>()
+
+    private lateinit var dynamicContentContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -47,19 +48,11 @@ class ScheduleMakerActivity : AppCompatActivity() {
         val selectedDate = intent.getStringExtra("SELECTED_DATE")
 
         // Find the dynamic content container
-        val dynamicContentContainer: LinearLayout = findViewById(R.id.dynamicContentContainer)
 
+        dynamicContentContainer = findViewById(R.id.dynamicContentContainer)
         // Add multiple instances of content_schedule_maker dynamically
         if (selectedDate != null) {
-            getShiftData(selectedDate) { shifts ->
-                for (shift in shiftsList) {
-                    val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                    val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
-                    dynamicContentContainer.addView(contentView)
-
-                    contentView.findViewById<TextView>(R.id.shiftHours).text = "${shift.startTime} - ${shift.endTime}"
-                }
-             }
+            fetchShiftData(selectedDate)
 
         }
 
@@ -84,22 +77,54 @@ class ScheduleMakerActivity : AppCompatActivity() {
 
             // Start ScheduleMakerActivity
             startActivity(intent)
+            finish()
         }
     }
 
-    private fun getShiftData(selectedDate: String, callback: (Shift) -> Unit) {
+    private fun fetchShiftData(selectedDate: String) {
+        // Fetch shift data using the selected date
+        getShiftData(selectedDate) { shifts ->
+            populateUI(shifts)
+        }
+    }
+
+    private fun populateUI(shifts: List<Shift>) {
+        for (shift in shifts) {
+            val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
+            dynamicContentContainer.addView(contentView)
+
+            contentView.findViewById<TextView>(R.id.shiftHours).text = "${shift.startTime} - ${shift.endTime}"
+            val names = StringBuilder()
+            for (name in shift.employees!!) { // Assuming names is a list of names in Shift class
+                names.append(name).append("\n") // You can adjust the separator as needed
+            }
+
+            // Remove the trailing comma and space if there are names
+            if (names.isNotEmpty()) {
+                names.setLength(names.length - 2)
+            }
+
+            contentView.findViewById<TextView>(R.id.NameFromDb).text = names.toString()
+        }
+    }
+
+    private fun getShiftData(selectedDate: String, callback: (List<Shift>) -> Unit) {
         db.collection("schedule")
             .whereEqualTo("BID", GlobalUserData.bid)
             .whereEqualTo("day", selectedDate)
             .get()
             .addOnSuccessListener { documents ->
+                val shiftsList = mutableListOf<Shift>()
                 for (document in documents) {
                     Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
                     // Assuming Shift is a model class representing your shift data
                     val shift = document.toObject(Shift::class.java)
                     shiftsList.add(shift)
-                    callback(shift)
                 }
+
+                // Pass the list of Shift objects to the callback function
+                callback(shiftsList)
             }
             .addOnFailureListener { exception ->
                 Log.e("ScheduleMakerActivity", "Error getting shift data", exception)

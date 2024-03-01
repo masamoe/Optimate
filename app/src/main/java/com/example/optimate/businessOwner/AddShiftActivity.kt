@@ -112,6 +112,7 @@ class AddShiftActivity : AppCompatActivity() {
                 Log.d("AddShiftActivity", "Shift added with ID: ${documentReference.id}")
                 Toast.makeText(this, "Shift added successfully", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, ScheduleMakerActivity::class.java)
+                intent.putExtra("SELECTED_DATE", shift.day)
                 startActivity(intent)
                 finish()
             }
