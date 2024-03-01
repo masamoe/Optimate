@@ -73,6 +73,8 @@
         <activity android:name=".businessOwner.FinancesActivity" />
         <activity android:name=".businessOwner.AddRevenueOrExpenseActivity" />
         <activity android:name=".businessOwner.FinancesDetailActivity" />
+        <activity android:name=".businessOwner.PayStubsActivity" />
+        <activity android:name=".businessOwner.PayRequestsActivity" />
         <activity android:name=".employeeFlow.RequestTimeOff" />
         <activity android:name=".employeeFlow.ViewHistory" />
         <activity android:name=".employeeFlow.ScheduleModule" android:exported="true">

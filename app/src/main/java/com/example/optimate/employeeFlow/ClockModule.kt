@@ -271,8 +271,11 @@ class ClockModule : AppCompatActivity() {
         val uid =GlobalUserData.uid
 
         val entry = hashMapOf(
-            date to totalHours
+            date to totalHours,
+            "approved" to false
+
         )
+
         db.collection("totalHours")
             .whereEqualTo("bid", bid)
             .get()
@@ -281,7 +284,7 @@ class ClockModule : AppCompatActivity() {
                     // No documents for today, create a new work log
                     val hours = hashMapOf(
                         "bid" to bid,
-                        uid to listOf(entry)
+                        uid to listOf(entry),
                     )
                     db.collection("totalHours")
                         .add(hours)
@@ -299,6 +302,7 @@ class ClockModule : AppCompatActivity() {
 
                     val updatedData = existingData?.toMutableList() ?: mutableListOf()
                     updatedData.add(entry)
+
 
                     documentSnapshot.reference.update(mapOf(
                         uid to updatedData
