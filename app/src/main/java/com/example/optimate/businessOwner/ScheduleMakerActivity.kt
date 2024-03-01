@@ -92,35 +92,48 @@ class ScheduleMakerActivity : AppCompatActivity() {
     }
 
     private fun populateUI(shifts: List<Shift>) {
-
         if (!::dynamicContentContainer.isInitialized) {
-            // Initialize dynamic content container if not initialized
             dynamicContentContainer = findViewById(R.id.dynamicContentContainer)
         }
 
-        // Sort the list of shifts by start time
-        val sortedShifts = shifts.sortedBy {  convertStringToTime(it.startTime)  }
+        // Create a map to group shifts by details
+        val groupedShiftsMap = mutableMapOf<String, MutableList<String>>()
 
+        // Populate the map with shifts and associated individuals
+        for (shift in shifts) {
+            val shiftDetails = "${shift.startTime} - ${shift.endTime}"
+            val individuals = shift.employees ?: emptyList()
 
-        for (shift in sortedShifts) {
+            if (groupedShiftsMap.containsKey(shiftDetails)) {
+                groupedShiftsMap[shiftDetails]?.addAll(individuals)
+            } else {
+                groupedShiftsMap[shiftDetails] = individuals.toMutableList()
+            }
+        }
+
+        // Iterate through the grouped shifts map
+        for ((shiftDetails, individuals) in groupedShiftsMap) {
             val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
             dynamicContentContainer.addView(contentView)
 
-            contentView.findViewById<TextView>(R.id.shiftHours).text = "${shift.startTime} - ${shift.endTime}"
+            contentView.findViewById<TextView>(R.id.shiftHours).text = shiftDetails
+
+            // Create a formatted string for the individuals working on the shift
             val names = StringBuilder()
-            for (name in shift.employees!!) { // Assuming names is a list of names in Shift class
-                names.append(name).append(" \n") // You can adjust the separator as needed
+            for (name in individuals) {
+                names.append(name).append("\n")
             }
 
-            // Remove the trailing comma and space if there are names
+            // Remove the trailing newline if there are names
             if (names.isNotEmpty()) {
-                names.setLength(names.length - 2)
+                names.setLength(names.length - 1)
             }
 
             contentView.findViewById<TextView>(R.id.NameFromDb).text = names.toString()
         }
     }
+
 
     private fun getShiftData(selectedDate: String, callback: (List<Shift>) -> Unit) {
         db.collection("schedule")
