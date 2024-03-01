@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Paint
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,9 +16,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -47,13 +52,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
+import com.example.optimate.employeeFlow.NoDataFound
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.example.optimate.loginAndRegister.addRevenueOrExpenseToDB
+import com.example.optimate.loginAndRegister.getWage
 import com.example.optimate.loginAndRegister.milliSecondsToHours
 import com.example.optimate.loginAndRegister.uidToName
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.lang.String.format
+import java.text.SimpleDateFormat
+import java.util.Date
 
 //workLogsWaitForApproval:
 // {lV0Hg8ikbRM6GZZN6FjslXki4MD2=[{20240229=4000}],
@@ -67,7 +82,11 @@ fun PayRequestsScreen(workLogsWaitForApproval: MutableMap<String, List<Map<Strin
             Column(
                 modifier = Modifier.padding(innerPadding)
             ) {
-                WorkingHoursCardList(workLogsWaitForApproval)
+                if (workLogsWaitForApproval.isEmpty()) {
+                    NoDataFound(text = "No pay requests found")
+                } else {
+                    WorkingHoursCardList(workLogsWaitForApproval)
+                }
             }
         }
     )
@@ -97,6 +116,8 @@ fun WorkingHoursCardList(workLogsWaitForApproval: MutableMap<String, List<Map<St
 fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<String, Long>) {
     val date = log.keys.first()
     val hours = log.values.first()
+    var wage by remember { mutableStateOf(0.0) }
+    var pay by remember { mutableStateOf(0.0) }
     var isExpanded by remember { mutableStateOf(false) }
     val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
 
@@ -119,6 +140,10 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                     }
                 }
         }
+        getWage(userId) { fetchedWage ->
+            wage = fetchedWage
+            pay = milliSecondsToHours(hours) * wage // Calculate pay
+        }
     }
 
     ElevatedCard(
@@ -138,7 +163,7 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = userName,
+                            text = "$userName ($$wage)",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -146,6 +171,12 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                             text = "$date: ${milliSecondsToHours(hours)} hs",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal
+                        )
+                        Text(
+                            text = "Pay: $${format("%.2f", pay)}",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Blue
                         )
                     }
                 }
@@ -165,7 +196,13 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                             }
                         }
                         Divider(modifier = Modifier.padding(vertical = 8.dp))
-                        ApproveBtn(modifier = Modifier.fillMaxWidth())
+                        val originalFormat = SimpleDateFormat("yyyyMMdd")
+                        val targetFormat = SimpleDateFormat("MM/dd/yy")
+                        val parsedDate = originalFormat.parse(date)
+                        val formattedDate = targetFormat.format(parsedDate)
+
+
+                        ApproveBtn(modifier = Modifier.fillMaxWidth(), uid = userId, date = date, expensesDate = formattedDate, pay = pay)
                     }
                 }
             }
@@ -184,24 +221,134 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
 }
 
 @Composable
-fun ApproveBtn(modifier: Modifier = Modifier) {
-    val buttonColor = androidx.compose.material.MaterialTheme.colors.run { Color(0xFF75f8e2) }
-    val approveBtn = LocalContext.current
-    Button(
-        modifier = modifier,
-        onClick = {
-            val intent = Intent(approveBtn, PayRequestsActivity::class.java)
-            approveBtn.startActivity(intent)
-        },
-        colors = ButtonDefaults.run { buttonColors(buttonColor) },
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
-    ) {
-        Text("Approve", fontSize = 12.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+fun LoadingDialog(showDialog: Boolean) {
+    if (showDialog) {
+        Dialog(onDismissRequest = { /* Dialog cannot be dismissed by the user */ }) {
+            // Customize the dialog's appearance
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(100.dp)
+                    .background(Color.White, shape = RoundedCornerShape(8.dp))
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
+}
 
+@Composable
+fun ApproveBtn(modifier: Modifier = Modifier, uid: String, date: String, expensesDate: String, pay: Double) {
+    val approveBtn = LocalContext.current
+    var showDialog by remember { mutableStateOf(false) }
+    var showLoading by remember { mutableStateOf(false) } // State to control the visibility of the loading dialog
+
+    Box(modifier = modifier) {
+        if (showDialog) {
+            ApproveDialog(
+                onConfirm = {
+                    setApprovedToTrue(uid, date)
+                    addRevenueOrExpenseToDB("expense", expensesDate, pay, "Pay to $uid")
+                    showDialog = false
+                    showLoading = true // Show loading dialog
+
+                    // Launch a coroutine to delay the restart
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(2000) // Wait for 2 seconds
+                        showLoading = false // Hide loading dialog before restarting the activity
+                        val restartIntent = Intent(approveBtn, PayRequestsActivity::class.java)
+                        restartIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        approveBtn.startActivity(restartIntent)
+                    }
+                },
+                onDismiss = {
+                    showDialog = false
+                }
+            )
+        }
+
+        Button(
+            onClick = { showDialog = true },
+            colors = ButtonDefaults.buttonColors(Color(0xFF75f8e2)),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Approve", fontSize = 12.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+        }
+
+        LoadingDialog(showDialog = showLoading) // Show the loading dialog when showLoading is true
+    }
 }
 
 
+
+
+@Composable
+fun ApproveDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { androidx.compose.material.Text("Pay Request Approval") },
+        text = { androidx.compose.material.Text("Are you sure you want to approve?") },
+        confirmButton = {
+            androidx.compose.material.Button(onClick = onConfirm) {
+                androidx.compose.material.Text("Yes, Approve")
+            }
+        },
+        dismissButton = {
+            androidx.compose.material.Button(onClick = onDismiss) {
+                androidx.compose.material.Text("No, Go Back")
+            }
+        }
+    )
+}
+
+//bid:"d89RXe3xFjNNCEAftuslt3pGWR23ab"
+//JiHljMeEbuO7vEG1aUaKrbLto5t1(this is uid)=[{20240228: 20000, approved: false}]
+//KbClYhd5vXhRPf84jbCPr7cAglq1(this is uid)=[{20240229: 4000, approved: false}, {20240228: 40000, approved: false}]
+fun setApprovedToTrue(uid: String, date: String) {
+    val db = Firebase.firestore
+    db.collection("totalHours")
+        .whereEqualTo("bid", GlobalUserData.bid)
+        .get()
+        .addOnSuccessListener { documents ->
+            for (document in documents) {
+                val totalHours = document.data[uid] as? List<Map<String, Any>>
+                totalHours?.let {
+                    // Find the index of the map that contains the specified date
+                    val index = it.indexOfFirst { log -> log.containsKey(date) && log["approved"] == false }
+
+                    if (index != -1) {
+                        // If found, create a copy of the map to modify it
+                        val updatedLog = HashMap(it[index])
+                        updatedLog["approved"] = true // Set approved to true
+
+                        // Create a new list with the updated map
+                        val updatedTotalHours = ArrayList(it)
+                        updatedTotalHours[index] = updatedLog
+
+                        // Prepare the update for the Firestore document
+                        val update = hashMapOf<String, Any>(uid to updatedTotalHours)
+
+                        // Update the document
+                        db.collection("totalHours").document(document.id)
+                            .update(update)
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "DocumentSnapshot successfully updated!")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w("Firestore", "Error updating document", e)
+                            }
+                    }
+                }
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.w("Firestore", "Error getting documents: ", exception)
+        }
+}
 
 ////getWorkLogsByUidAndDate("lV0Hg8ikbRM6GZZN6FjslXki4MD2", "20240229")
 //fun getWorkLogsByUidAndDate(uid: String, date: String) {

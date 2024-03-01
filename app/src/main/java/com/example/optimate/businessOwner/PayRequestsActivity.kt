@@ -66,6 +66,10 @@ class PayRequestsActivity : AppCompatActivity() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        getWorkLogsWaitForApproval()
+    }
 
 }
 

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.example.optimate.loginAndRegister.addRevenueOrExpenseToDB
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
@@ -52,6 +53,7 @@ class AddRevenueOrExpenseActivity: AppCompatActivity() {
         val submitBtn = findViewById<Button>(R.id.submitBtn)
         submitBtn.setOnClickListener {
             val date = date.text.toString()
+            Log.d("AddRevenueOrExpenseActivity", "date: $date")
             val amount = amount.text.toString().toDouble()
             val description = description.text.toString()
             addRevenueOrExpenseToDB(type, date, amount, description)
@@ -95,59 +97,7 @@ class AddRevenueOrExpenseActivity: AppCompatActivity() {
         date.setText(sdf.format(calendar.time))
     }
 
-    private fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Double, description: String) {
-        val bid = GlobalUserData.bid
 
-        // Convert the String date to a Date object
-        val sdf = SimpleDateFormat("MM/dd/yy", Locale.getDefault()).apply {
-            timeZone = TimeZone.getDefault()
-        }
-        val date = sdf.parse(dateStr)
-
-        val entry = hashMapOf(
-            "UID" to (auth.currentUser?.uid ?: ""),
-            "Date" to date,
-            "Amount" to amount,
-            "Description" to description,
-            "Approval" to true,
-            "Name" to GlobalUserData.name,
-            "Uploaded Date" to Timestamp(Date())
-        )
-
-        // Reference to the document in the finances collection
-        val docRef = db.collection("finances").document(bid)
-
-        // Check if the BID exists in the finances collection
-        docRef.get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                // If the document exists, append the new entry to the appropriate array
-                val fieldName = if (type == "Revenue") "Revenues" else "Expenses"
-                docRef.update(fieldName, com.google.firebase.firestore.FieldValue.arrayUnion(entry))
-                    .addOnSuccessListener {
-                        Log.d("AddRevenueOrExpenseActivity", "$type added successfully")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w("AddRevenueOrExpenseActivity", "Error adding $type", e)
-                    }
-            } else {
-                // If the document does not exist, create a new document with the BID and initialize the Revenues and Expenses arrays
-                val initData = hashMapOf(
-                    "BID" to bid,
-                    "Revenues" to if (type == "Revenue") listOf(entry) else emptyList<Any>(),
-                    "Expenses" to if (type == "Expense") listOf(entry) else emptyList<Any>()
-                )
-                docRef.set(initData)
-                    .addOnSuccessListener {
-                        Log.d("AddRevenueOrExpenseActivity", "New finances document with $type added successfully")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w("AddRevenueOrExpenseActivity", "Error creating new finances document", e)
-                    }
-            }
-        }.addOnFailureListener { e ->
-            Log.w("AddRevenueOrExpenseActivity", "Error checking document existence", e)
-        }
-    }
 
 
 
