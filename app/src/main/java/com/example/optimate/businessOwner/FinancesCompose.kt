@@ -80,7 +80,16 @@ fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<Fina
                 Spacer(modifier = Modifier.height(16.dp))
                 DonutChart(filteredRevenues, filteredExpenses, donutChartFromDate, donutChartToDate)
                 Spacer(modifier = Modifier.height(16.dp))
-                ViewMore(modifier = Modifier.align(Alignment.End).padding(16.dp))
+
+                Row (modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween){
+                    PayStubs()
+                    ViewMore()
+
+                }
+
 
             }
         }
@@ -173,9 +182,25 @@ fun Search(
     }
 }
 
+@Composable
+fun PayStubs() {
+    val buttonColor = colors.run { Color(0xFF75f8e2) }
+    val payStubsBtn = LocalContext.current
+    Button(
+        onClick = {
+            val intent = Intent(payStubsBtn, PayStubsActivity::class.java)
+            payStubsBtn.startActivity(intent)
+        },
+        colors = ButtonDefaults.run { buttonColors(buttonColor) },
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+    ) {
+        Text("Pay-stubs", fontSize = 12.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+    }
+}
+
 
 @Composable
-fun ViewMore(modifier: Modifier = Modifier){
+fun ViewMore(){
     val viewMoreBtn = LocalContext.current
     val buttonColor = colors.run { Color(0xFF75f8e2) }
     Button(
@@ -183,7 +208,6 @@ fun ViewMore(modifier: Modifier = Modifier){
             val intent = Intent(viewMoreBtn, FinancesDetailActivity::class.java)
             viewMoreBtn.startActivity(intent)
         },
-        modifier = modifier,
         colors = ButtonDefaults.buttonColors(buttonColor),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
     ) {
