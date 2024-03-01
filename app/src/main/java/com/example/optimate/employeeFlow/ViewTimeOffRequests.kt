@@ -157,7 +157,7 @@ class ViewTimeOffRequests : AppCompatActivity() {
                     timeRequest.startDate
                 timeRequestCard.findViewById<TextView>(R.id.reqEndDate).text = timeRequest.endDate
                 timeRequestCard.findViewById<TextView>(R.id.requestStatus).text =
-                    "Your time request from ${timeRequest.startTime} to ${timeRequest.endTime} is ${timeRequest.status}"
+                    "Your time request from ${timeRequest.startTime} to ${timeRequest.endTime} is ${timeRequest.status}."
 
                 timeRequestCard.findViewById<MaterialButton>(R.id.cancelRequestButton).setOnClickListener {
                     cancelTimeOffRequest(timeRequest)

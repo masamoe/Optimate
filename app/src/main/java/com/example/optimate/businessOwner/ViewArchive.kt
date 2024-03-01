@@ -157,7 +157,7 @@ class ViewArchive : AppCompatActivity() {
                     timeRequest.startDate
                 timeRequestCard.findViewById<TextView>(R.id.requestEndDate).text = timeRequest.endDate
                 timeRequestCard.findViewById<TextView>(R.id.reqStatus).text =
-                    "Time request from ${timeRequest.startTime} to ${timeRequest.endTime} is ${timeRequest.status}"
+                    "Time request from ${timeRequest.startTime} to ${timeRequest.endTime} is ${timeRequest.status}."
 
 
                 // Set card background color based on status

@@ -109,7 +109,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
 
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
                 android:hint="@string/start_date"
                 app:endIconDrawable="@drawable/date_icon"
@@ -132,7 +132,7 @@
                 android:id="@+id/outlinedEndDate"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
                 android:hint="@string/end_date"
                 app:endIconDrawable="@drawable/date_icon"
