@@ -50,6 +50,14 @@ class RequestTimeOff : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val cancelBtn = findViewById<Button>(R.id.cancelButton)
+        cancelBtn.setOnClickListener {
+            val intent = Intent(this, ScheduleModule::class.java)
+            startActivity(intent)
+        }
+
+
+
 
 
         // Create MaterialDatePicker instances for start and end dates
@@ -87,7 +95,7 @@ class RequestTimeOff : AppCompatActivity() {
 
         endDateEditText.setOnClickListener {
             outlinedEndDate.error = null
-                endDatePicker.show(supportFragmentManager, "END_DATE_PICKER_TAG")
+            endDatePicker.show(supportFragmentManager, "END_DATE_PICKER_TAG")
             }
 
 
