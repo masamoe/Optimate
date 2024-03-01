@@ -14,6 +14,9 @@ import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ScheduleMakerActivity : AppCompatActivity() {
     private var db = Firebase.firestore
@@ -89,7 +92,17 @@ class ScheduleMakerActivity : AppCompatActivity() {
     }
 
     private fun populateUI(shifts: List<Shift>) {
-        for (shift in shifts) {
+
+        if (!::dynamicContentContainer.isInitialized) {
+            // Initialize dynamic content container if not initialized
+            dynamicContentContainer = findViewById(R.id.dynamicContentContainer)
+        }
+
+        // Sort the list of shifts by start time
+        val sortedShifts = shifts.sortedBy {  convertStringToTime(it.startTime)  }
+
+
+        for (shift in sortedShifts) {
             val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
             dynamicContentContainer.addView(contentView)
@@ -97,7 +110,7 @@ class ScheduleMakerActivity : AppCompatActivity() {
             contentView.findViewById<TextView>(R.id.shiftHours).text = "${shift.startTime} - ${shift.endTime}"
             val names = StringBuilder()
             for (name in shift.employees!!) { // Assuming names is a list of names in Shift class
-                names.append(name).append("\n") // You can adjust the separator as needed
+                names.append(name).append(" \n") // You can adjust the separator as needed
             }
 
             // Remove the trailing comma and space if there are names
@@ -131,5 +144,10 @@ class ScheduleMakerActivity : AppCompatActivity() {
                 Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show()
 
             }
+    }
+
+    private fun convertStringToTime(timeStr: String): Date {
+        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return format.parse(timeStr) ?: Date()
     }
 }

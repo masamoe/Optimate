@@ -97,6 +97,13 @@ class AddShiftActivity : AppCompatActivity() {
             startTime = startTime,
             endTime = endTime
         )
+        val timeRegex = Regex("""^(?:[01]\d|2[0-3]):(?:[0-5]\d)$""")
+        if (!startTime.matches(timeRegex) || !endTime.matches(timeRegex)) {
+            // If either startTime or endTime doesn't match the hh:mm format, show an error
+            Toast.makeText(this, "Invalid time format. Please use HH:MM format.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
 
         val shiftMap = hashMapOf(
             "BID" to GlobalUserData.bid,
