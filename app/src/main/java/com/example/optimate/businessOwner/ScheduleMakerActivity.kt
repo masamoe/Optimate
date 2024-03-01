@@ -111,8 +111,13 @@ class ScheduleMakerActivity : AppCompatActivity() {
             }
         }
 
-        // Iterate through the grouped shifts map
-        for ((shiftDetails, individuals) in groupedShiftsMap) {
+        // Sort the keys of groupedShiftsMap by start time
+        val sortedShiftDetails = groupedShiftsMap.keys.sorted()
+
+        // Iterate through the sorted keys
+        for (shiftDetails in sortedShiftDetails) {
+            val individuals = groupedShiftsMap[shiftDetails]
+
             val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
             dynamicContentContainer.addView(contentView)
@@ -121,8 +126,8 @@ class ScheduleMakerActivity : AppCompatActivity() {
 
             // Create a formatted string for the individuals working on the shift
             val names = StringBuilder()
-            for (name in individuals) {
-                names.append(name).append("\n")
+            individuals?.forEach { name ->
+                names.append(name).append(" \n")
             }
 
             // Remove the trailing newline if there are names
@@ -133,6 +138,7 @@ class ScheduleMakerActivity : AppCompatActivity() {
             contentView.findViewById<TextView>(R.id.NameFromDb).text = names.toString()
         }
     }
+
 
 
     private fun getShiftData(selectedDate: String, callback: (List<Shift>) -> Unit) {
