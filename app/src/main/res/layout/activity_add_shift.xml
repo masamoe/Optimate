@@ -27,7 +27,7 @@
             android:id="@+id/editTextDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:hint="@string/date"
             app:boxStrokeColor="@color/dark_purple"
             app:boxStrokeWidth="3dp"
@@ -49,12 +49,13 @@
             android:id="@+id/startTimeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:hint="@string/start_time"
             app:boxStrokeColor="@color/dark_purple"
             app:boxStrokeWidth="3dp"
             app:endIconDrawable="@drawable/clock"
             app:endIconMode="custom"
+            app:helperText="00:00 24h Format"
             app:helperTextEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -71,12 +72,13 @@
             android:id="@+id/endTimeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:hint="@string/end_time"
             app:boxStrokeColor="@color/dark_purple"
             app:boxStrokeWidth="3dp"
             app:endIconDrawable="@drawable/clock"
             app:endIconMode="custom"
+            app:helperText="00:00 24h Format"
             app:helperTextEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
