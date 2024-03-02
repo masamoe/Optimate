@@ -33,9 +33,11 @@ class DynamicLandingActivity : AppCompatActivity(){
                 DynamicLandingScreen(GlobalUserData.access, GlobalUserData.title)
             }
         }
-        Glide.with(this)
-            .load(GlobalUserData.profilePic)
-            .into(settingPage)
+        if (GlobalUserData.profilePic != "") {
+            Glide.with(this)
+                .load(GlobalUserData.profilePic)
+                .into(settingPage)
+        }
 
         settingPage.setOnClickListener{
             val intent = Intent(this, ProfilePage::class.java)

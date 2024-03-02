@@ -29,14 +29,12 @@
             android:exported="true"
             android:label="@string/title_activity_add_shift_page"
             android:theme="@style/Theme.Optimate" />
-        <!--
 <activity
             android:name=".businessOwner.SchedulerActivity"
             android:exported="true"
             android:label="@string/title_activity_schedule_maker"
             android:theme="@style/Theme.Optimate">
         </activity>
-        -->
         <activity android:name=".loginAndRegister.NewUserPasswordChange" />
         <activity
             android:name=".loginAndRegister.LandingMain"
@@ -92,7 +90,7 @@
             android:name=".employeeFlow.EditProfile"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

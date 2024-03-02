@@ -51,6 +51,10 @@ class EditProfile : AppCompatActivity() {
         val roleText = findViewById<TextView>(R.id.textView7)
         val nameText = findViewById<TextView>(R.id.textView6)
         val iconButton = findViewById<Button>(R.id.iconButton)
+        val imageInput = findViewById<ImageView>(R.id.imageProfile)
+        Glide.with(this)
+            .load(GlobalUserData.profilePic)
+            .into(imageInput)
 
         emailInput.text = GlobalUserData.email
         passwordInput.text = GlobalUserData.password

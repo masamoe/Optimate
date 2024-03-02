@@ -47,9 +47,11 @@ class ProfilePage : AppCompatActivity() {
         phoneText.text = GlobalUserData.phone
         roleText.text = GlobalUserData.role
         nameText.text = GlobalUserData.name
-        Glide.with(this)
-            .load(GlobalUserData.profilePic)
-            .into(profilePic)
+        if (GlobalUserData.profilePic != "") {
+            Glide.with(this)
+                .load(GlobalUserData.profilePic)
+                .into(profilePic)
+        }
 
 
 
