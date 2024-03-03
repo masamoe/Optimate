@@ -182,6 +182,8 @@ class Login : AppCompatActivity(){
                         GlobalUserData.phone = (document.getString("phone") ?: "").toString()
                         GlobalUserData.wage = (document.getDouble("wage") ?: 0.0).toFloat()
                         GlobalUserData.profilePic = (document.getString("profilePic") ?: "").toString()
+
+                        GlobalUserData.deviceToken = (document.getString("deviceToken") ?: "").toString()
                         val accountStatusObject = document.get("account_status") as? Map<String, Any>
                         if (accountStatusObject != null) {
                             val date = accountStatusObject["date"] as? Date ?: Date()

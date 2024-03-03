@@ -11,10 +11,14 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import com.bumptech.glide.Glide
 import com.example.optimate.R
+import com.example.optimate.businessOwner.Requests.Companion.TAG
 import com.example.optimate.employeeFlow.EditProfile
 import com.example.optimate.employeeFlow.ProfilePage
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
+import java.util.Date
 
 class DynamicLandingActivity : AppCompatActivity(){
     val db = Firebase.firestore
@@ -44,6 +48,7 @@ class DynamicLandingActivity : AppCompatActivity(){
             startActivity(intent)
             finish()
         }
+        getToken()
     }
 
     // Modify getAccountAccess to accept a callback function
@@ -68,5 +73,41 @@ class DynamicLandingActivity : AppCompatActivity(){
                 }
         }
     }
+    private fun getToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            GlobalUserData.deviceToken = token
+
+            // Update token in Firebase
+            db.collection("users")
+                .whereEqualTo("UID", GlobalUserData.uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        Log.e("EditAccountActivity", "No matching account found")
+                        return@addOnSuccessListener
+                    }
+
+                    val account = documents.first()
+
+                    account.reference.update("deviceToken", token)
+                        .addOnSuccessListener {
+                            Log.d("EditAccountActivity", "Account Updated successfully")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("EditAccountActivity", "Error Updating account", e)
+                        }
+                }
+        })
+    }
+
+    // Correct method signature to receive the new token
+
 }
 

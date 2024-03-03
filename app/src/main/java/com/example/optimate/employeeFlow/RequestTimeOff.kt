@@ -11,9 +11,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.ChatViewModel
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
+import com.example.optimate.loginAndRegister.FcmApi
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.example.optimate.loginAndRegister.NotificationBody
+import com.example.optimate.loginAndRegister.SendMessageDTO
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
@@ -22,6 +27,9 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
+import com.google.firebase.messaging.messaging
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -314,6 +322,7 @@ class RequestTimeOff : AppCompatActivity() {
             .addOnSuccessListener { documentReference ->
                 Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
                 Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
+
                 startActivity(Intent(this, ScheduleModule::class.java))
 
             }
@@ -323,6 +332,37 @@ class RequestTimeOff : AppCompatActivity() {
                 // Handle the error, for example, show an error message to the user
             }
     }
+    private fun sendNotificationToManager() {
+    val docRef = db.collection("users")
+        .whereEqualTo("BID", GlobalUserData.bid)
+        .whereEqualTo("role", "Manager")
+    docRef.get()
+    .addOnSuccessListener { querySnapshot ->
+
+        for (document in querySnapshot.documents) {
+            val managerToken = document.getString("deviceToken")
+            if (managerToken != null) {
+                // Send notification to manager
+                val notification = NotificationBody(
+                    title = "New Time-Off Request",
+                    body = "A new time-off request requires your approval."
+                )
+                val messageDto = SendMessageDTO(
+                    to = managerToken,
+                    notification = notification
+                )
+                // Create an instance of FcmApi
+                FcmApi.sendMessage(messageDto) // Call the sendMessage function
+
+            } else {
+                Log.e("SendNotification", "Manager's FCM token not found for document ${document.id}")
+            }
+        }
+    }
+
+    }
+
+
 }
 
 
