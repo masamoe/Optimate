@@ -1,6 +1,9 @@
 package com.example.optimate.loginAndRegister
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -9,6 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.optimate.R
 import com.example.optimate.businessOwner.Requests.Companion.TAG
@@ -48,7 +53,7 @@ class DynamicLandingActivity : AppCompatActivity(){
             startActivity(intent)
             finish()
         }
-        getToken()
+        requestNotificationPermission()
     }
 
     // Modify getAccountAccess to accept a callback function
@@ -73,41 +78,27 @@ class DynamicLandingActivity : AppCompatActivity(){
                 }
         }
     }
-    private fun getToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
+
+    private fun requestNotificationPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val hasPermission = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if(!hasPermission) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    0
+                )
             }
-
-            // Get new FCM registration token
-            val token = task.result
-            GlobalUserData.deviceToken = token
-
-            // Update token in Firebase
-            db.collection("users")
-                .whereEqualTo("UID", GlobalUserData.uid)
-                .get()
-                .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        Log.e("EditAccountActivity", "No matching account found")
-                        return@addOnSuccessListener
-                    }
-
-                    val account = documents.first()
-
-                    account.reference.update("deviceToken", token)
-                        .addOnSuccessListener {
-                            Log.d("EditAccountActivity", "Account Updated successfully")
-                        }
-                        .addOnFailureListener { e ->
-                            Log.e("EditAccountActivity", "Error Updating account", e)
-                        }
-                }
-        })
+        }
     }
 
-    // Correct method signature to receive the new token
+
+
+
 
 }
 

@@ -11,9 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import com.example.optimate.R
-import com.example.optimate.loginAndRegister.ChatViewModel
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.FcmApi
 import com.example.optimate.loginAndRegister.GlobalUserData
@@ -21,18 +20,22 @@ import com.example.optimate.loginAndRegister.NotificationBody
 import com.example.optimate.loginAndRegister.SendMessageDTO
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.messaging.messaging
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.create
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class RequestTimeOff : AppCompatActivity() {
 
@@ -292,7 +295,9 @@ class RequestTimeOff : AppCompatActivity() {
             }
 
             // If all fields are filled, proceed to save the request
-            saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb, endDatetoDb, reason)
+            lifecycleScope.launch {
+                saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb, endDatetoDb, reason)
+            }
         }
 
 
@@ -300,10 +305,7 @@ class RequestTimeOff : AppCompatActivity() {
 
     }
 
-    private fun saveTimeOffRequestToFirestore(startTime: String, endTime: String, startDate: String, endDate: String, reason: String) {
-
-
-
+    private suspend fun saveTimeOffRequestToFirestore(startTime: String, endTime: String, startDate: String, endDate: String, reason: String) {
         val timeOffRequest = hashMapOf(
             "dateOfRequest" to Date(),
             "startTime" to startTime,
@@ -317,49 +319,67 @@ class RequestTimeOff : AppCompatActivity() {
             "reason" to reason
         )
 
-        db.collection("timeOffRequest")
-            .add(timeOffRequest)
-            .addOnSuccessListener { documentReference ->
-                Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
-                Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
+        try {
+            val documentReference = db.collection("timeOffRequest")
+                .add(timeOffRequest)
+                .await()
+            Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
+            Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
 
-                startActivity(Intent(this, ScheduleModule::class.java))
-
-            }
-            .addOnFailureListener { e ->
-                Log.e("EditAccountActivity", "Error creating new record", e)
-                Toast.makeText(this, "Error in Sending", Toast.LENGTH_SHORT).show()
-                // Handle the error, for example, show an error message to the user
-            }
-    }
-    private fun sendNotificationToManager() {
-    val docRef = db.collection("users")
-        .whereEqualTo("BID", GlobalUserData.bid)
-        .whereEqualTo("role", "Manager")
-    docRef.get()
-    .addOnSuccessListener { querySnapshot ->
-
-        for (document in querySnapshot.documents) {
-            val managerToken = document.getString("deviceToken")
-            if (managerToken != null) {
-                // Send notification to manager
-                val notification = NotificationBody(
-                    title = "New Time-Off Request",
-                    body = "A new time-off request requires your approval."
-                )
-                val messageDto = SendMessageDTO(
-                    to = managerToken,
-                    notification = notification
-                )
-                // Create an instance of FcmApi
-                FcmApi.sendMessage(messageDto) // Call the sendMessage function
-
-            } else {
-                Log.e("SendNotification", "Manager's FCM token not found for document ${document.id}")
-            }
+            sendNotificationToManagers() // Call the suspend function within a coroutine scope
+            startActivity(Intent(this, ScheduleModule::class.java))
+        } catch (e: Exception) {
+            Log.e("EditAccountActivity", "Error creating new record", e)
+            Toast.makeText(this, "Error in Sending", Toast.LENGTH_SHORT).show()
+            // Handle the error, for example, show an error message to the user
         }
     }
 
+
+    private suspend fun getManagerTokens(): List<String> = suspendCoroutine { continuation ->
+        val docRef = db.collection("users")
+            .whereEqualTo("BID", GlobalUserData.bid)
+            .whereEqualTo("role", "Manager")
+
+        docRef.get()
+            .addOnSuccessListener { querySnapshot ->
+                val managerTokens = mutableListOf<String>()
+                for (document in querySnapshot.documents) {
+                    val managerToken = document.getString("deviceToken")
+                    if (managerToken != null) {
+                        managerTokens.add(managerToken)
+                    } else {
+                        Log.e("SendNotification", "Manager's FCM token not found for document ${document.id}")
+                    }
+                }
+                continuation.resume(managerTokens)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("SendNotification", "Error getting manager tokens", exception)
+                continuation.resumeWithException(exception)
+            }
+    }
+
+    private suspend fun sendNotificationToManagers() {
+        val managerTokens = getManagerTokens()
+        val api: FcmApi = Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8080/")
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create()
+
+        for (managerToken in managerTokens) {
+            val notification = NotificationBody(
+                title = "New Time-Off Request",
+                body = "A new time-off request requires your approval."
+            )
+            val messageDto = SendMessageDTO(
+                to = managerToken,
+                notification = notification
+            )
+
+            api.sendMessage(messageDto)
+        }
     }
 
 
