@@ -1,9 +1,8 @@
 package com.example.optimate.employeeFlow
 
+
 import android.content.Intent
 import android.os.Bundle
-
-
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -13,14 +12,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.input.key.Key.Companion.Notification
 import androidx.lifecycle.lifecycleScope
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
-import com.example.optimate.loginAndRegister.FcmApi
 import com.example.optimate.loginAndRegister.GlobalUserData
-import com.example.optimate.loginAndRegister.NotificationBody
-import com.example.optimate.loginAndRegister.SendMessageDTO
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputLayout
@@ -32,9 +27,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.create
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -369,21 +361,26 @@ class RequestTimeOff : AppCompatActivity() {
         val managerTokens = getManagerTokens()
 
         for (managerToken in managerTokens) {
-            val notification = mapOf(
-                "title" to "New Time-Off Request",
-                "body" to "A new time-off request requires your approval."
-            )
+            if (managerToken != null && managerToken.isNotBlank()) {
+                val notification = mapOf(
+                    "title" to "New Time-Off Request",
+                    "body" to "A new time-off request requires your approval."
+                )
 
-            val message = RemoteMessage.Builder(managerToken)
-                .setData(notification)
-                .build()
+                val message = RemoteMessage.Builder(managerToken)
+                    .setData(notification)
+                    .build()
 
-            try {
-                FirebaseMessaging.getInstance().send(message)
-                // Notification sent successfully
-            } catch (e: Exception) {
-                e.printStackTrace()
-                // Handle failure to send notification
+                try {
+                    FirebaseMessaging.getInstance().send(message)
+                    // Notification sent successfully
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    // Handle failure to send notification
+                }
+            } else {
+                // Handle case where manager token is not found or blank
+                println("Manager's FCM token not found or blank.")
             }
         }
     }

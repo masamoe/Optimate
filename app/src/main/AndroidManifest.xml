@@ -2,12 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="com.google.firebase.messaging.default_notification_channel_id" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
@@ -16,36 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"/>
 
-        <activity
-            android:name=".businessOwner.ViewArchive"
-            android:exported="false" />
-        <activity
-            android:name=".businessOwner.Requests"
-            android:exported="false" />
-        <activity
-            android:name=".businessOwner.ScheduleMakerActivity"
-            android:exported="true"
-            android:label="@string/title_activity_schedule_maker"
-            android:theme="@style/Theme.Optimate" />
-        <activity
-            android:name=".businessOwner.AddShiftActivity"
-            android:exported="true"
-            android:label="@string/title_activity_add_shift_page"
-            android:theme="@style/Theme.Optimate" />
-<activity
-            android:name=".businessOwner.SchedulerActivity"
-            android:exported="true"
-            android:label="@string/title_activity_schedule_maker"
-            android:theme="@style/Theme.Optimate">
-        </activity>
+
+        <activity android:name=".businessOwner.ViewArchive" />
+        <activity android:name=".businessOwner.Requests" />
+        <activity android:name=".businessOwner.ScheduleMakerActivity" />
+        <activity android:name=".businessOwner.AddShiftActivity" />
+        <activity android:name=".businessOwner.SchedulerActivity" />
         <activity android:name=".loginAndRegister.NewUserPasswordChange" />
         <activity
             android:name=".loginAndRegister.LandingMain"
@@ -62,15 +40,7 @@
         <activity android:name=".loginAndRegister.Login" />
         <activity android:name=".loginAndRegister.Register" />
         <activity android:name=".loginAndRegister.DynamicLandingActivity" />
-        <activity
-            android:name=".businessOwner.BusinessLanding"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.LANDING" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".businessOwner.BusinessLanding" />
         <activity android:name=".employeeFlow.Availability" />
         <activity android:name=".businessOwner.TitlesActivity" />
         <activity android:name=".businessOwner.AddTitle" />
@@ -86,31 +56,19 @@
         <activity android:name=".businessOwner.PayRequestsActivity" />
         <activity android:name=".employeeFlow.RequestTimeOff" />
         <activity android:name=".employeeFlow.ViewHistory" />
-        <activity android:name=".employeeFlow.ScheduleModule" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.LANDING" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".employeeFlow.ScheduleModule" />
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity android:name=".employeeFlow.ClockModule" />
         <activity android:name=".employeeFlow.PayStub" />
         <activity android:name=".employeeFlow.ViewAllPayStubs" />
-        <activity
-            android:name=".employeeFlow.EditProfile"
-            android:exported="true">
-            <intent-filter>
-
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".employeeFlow.EditProfile" />
         <activity android:name=".employeeFlow.ProfilePage" />
         <activity android:name=".employeeFlow.SubmitExpenses" />
-        <service android:name=".loginAndRegister.PushNotificationService"
-            android:exported="false"
-            android:directBootAware="true">
+
+        <service
+            android:name=".loginAndRegister.PushNotificationService"
+            android:directBootAware="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
