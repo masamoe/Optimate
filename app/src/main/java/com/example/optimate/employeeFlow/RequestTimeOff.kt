@@ -2,6 +2,9 @@ package com.example.optimate.employeeFlow
 
 import android.content.Intent
 import android.os.Bundle
+
+import com.google.firebase.messaging.Message
+import com.google.firebase.messaging.Notification
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -11,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.input.key.Key.Companion.Notification
 import androidx.lifecycle.lifecycleScope
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
@@ -25,6 +29,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
@@ -362,27 +367,28 @@ class RequestTimeOff : AppCompatActivity() {
 
     private suspend fun sendNotificationToManagers() {
         val managerTokens = getManagerTokens()
-        val api: FcmApi = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create()
 
         for (managerToken in managerTokens) {
-            val notification = NotificationBody(
-                title = "New Time-Off Request",
-                body = "A new time-off request requires your approval."
-            )
-            val messageDto = SendMessageDTO(
-                to = managerToken,
-                notification = notification
-            )
+            val message = Message.builder()
+                .setNotification(
+                    Notification(
+                        "New Time-Off Request",
+                        "A new time-off request requires your approval."
+                    )
+                )
+                .setToken(managerToken)
+                .build()
 
-            api.sendMessage(messageDto)
+            try {
+                FirebaseMessaging.getInstance().send(message)
+                // Notification sent successfully
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Handle failure to send notification
+            }
         }
+
     }
-
-
 }
 
 
