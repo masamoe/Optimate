@@ -3,8 +3,7 @@ package com.example.optimate.employeeFlow
 import android.content.Intent
 import android.os.Bundle
 
-import com.google.firebase.messaging.Message
-import com.google.firebase.messaging.Notification
+
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -30,6 +29,7 @@ import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
@@ -369,14 +369,13 @@ class RequestTimeOff : AppCompatActivity() {
         val managerTokens = getManagerTokens()
 
         for (managerToken in managerTokens) {
-            val message = Message.builder()
-                .setNotification(
-                    Notification(
-                        "New Time-Off Request",
-                        "A new time-off request requires your approval."
-                    )
-                )
-                .setToken(managerToken)
+            val notification = mapOf(
+                "title" to "New Time-Off Request",
+                "body" to "A new time-off request requires your approval."
+            )
+
+            val message = RemoteMessage.Builder(managerToken)
+                .setData(notification)
                 .build()
 
             try {
@@ -387,7 +386,6 @@ class RequestTimeOff : AppCompatActivity() {
                 // Handle failure to send notification
             }
         }
-
     }
 }
 
