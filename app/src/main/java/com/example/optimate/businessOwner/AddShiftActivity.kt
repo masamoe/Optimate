@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateListOf
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.GlobalUserData
-import com.example.optimate.loginAndRegister.NewUserPasswordChange
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
@@ -81,7 +80,6 @@ class AddShiftActivity : AppCompatActivity() {
         getEmployeesFromDB()
     }
 
-
     private fun saveShiftToFirebase(
         date: CharSequence,
         startTimeEditText: EditText,
@@ -99,10 +97,13 @@ class AddShiftActivity : AppCompatActivity() {
         val timeRegex = Regex("""^(?:[01]\d|2[0-3]):(?:[0-5]\d)$""")
         if (!startTime.matches(timeRegex) || !endTime.matches(timeRegex)) {
             // If either startTime or endTime doesn't match the hh:mm format, show an error
-            Toast.makeText(this, "Invalid time format. Please use HH:MM format.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Invalid time format. Please use HH:MM format.",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
-        
 
         val shiftMap = hashMapOf(
             "BID" to GlobalUserData.bid,
@@ -116,15 +117,13 @@ class AddShiftActivity : AppCompatActivity() {
             .add(shiftMap)
             .addOnSuccessListener { documentReference ->
                 Log.d("AddShiftActivity", "Shift added with ID: ${documentReference.id}")
-                Toast.makeText(this, "Shift added successfully", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, ScheduleMakerActivity::class.java)
+                val intent = Intent(this, SchedulerActivity::class.java)
                 intent.putExtra("SELECTED_DATE", shift.day)
                 startActivity(intent)
                 finish()
             }
             .addOnFailureListener { e ->
                 Log.e("AddShiftActivity", "Error adding shift", e)
-                Toast.makeText(this, "Failed to add shift", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -140,28 +139,17 @@ class AddShiftActivity : AppCompatActivity() {
                     val name = document.getString("name") ?: "N/A"
                     if (name != null) {
                         employeeNamesList.add(name)
-                        Toast.makeText(this, "${name}", Toast.LENGTH_SHORT).show()
                     }
                 }
                 employeeNames.clear()
                 employeeNames.addAll(employeeNamesList)
-
-
                 adapter.notifyDataSetChanged()
-
-
-                Toast.makeText(this, "${employeeNames}", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->
                 Log.e("ScheduleMakerActivity", "Error getting employee data", exception)
                 Toast.makeText(this, "Failed to retrieve employees", Toast.LENGTH_SHORT).show()
             }
     }
-
-
-
-
-
 
 
 }

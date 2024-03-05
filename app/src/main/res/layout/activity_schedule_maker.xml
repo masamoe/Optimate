@@ -8,43 +8,6 @@
     android:orientation="vertical"
     tools:context=".businessOwner.ScheduleMakerActivity">
 
-    <com.example.optimate.businessOwner.XmlTopBar
-        android:id="@+id/topBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:fitsSystemWindows="true">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/light_purple"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="10dp"
-            app:contentPadding="16dp">
-
-            <TextView
-                android:id="@+id/editTextDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Monday, 21 Aug 2024"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </androidx.cardview.widget.CardView>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
@@ -63,25 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
             </LinearLayout>
         </ScrollView>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addShiftBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:src="@android:drawable/ic_input_add"
-            android:tint="@color/light_green"
-            app:backgroundTint="@color/light_green"
-            app:fabSize="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:rippleColor="@color/light_green" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </LinearLayout>
