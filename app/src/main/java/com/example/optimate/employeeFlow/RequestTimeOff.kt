@@ -2,6 +2,7 @@ package com.example.optimate.employeeFlow
 
 
 import android.content.Intent
+import retrofit2.converter.gson.GsonConverterFactory
 import android.os.Bundle
 import android.util.Log
 import android.widget.AdapterView
@@ -15,7 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
+import com.example.optimate.loginAndRegister.FcmApi
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.example.optimate.loginAndRegister.NotificationBody
+import com.example.optimate.loginAndRegister.SendMessageDTO
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputLayout
@@ -27,6 +31,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -37,6 +42,10 @@ import kotlin.coroutines.suspendCoroutine
 class RequestTimeOff : AppCompatActivity() {
 
     private var db = Firebase.firestore
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("http://10.0.2.2:8080") // Update with your server URL
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
 
 
@@ -63,6 +72,7 @@ class RequestTimeOff : AppCompatActivity() {
             val intent = Intent(this, ScheduleModule::class.java)
             startActivity(intent)
         }
+
 
 
 
@@ -342,9 +352,9 @@ class RequestTimeOff : AppCompatActivity() {
             .addOnSuccessListener { querySnapshot ->
                 val managerTokens = mutableListOf<String>()
                 for (document in querySnapshot.documents) {
-                    val managerToken = document.getString("deviceToken")
-                    if (managerToken != null) {
-                        managerTokens.add(managerToken)
+                    val Manageruid = document.getString("deviceToken")
+                    if (Manageruid != null) {
+                        managerTokens.add(Manageruid)
                     } else {
                         Log.e("SendNotification", "Manager's FCM token not found for document ${document.id}")
                     }
@@ -357,35 +367,33 @@ class RequestTimeOff : AppCompatActivity() {
             }
     }
 
-    private suspend fun sendNotificationToManagers() {
-        val managerTokens = getManagerTokens()
 
-        for (managerToken in managerTokens) {
-            if (managerToken != null && managerToken.isNotBlank()) {
-                val notification = mapOf(
-                    "title" to "New Time-Off Request",
-                    "body" to "A new time-off request requires your approval."
-                )
+        suspend fun sendNotificationToManagers() {
+            val managerTokens = getManagerTokens()
+            val fcmApi = retrofit.create(FcmApi::class.java)
 
-                val message = RemoteMessage.Builder(managerToken)
-                    .setData(notification)
-                    .build()
+            for (managerToken in managerTokens) {
+                if (managerToken != null && managerToken.isNotBlank()) {
+                    val notificationData = NotificationBody(
+                        title = "New Time-Off Request",
+                        body = "A new time-off request requires your approval."
+                    )
 
-                try {
-                    FirebaseMessaging.getInstance().send(message)
-                    Log.e("SendNotification", "Success")
-                    // Notification sent successfully
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("SendNotification", "Fail", e)
-                    // Handle failure to send notification
+                    try {
+                        fcmApi.sendMessage(SendMessageDTO(deviceToken = managerToken, notification = notificationData))
+                        Log.e("SendNotification", "Success")
+                        // Notification sent successfully
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Log.e("SendNotification", "Fail", e)
+                        // Handle failure to send notification
+                    }
+                } else {
+                    // Handle case where manager token is not found or blank
+                    println("Manager's FCM token not found or blank.")
                 }
-            } else {
-                // Handle case where manager token is not found or blank
-                println("Manager's FCM token not found or blank.")
             }
         }
-    }
 }
 
 
