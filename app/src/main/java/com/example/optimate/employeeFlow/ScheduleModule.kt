@@ -4,17 +4,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.CalendarView
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.applandeo.materialcalendarview.CalendarDay
+import com.applandeo.materialcalendarview.EventDay
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.example.optimate.R
-import com.example.optimate.loginAndRegister.DynamicLandingActivity
+import com.example.optimate.businessOwner.XmlTopBar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class ScheduleModule : AppCompatActivity() {
@@ -26,10 +28,9 @@ class ScheduleModule : AppCompatActivity() {
         val startTime: String?
     )
 
-    private lateinit var selectedDateTextView: TextView
     private lateinit var nextShiftOrNotScheduledTextView: TextView
     private lateinit var scheduledOrNotTextView: TextView
-    private lateinit var calendarView: CalendarView
+    private lateinit var materialCalendarView: com.applandeo.materialcalendarview.CalendarView
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
@@ -37,35 +38,35 @@ class ScheduleModule : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule_module)
 
+        val topBar: XmlTopBar = findViewById(R.id.topBar)
+        topBar.setTitle("Schedules")
+
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
-        homeBtn.setOnClickListener {
-            val intent = Intent(this, DynamicLandingActivity::class.java)
-            startActivity(intent)
-        }
-
-        selectedDateTextView = findViewById(R.id.selectedDate)
         nextShiftOrNotScheduledTextView = findViewById(R.id.nextShiftOrNotScheduled)
         scheduledOrNotTextView = findViewById(R.id.scheduledOrNot)
-        calendarView = findViewById(R.id.calendarView)
+        materialCalendarView = findViewById(R.id.calendarView)
 
         // Get today's date and format it
         val todayDate = getCurrentDateFormatted()
 
-        // Set today's date initially
-        selectedDateTextView.text = todayDate
+        // Check for scheduled shifts for the initial selected date
+        checkScheduledShifts(materialCalendarView.firstSelectedDate.time)
 
-        // Check for scheduled shifts
-        checkScheduledShifts(calendarView.date)
+        // Set up the listener for day clicks
+        materialCalendarView.setOnDayClickListener(object : OnDayClickListener {
+            override fun onDayClick(eventDay: EventDay) {
+                val selectedDate = getDateFormattedFromMillis(eventDay.calendar.timeInMillis)
 
-        // Set an OnDateChangeListener to update the selected date and check for scheduled shifts
-        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val selectedDate = getDateFormatted(year, month, dayOfMonth)
-            selectedDateTextView.text = selectedDate
-            checkScheduledShifts(calendarView.date)
-        }
+                // Pass the time in milliseconds to checkScheduledShifts
+                checkScheduledShifts(Date(eventDay.calendar.timeInMillis))
+            }
+        })
+
+
+
+
 
         val viewTimeRequestsBtn = findViewById<Button>(R.id.viewTimeRequests)
         val requestTimeOffBtn = findViewById<Button>(R.id.requestTimeOff)
@@ -76,6 +77,64 @@ class ScheduleModule : AppCompatActivity() {
 
         requestTimeOffBtn.setOnClickListener {
             startActivity(Intent(this, RequestTimeOff::class.java))
+        }
+
+        // Fetch and highlight scheduled dates for the current month
+        fetchScheduledDatesForMonth(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH))
+    }
+
+    private fun fetchScheduledDatesForMonth(year: Int, month: Int) {
+        val user = auth.currentUser
+        user?.let { currentUser ->
+            val userName = currentUser.displayName
+
+            if (userName != null) {
+                val calendar = Calendar.getInstance()
+                calendar.set(year, month, 1)
+
+                val firstDayOfMonth = calendar.timeInMillis
+                calendar.add(Calendar.MONTH, 1)
+                val firstDayOfNextMonth = calendar.timeInMillis
+
+                db.collection("schedule")
+                    .whereArrayContains("employees", userName)
+                    .whereGreaterThanOrEqualTo("day", getDateFormattedFromMillis(firstDayOfMonth))
+                    .whereLessThan("day", getDateFormattedFromMillis(firstDayOfNextMonth))
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        val scheduledDates = mutableListOf<CalendarDay>()
+
+                        for (document in documents) {
+                            val shift = document.toObject(ShiftInfo::class.java)
+
+                            // Check if shift.day is not null before attempting to convert
+                            val shiftDateMillis = shift.day?.let { getDateInMillisFromFormatted(it) } ?: 0L
+
+                            // Create a new Calendar instance and set the time
+                            val calendar = Calendar.getInstance().apply {
+                                timeInMillis = shiftDateMillis
+                            }
+
+                            // Create a new CalendarDay instance and add it to scheduledDates
+                            val calendarDay = CalendarDay(calendar)
+                            scheduledDates.add(calendarDay)
+                        }
+
+                        val decorators = mutableListOf<EventDay>()
+
+                        // Highlight the scheduled dates
+                        for (calendarDay in scheduledDates) {
+                            val decorator = EventDay(calendarDay.calendar, R.color.light_green)
+                            decorators.add(decorator)
+                        }
+
+                        materialCalendarView.setEvents(decorators)
+                    }
+                    .addOnFailureListener { exception ->
+                        val failureToastText = "Failed to fetch scheduled dates. Error: ${exception.message}"
+                        showToast(failureToastText)
+                    }
+            }
         }
     }
 
@@ -91,18 +150,18 @@ class ScheduleModule : AppCompatActivity() {
         return dateFormat.format(calendar.time)
     }
 
-    private fun checkScheduledShifts(dateInMillis: Long) {
+    private fun checkScheduledShifts(selectedDate: Date) {
         val user = auth.currentUser
         user?.let { currentUser ->
             // Fetch the shifts for the current user from the database
             val userName = currentUser.displayName
 
             if (userName != null) {
-                val selectedDate = getDateFormattedFromMillis(dateInMillis)
+                val selectedDateString = getDateFormattedFromMillis(selectedDate.time)
 
                 db.collection("schedule")
-                    .whereArrayContains("employees", userName) // Adjust this based on your database structure
-                    .whereEqualTo("day", selectedDate)
+                    .whereArrayContains("employees", userName) // Replace with the actual field name in your database
+                    .whereEqualTo("day", selectedDateString)
                     .get()
                     .addOnSuccessListener { documents ->
                         val shiftList = mutableListOf<ShiftInfo>()
@@ -124,6 +183,8 @@ class ScheduleModule : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun displayShiftData(shiftList: List<ShiftInfo>) {
         // Clear previous text
@@ -148,6 +209,12 @@ class ScheduleModule : AppCompatActivity() {
         calendar.timeInMillis = dateInMillis
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return dateFormat.format(calendar.time)
+    }
+
+    private fun getDateInMillisFromFormatted(formattedDate: String): Long {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = dateFormat.parse(formattedDate)
+        return date?.time ?: 0L
     }
 
     private fun showToast(message: String) {
