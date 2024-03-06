@@ -191,6 +191,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sendExpenseReq"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"

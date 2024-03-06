@@ -54,6 +54,7 @@ class RequestTimeOff : AppCompatActivity() {
         cancelBtn.setOnClickListener {
             val intent = Intent(this, ScheduleModule::class.java)
             startActivity(intent)
+            finish()
         }
 
 
