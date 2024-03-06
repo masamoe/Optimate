@@ -54,6 +54,7 @@ class DynamicLandingActivity : AppCompatActivity(){
             finish()
         }
         requestNotificationPermission()
+        updateMessagingToken()
     }
 
     // Modify getAccountAccess to accept a callback function
@@ -95,9 +96,50 @@ class DynamicLandingActivity : AppCompatActivity(){
             }
         }
     }
+    private fun updateMessagingToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            getToken(token)
+            // Log and toast
+            val msg = getString(R.string.msg_token_fmt, token)
+            Log.d(TAG, msg)
+            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+        })
+    }
+
+    private fun getToken(token: String) {
+
+        GlobalUserData.deviceToken = token
 
 
+        // Update token in Firebase
+        db.collection("users")
+            .whereEqualTo("UID", GlobalUserData.uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Log.e("EditAccountActivity", "No matching account found")
+                    return@addOnSuccessListener
+                }
 
+                val account = documents.first()
+
+                account.reference.update("deviceToken", token)
+                    .addOnSuccessListener {
+                        Log.d("EditAccountActivity", "Account Updated successfully")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("EditAccountActivity", "Error Updating account", e)
+                    }
+            }
+
+    }
 
 
 }

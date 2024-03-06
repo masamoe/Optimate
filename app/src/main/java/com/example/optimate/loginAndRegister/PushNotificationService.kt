@@ -1,18 +1,15 @@
 package com.example.optimate.loginAndRegister
 
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
+import android.app.NotificationManager
 import android.util.Log
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.optimate.businessOwner.Requests
+import androidx.core.app.NotificationCompat
+import com.example.optimate.R
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import io.grpc.Context
 
 
 class PushNotificationService : FirebaseMessagingService() {
@@ -23,10 +20,8 @@ class PushNotificationService : FirebaseMessagingService() {
         getToken(token)
     }
 
-    override fun onMessageReceived(message: RemoteMessage) {
-        super.onMessageReceived(message)
-        // Handle incoming messages here if needed
-    }
+
+
 
     private fun getToken(token: String) {
         GlobalUserData.deviceToken = token
@@ -52,6 +47,14 @@ class PushNotificationService : FirebaseMessagingService() {
                     }
             }
     }
+
+    override fun onMessageReceived(message: RemoteMessage) {
+        super.onMessageReceived(message)
+
+        // Respond to received messages
+    }
+
+
 
 
 }

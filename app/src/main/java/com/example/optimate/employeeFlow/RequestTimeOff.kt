@@ -373,9 +373,11 @@ class RequestTimeOff : AppCompatActivity() {
 
                 try {
                     FirebaseMessaging.getInstance().send(message)
+                    Log.e("SendNotification", "Success")
                     // Notification sent successfully
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    Log.e("SendNotification", "Fail", e)
                     // Handle failure to send notification
                 }
             } else {
