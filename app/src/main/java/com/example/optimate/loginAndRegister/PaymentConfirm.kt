@@ -18,7 +18,7 @@ class PaymentConfirm : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_confirm)
-        val uid = intent.getStringExtra("USER_UID")
+        val uid = GlobalUserData.uid
 
         val paidButton = findViewById<Button>(R.id.confirmedButton)
         val paidImage = findViewById<ImageView>(R.id.imageView5)
@@ -64,7 +64,7 @@ class PaymentConfirm : AppCompatActivity() {
         if (user != null) {
             // User is signed in, show success message
             
-
+            GlobalUserData.uid = ""
             // Navigate to the Login activity
             val intent = Intent(this, Login::class.java)
 

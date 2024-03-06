@@ -5,6 +5,9 @@
       <entry key="LandingMain">
         <State />
       </entry>
+      <entry key="ModuleChoosingMain">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

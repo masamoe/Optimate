@@ -11,13 +11,21 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.optimate.R
+import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.fuel.json.responseJson
+import com.github.kittinunf.result.Result
+
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.firestore
-import java.util.Date
+import com.stripe.android.PaymentConfiguration
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.PaymentSheetResult
 
 class ModuleChoosingMain : AppCompatActivity() {
     private var db = Firebase.firestore
+    lateinit var paymentSheet: PaymentSheet
+    lateinit var customerConfig: PaymentSheet.CustomerConfiguration
+    lateinit var paymentIntentClientSecret: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_module_choosing_main)
@@ -25,7 +33,7 @@ class ModuleChoosingMain : AppCompatActivity() {
         val container1 = findViewById<TextView>(R.id.container1)
         val container2 = findViewById<TextView>(R.id.container2)
         val container3 = findViewById<TextView>(R.id.container3)
-        val payButton = findViewById<Button>(R.id.payButton)
+        val payButtonMain = findViewById<Button>(R.id.payButtonMain)
         var container1Picked = false
         var container2Picked = false
         var container3Picked = false
@@ -35,8 +43,9 @@ class ModuleChoosingMain : AppCompatActivity() {
         var currentAmount = 0.00
         val amount = findViewById<TextView>(R.id.Amount)
         val moduleList = mutableListOf<String>()
+        paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
+        fetchPaymentIntent()
 
-        
 
 
         container1.setOnClickListener {
@@ -75,7 +84,7 @@ class ModuleChoosingMain : AppCompatActivity() {
             container3Picked = !container3Picked
         }
 
-        payButton.setOnClickListener {
+        payButtonMain.setOnClickListener {
             if(container1Picked){
                 moduleList.add("One")
 
@@ -88,6 +97,7 @@ class ModuleChoosingMain : AppCompatActivity() {
 
                 if (uid != null) {
                     updateUser(uid, moduleList, currentAmount)
+
                 }
 
             } else{
@@ -112,15 +122,14 @@ class ModuleChoosingMain : AppCompatActivity() {
     private fun updateUI(user: String,newModules: List<String>, currentAmount: Double) {
         if (newModules != null) {
             // User is signed in, show success message
+            GlobalUserData.uid = user
+            Toast.makeText(this, "Now fo rpaying", Toast.LENGTH_SHORT).show()
 
-            val intent = Intent(this, PaymentConfirm::class.java)
-            intent.putExtra("USER_UID", user)
-            intent.putExtra("paymentAmount", currentAmount)
             // Navigate to the Login activity
+            presentPaymentSheet()
 
 
-            startActivity(intent)
-            finish() // Finish the current activity so the user can't go back to it
+            // Finish the current activity so the user can't go back to it
         } else {
             // User is null, stay on the register page or show an error message
             Toast.makeText(this, "Update failed.", Toast.LENGTH_SHORT).show()
@@ -128,7 +137,7 @@ class ModuleChoosingMain : AppCompatActivity() {
     }
 
     private fun updateUser(uid: String, newModules: List<String>, currentAmount: Double) {
-
+        Log.e(this.toString(), "updateUser: called ", )
         db.collection("users")
             .whereEqualTo("UID", uid)
             .get()
@@ -152,5 +161,52 @@ class ModuleChoosingMain : AppCompatActivity() {
     }
     private fun reload() {
         // Reload the current activity or perform other actions if the user is already signed in
+    }
+    fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
+        when(paymentSheetResult) {
+            is PaymentSheetResult.Canceled -> {
+                print("Canceled")
+            }
+            is PaymentSheetResult.Failed -> {
+                print("Error: ${paymentSheetResult.error}")
+            }
+            is PaymentSheetResult.Completed -> {
+                // Display for example, an order confirmation screen
+                print("Completed")
+                val intent = Intent(this, PaymentConfirm::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+    }
+
+    fun presentPaymentSheet() {
+        paymentSheet.presentWithPaymentIntent(
+            paymentIntentClientSecret,
+            PaymentSheet.Configuration(
+                merchantDisplayName = "Optimate",
+                customer = customerConfig,
+                // Set `allowsDelayedPaymentMethods` to true if your business handles
+                // delayed notification payment methods like US bank accounts.
+                allowsDelayedPaymentMethods = true
+            )
+        )
+    }
+
+    private fun fetchPaymentIntent() {
+        // Fetch payment intent client secret and customer config from your backend
+        // This is just a placeholder, replace it with your actual network request code
+        "http://10.0.2.2:8080/payment-sheet".httpPost().responseJson { _, _, result ->
+            if (result is Result.Success) {
+                val responseJson = result.get().obj()
+                paymentIntentClientSecret = responseJson.getString("paymentIntent")
+                customerConfig = PaymentSheet.CustomerConfiguration(
+                    responseJson.getString("customer"),
+                    responseJson.getString("ephemeralKey")
+                )
+                val publishableKey = responseJson.getString("publishableKey")
+                PaymentConfiguration.init(this, publishableKey)
+            }
+        }
     }
 }
