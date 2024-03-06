@@ -64,10 +64,6 @@ class ScheduleModule : AppCompatActivity() {
             }
         })
 
-
-
-
-
         val viewTimeRequestsBtn = findViewById<Button>(R.id.viewTimeRequests)
         val requestTimeOffBtn = findViewById<Button>(R.id.requestTimeOff)
 
@@ -80,7 +76,10 @@ class ScheduleModule : AppCompatActivity() {
         }
 
         // Fetch and highlight scheduled dates for the current month
-        fetchScheduledDatesForMonth(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH))
+        fetchScheduledDatesForMonth(
+            Calendar.getInstance().get(Calendar.YEAR),
+            Calendar.getInstance().get(Calendar.MONTH)
+        )
     }
 
     private fun fetchScheduledDatesForMonth(year: Int, month: Int) {
@@ -108,7 +107,8 @@ class ScheduleModule : AppCompatActivity() {
                             val shift = document.toObject(ShiftInfo::class.java)
 
                             // Check if shift.day is not null before attempting to convert
-                            val shiftDateMillis = shift.day?.let { getDateInMillisFromFormatted(it) } ?: 0L
+                            val shiftDateMillis =
+                                shift.day?.let { getDateInMillisFromFormatted(it) } ?: 0L
 
                             // Create a new Calendar instance and set the time
                             val calendar = Calendar.getInstance().apply {
@@ -131,7 +131,8 @@ class ScheduleModule : AppCompatActivity() {
                         materialCalendarView.setEvents(decorators)
                     }
                     .addOnFailureListener { exception ->
-                        val failureToastText = "Failed to fetch scheduled dates. Error: ${exception.message}"
+                        val failureToastText =
+                            "Failed to fetch scheduled dates. Error: ${exception.message}"
                         showToast(failureToastText)
                     }
             }
@@ -160,7 +161,10 @@ class ScheduleModule : AppCompatActivity() {
                 val selectedDateString = getDateFormattedFromMillis(selectedDate.time)
 
                 db.collection("schedule")
-                    .whereArrayContains("employees", userName) // Replace with the actual field name in your database
+                    .whereArrayContains(
+                        "employees",
+                        userName
+                    ) // Replace with the actual field name in your database
                     .whereEqualTo("day", selectedDateString)
                     .get()
                     .addOnSuccessListener { documents ->
@@ -177,13 +181,13 @@ class ScheduleModule : AppCompatActivity() {
                         showToast(toastText)
                     }
                     .addOnFailureListener { exception ->
-                        val failureToastText = "Failed to fetch shift data. Error: ${exception.message}"
+                        val failureToastText =
+                            "Failed to fetch shift data. Error: ${exception.message}"
                         showToast(failureToastText)
                     }
             }
         }
     }
-
 
 
     private fun displayShiftData(shiftList: List<ShiftInfo>) {
