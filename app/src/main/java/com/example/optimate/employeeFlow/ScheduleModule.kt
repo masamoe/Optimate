@@ -84,6 +84,8 @@ class ScheduleModule : AppCompatActivity() {
 
     private fun fetchScheduledDatesForMonth(year: Int, month: Int) {
         val user = auth.currentUser
+         showToast("Checked Schedule Shifts Month")
+
         user?.let { currentUser ->
             val userName = currentUser.displayName
 
@@ -96,11 +98,17 @@ class ScheduleModule : AppCompatActivity() {
                 val firstDayOfNextMonth = calendar.timeInMillis
 
                 db.collection("schedule")
+                    .whereEqualTo("BID" , GlobalUserData.bid)
                     .whereArrayContains("employees", userName)
                     .whereGreaterThanOrEqualTo("day", getDateFormattedFromMillis(firstDayOfMonth))
                     .whereLessThan("day", getDateFormattedFromMillis(firstDayOfNextMonth))
                     .get()
                     .addOnSuccessListener { documents ->
+                        if (document.isEmpty) {
+                            Log.e("FirestoreData","Schedule has no document")
+                        }
+                        showToast("Checked Schedule Shifts Month Success Getting")
+
                         val scheduledDates = mutableListOf<CalendarDay>()
 
                         for (document in documents) {
@@ -140,11 +148,14 @@ class ScheduleModule : AppCompatActivity() {
     }
 
     private fun getCurrentDateFormatted(): String {
+         showToast("Current Date Format")
         val dateFormat = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
         return dateFormat.format(Calendar.getInstance().time)
     }
 
     private fun getDateFormatted(year: Int, month: Int, dayOfMonth: Int): String {
+                 showToast("get Date Format")
+
         val dateFormat = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
         val calendar = Calendar.getInstance()
         calendar.set(year, month, dayOfMonth)
@@ -153,6 +164,7 @@ class ScheduleModule : AppCompatActivity() {
 
     private fun checkScheduledShifts(selectedDate: Date) {
         val user = auth.currentUser
+        showToast("Checked Schedule Shifts Day")
         user?.let { currentUser ->
             // Fetch the shifts for the current user from the database
             val userName = currentUser.displayName
@@ -161,6 +173,7 @@ class ScheduleModule : AppCompatActivity() {
                 val selectedDateString = getDateFormattedFromMillis(selectedDate.time)
 
                 db.collection("schedule")
+                    .whereEqualTo("BID", GlobalUserData.bid)
                     .whereArrayContains(
                         "employees",
                         userName
@@ -168,6 +181,11 @@ class ScheduleModule : AppCompatActivity() {
                     .whereEqualTo("day", selectedDateString)
                     .get()
                     .addOnSuccessListener { documents ->
+                        if (document.isEmpty) {
+                            Log.e("FirestoreData","Scheduale has no document")
+                        }
+                         showToast("Checked Schedule Shifts Day Success Getting")
+                        
                         val shiftList = mutableListOf<ShiftInfo>()
 
                         for (document in documents) {
@@ -177,8 +195,7 @@ class ScheduleModule : AppCompatActivity() {
                         }
 
                         displayShiftData(shiftList)
-                        val toastText = buildToastText(shiftList)
-                        showToast(toastText)
+                       
                     }
                     .addOnFailureListener { exception ->
                         val failureToastText =
@@ -191,6 +208,8 @@ class ScheduleModule : AppCompatActivity() {
 
 
     private fun displayShiftData(shiftList: List<ShiftInfo>) {
+                 showToast("Displaying shiftlist")
+
         // Clear previous text
         nextShiftOrNotScheduledTextView.text = ""
         scheduledOrNotTextView.text = ""
@@ -209,6 +228,8 @@ class ScheduleModule : AppCompatActivity() {
     }
 
     private fun getDateFormattedFromMillis(dateInMillis: Long): String {
+                 showToast("from millis Format")
+
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = dateInMillis
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -216,6 +237,8 @@ class ScheduleModule : AppCompatActivity() {
     }
 
     private fun getDateInMillisFromFormatted(formattedDate: String): Long {
+                 showToast("get millis Format")
+
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val date = dateFormat.parse(formattedDate)
         return date?.time ?: 0L
