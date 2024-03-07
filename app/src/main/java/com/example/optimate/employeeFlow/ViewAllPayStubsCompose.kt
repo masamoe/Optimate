@@ -352,6 +352,7 @@ fun generateAndDownloadPdf(
                 resolver.openOutputStream(it).use { outputStream ->
                     pdfDocument.writeTo(outputStream)
                     Log.d("PDFGeneration", "PDF written to Downloads successfully: $fileName")
+                    Toast.makeText(context, "PDF downloaded successfully: $fileName", Toast.LENGTH_SHORT).show()
                     openPdf(context, uri)
                 }
             } ?: throw IOException("Failed to create new MediaStore record.")
