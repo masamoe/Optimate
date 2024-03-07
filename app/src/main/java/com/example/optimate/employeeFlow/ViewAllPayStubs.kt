@@ -1,6 +1,7 @@
 package com.example.optimate.employeeFlow
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.MutableLiveData
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.biWeeklyDateRanges2024
 import com.example.optimate.loginAndRegister.milliSecondsToHours
@@ -34,7 +36,12 @@ class ViewAllPayStubs : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_all_pay_stubs)
-        getWorkedHoursForDateRange(listOf("20240101", "20241231"), yearlyWorkLogs,yearlyTotalHour, yearlyIncome)
+        getWorkedHoursForDateRange(
+            listOf("20240101", "20241231"),
+            yearlyWorkLogs,
+            yearlyTotalHour,
+            yearlyIncome
+        )
 
 
         val totalGrossPayAnnual = findViewById<TextView>(R.id.totalGrossPayAnnual)
@@ -45,6 +52,11 @@ class ViewAllPayStubs : AppCompatActivity() {
             totalGrossPayAnnual.text = "$${income}"
             totalNetPayAnnual.text = "$${income?.times(0.8)}"
             totalTaxesAnnual.text = "$${income?.times(0.2)}"
+        }
+
+        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
+        homeBtn.setOnClickListener {
+            startActivity(Intent(this, DynamicLandingActivity::class.java))
         }
 
         val currentDate = Calendar.getInstance().time
@@ -60,97 +72,7 @@ class ViewAllPayStubs : AppCompatActivity() {
         composeView.setContent {
             ViewAllPayStubsList(validBiWeeklyDateRanges)
         }
-
-//        generatePayStubsDataFromRanges(validBiWeeklyDateRanges, payStubsData) {
-//            // This code block is executed after generatePayStubsDataFromRanges is complete
-//            val myAdapter = MyAdapter(this, payStubsData)
-//            val payStubList: ListView = findViewById(R.id.payStubList)
-//            payStubList.adapter = myAdapter
-//        }
     }
-//    private fun generatePayStubsDataFromRanges(ranges: List<List<String>>,
-//                                               payStubsData: MutableList<Map<String, String>>,
-//                                               onCompleted: () -> Unit){
-//        val inputDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-//        val outputDateFormat = SimpleDateFormat("MMMM dd, YYYY", Locale.getDefault())
-//
-//        for (range in ranges) {
-//            if (range.size >= 2) { // Ensure that the range has at least two elements
-//                val startDate = inputDateFormat.parse(range[0])
-//                val endDate = inputDateFormat.parse(range[1])
-//
-//                val payStub = HashMap<String, String>()
-//                payStub["Date"] =
-//                    outputDateFormat.format(startDate) + " to " + outputDateFormat.format(endDate)
-//                payStub["TotalHours"] = ""
-//                payStub["GrossPay"] = ""
-//                payStub["NetPay"] = ""
-//                payStub["Taxes"] = ""
-//                payStubsData.add(payStub)
-//                Log.d("PayStubs1", "Pay stub: $payStub")
-//            } else {
-//                Log.e("PayStubs", "Invalid date range: $range")
-//            }
-//        }
-//        onCompleted()
-//    }
-//    private class MyAdapter(
-//        private val context: Context,
-//        private val data: MutableList<Map<String, String>>
-//    ) : BaseAdapter() {
-//        private var expandedPosition = -1
-//
-//        override fun getCount(): Int {
-//            return data.size
-//        }
-//
-//        override fun getItem(position: Int): Any {
-//            return data[position]
-//        }
-//
-//        override fun getItemId(position: Int): Long {
-//            return position.toLong()
-//        }
-//
-//        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-//            val view: View = convertView ?: LayoutInflater.from(context)
-//                .inflate(R.layout.pay_stub_sub_list, parent, false)
-//
-//            val payStubDateTextView: TextView = view.findViewById(R.id.payStubDate)
-//            val totalHoursTextView: TextView = view.findViewById(R.id.totalHoursPerPayStub)
-//            val grossPayTextView: TextView = view.findViewById(R.id.grossPayPerPayStub)
-//            val netPayTextView: TextView = view.findViewById(R.id.netPayPerPayStub)
-//            val taxesTextView: TextView = view.findViewById(R.id.taxesPerPayStub)
-//            val arrowIcon: ImageView = view.findViewById(R.id.arrowIcon)
-//            val payStubChildItem: LinearLayout = view.findViewById(R.id.payStubChildItem)
-//
-//
-//            val item: Map<String, String> = getItem(position) as Map<String, String>
-//            payStubDateTextView.text = item["Date"]
-//            totalHoursTextView.text = item["TotalHours"]
-//            grossPayTextView.text = item["GrossPay"]
-//            netPayTextView.text = item["NetPay"]
-//            taxesTextView.text = item["Taxes"]
-//
-//            payStubChildItem.visibility =
-//                if (expandedPosition == position) View.VISIBLE else View.GONE
-//
-//            // Change arrow image based on visibility of child item
-//            if (expandedPosition == position) {
-//                arrowIcon.setImageResource(R.drawable.arrow_drop_up)
-//            } else {
-//                arrowIcon.setImageResource(R.drawable.arrow_drop_down)
-//            }
-//
-//            // Set onClickListener to toggle visibility of child item and change arrow image
-//            view.setOnClickListener {
-//                expandedPosition = if (expandedPosition == position) -1 else position
-//                notifyDataSetChanged()
-//            }
-//
-//            return view
-//        }
-//    }
 
     private fun getWorkedHoursForDateRange(
         dateRange: List<String>,

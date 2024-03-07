@@ -144,5 +144,6 @@
     <string name="percent80">80%</string>
     <string name="percent20">20%</string>
     <string name="submit_an_expense">Submit an expense</string>
+    <string name="pay_stubs">Pay Stubs</string>
 
 </resources>
