@@ -38,8 +38,10 @@ class SubmitExpenses : AppCompatActivity() {
     private lateinit var outlinedReasonFieldLayout: TextInputLayout
     private lateinit var expenseDateEditText: TextView
     private lateinit var sendButton: MaterialButton
+    private lateinit var outlinedExpenseDateLayout: TextInputLayout
     private var db = Firebase.firestore
     private var storageRef = Firebase.storage.reference;
+    private var selectedImageUri: Uri? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +56,7 @@ class SubmitExpenses : AppCompatActivity() {
         reasonFieldEditText = findViewById(R.id.reasonField)
         outlinedReasonFieldLayout = findViewById(R.id.outlinedReasonField)
         expenseDateEditText = findViewById(R.id.expenseDate)
+        outlinedExpenseDateLayout = findViewById(R.id.outlinedExpenseDate)
 
         var datetoDb = ""
         var reason = ""
@@ -67,7 +70,7 @@ class SubmitExpenses : AppCompatActivity() {
             .build()
 
         // Find TextInputLayouts and TextInputEditTexts
-        val outlinedExpenseDateLayout = findViewById<TextInputLayout>(R.id.outlinedExpenseDate)
+
 
 
         // Set click listeners to open date pickers
@@ -103,26 +106,30 @@ class SubmitExpenses : AppCompatActivity() {
             pickPhoto()
         }
 
+
         sendButton.setOnClickListener {
             // Get values from input fields
             val datetoDb = expenseDateEditText.text.toString()
             val reason = reasonFieldEditText.text.toString()
             val amount = expenseAmountEditText.text.toString()
 
-            // Check if all fields are filled
-            if (datetoDb.isNotEmpty() && reason.isNotEmpty() && amount.isNotEmpty()) {
-                // Pick photo and upload it
-                pickPhoto()
+            // Check if all fields are filled and an image is selected
+            if (datetoDb.isNotEmpty() && reason.isNotEmpty() && amount.isNotEmpty() && selectedImageUri != null) {
+                // Upload data to Firestore
+                uploadReceiptPhotoToStorage(selectedImageUri!!, datetoDb, reason, amount)
             } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                // Show toast message for empty fields
+                Toast.makeText(this, "Please fill all fields and select an image", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+
+
     private val pickMediaLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
-            val selectedImageUri = data?.data
+            selectedImageUri = data?.data
             selectedImageUri?.let {
                 val imageName = getImageName(it)
                 receiptPhotoEditText.setText(imageName)
@@ -166,6 +173,7 @@ class SubmitExpenses : AppCompatActivity() {
             Toast.makeText(this, "Failed to upload receipt photo", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     @SuppressLint("Range")
     private fun getFileName(context: Context, uri: Uri): String? {
@@ -224,10 +232,10 @@ class SubmitExpenses : AppCompatActivity() {
         db.collection("expenseRequest")
             .add(submitExpense)
             .addOnSuccessListener { documentReference ->
-                Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
+                Log.d("EditSubmitRequest", "New record created with ID: ${documentReference.id}")
                 Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, ScheduleModule::class.java))
-
+                // Start PayStub activity
+                startActivity(Intent(this, PayStub::class.java))
             }
             .addOnFailureListener { e ->
                 Log.e("EditAccountActivity", "Error creating new record", e)

@@ -22,6 +22,7 @@ class PayStub : AppCompatActivity() {
         val submitExpensesBtn = findViewById<Button>(R.id.submitExpensesBtn)
         val viewExpensesBtn = findViewById<Button>(R.id.viewExpensesBtn)
 
+
         viewMorePayStubsBtn.setOnClickListener {
             startActivity(Intent(this,ViewAllPayStubs::class.java))
         }
