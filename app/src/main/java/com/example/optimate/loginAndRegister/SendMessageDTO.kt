@@ -3,13 +3,11 @@ import com.google.gson.annotations.SerializedName
 
 data class SendMessageDTO(
     val deviceToken: String?, // Renamed from 'to' to match server-side expectation
-    val notification: NotificationBody
+    val title: String?,
+    val body: String?
 )
 
-data class NotificationBody(
-    val title: String,
-    val body: String
-)
+
 
 
 data class PaymentData(

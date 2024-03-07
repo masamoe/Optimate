@@ -18,7 +18,7 @@ import com.example.optimate.R
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.FcmApi
 import com.example.optimate.loginAndRegister.GlobalUserData
-import com.example.optimate.loginAndRegister.NotificationBody
+
 import com.example.optimate.loginAndRegister.SendMessageDTO
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -43,7 +43,7 @@ class RequestTimeOff : AppCompatActivity() {
 
     private var db = Firebase.firestore
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://optimateserver.onrender.com:8000") // Update with your server URL
+        .baseUrl("https://optimateserver.onrender.com ") // Update with your server URL
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -374,13 +374,13 @@ class RequestTimeOff : AppCompatActivity() {
 
             for (managerToken in managerTokens) {
                 if (managerToken != null && managerToken.isNotBlank()) {
-                    val notificationData = NotificationBody(
-                        title = "New Time-Off Request",
-                        body = "A new time-off request requires your approval."
-                    )
+
+                        val titleData = "New Time-Off Request"
+                        val bodyData = "A new time-off request requires your approval."
+
 
                     try {
-                        fcmApi.sendMessage(SendMessageDTO(deviceToken = managerToken, notification = notificationData))
+                        fcmApi.sendMessage(SendMessageDTO(deviceToken = managerToken, title = titleData, body = bodyData))
                         Log.e("SendNotification", "Success")
                         // Notification sent successfully
                     } catch (e: Exception) {
