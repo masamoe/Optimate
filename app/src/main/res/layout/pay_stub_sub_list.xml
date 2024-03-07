@@ -100,30 +100,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Over time:"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
-
-                    <TextView
-                        android:id="@+id/overTimePerPayStub"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="0h"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="Gross pay:"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?android:attr/textColorSecondary" />

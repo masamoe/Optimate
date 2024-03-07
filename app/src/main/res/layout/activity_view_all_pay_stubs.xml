@@ -79,6 +79,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView2"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="380dp"
         android:layout_height="665dp"
@@ -193,20 +194,27 @@
                 </com.google.android.material.divider.MaterialDivider>
 
             </LinearLayout>
-
-
-            <ListView
-                android:id="@+id/payStubList"
-                android:layout_width="match_parent"
-                android:layout_height="484dp"
-                tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="215dp" />
-
-
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:translationZ="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialCardView2"
+        app:layout_constraintEnd_toEndOf="@+id/materialCardView2"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView2"
+        app:layout_constraintTop_toTopOf="@+id/guideline72" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline72"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.35" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -272,7 +272,8 @@ class ClockModule : AppCompatActivity() {
 
         val entry = hashMapOf(
             date to totalHours,
-            "approved" to false
+            "approved" to false,
+            "wage" to GlobalUserData.wage,
 
         )
 
