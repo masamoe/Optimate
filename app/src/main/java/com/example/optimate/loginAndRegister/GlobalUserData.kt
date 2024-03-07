@@ -10,7 +10,6 @@ import java.util.Locale
 import java.util.TimeZone
 
 
-
 data class AccountStatus(var date: Date, var status: String)
 object GlobalUserData {
     var access: List<String> = emptyList()
@@ -131,6 +130,31 @@ fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Double, descr
     }.addOnFailureListener { e ->
         Log.w("AddRevenueOrExpenseActivity", "Error checking document existence", e)
     }
+}
+
+fun getBusinessNameAndAddress(bid: String, callback: (String, String) -> Unit) {
+    val db = Firebase.firestore
+
+    db.collection("users")
+        .whereEqualTo("BID", bid)
+        .get()
+        .addOnSuccessListener { querySnapshot ->
+            //find the "role" field is "businessOwner", then its "name" field is the business name
+            querySnapshot.documents.forEach { documentSnapshot ->
+                val user = documentSnapshot.data
+                if (user != null) {
+                    val role = user["role"] as String
+                    if (role == "businessOwner") {
+                        val name = user["name"] as String
+                        val address = user["address"] as String
+                        callback(name, address)
+                    }
+                }
+            }
+        }
+        .addOnFailureListener { e ->
+            Log.w("ExpensesRequestsScreen", "Error getting business name", e)
+        }
 }
 
 val biWeeklyDateRanges2024 = listOf(

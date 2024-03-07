@@ -2,7 +2,11 @@ package com.example.optimate.employeeFlow
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
+import android.text.TextPaint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,15 +18,20 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.MutableLiveData
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.biWeeklyDateRanges2024
+import com.example.optimate.loginAndRegister.getBusinessNameAndAddress
 import com.example.optimate.loginAndRegister.milliSecondsToHours
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,7 +40,6 @@ class ViewAllPayStubs : AppCompatActivity() {
     private val yearlyIncome = MutableLiveData<Double>().apply { value = 0.0 }
     private val yearlyWorkLogs = mutableStateListOf<Map<String, Any>>()
     private lateinit var validBiWeeklyDateRanges: List<List<String>>
-    private val payStubsData = mutableStateListOf<Map<String, String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +78,7 @@ class ViewAllPayStubs : AppCompatActivity() {
 
         val composeView = findViewById<ComposeView>(R.id.compose_view)
         composeView.setContent {
-            ViewAllPayStubsList(validBiWeeklyDateRanges)
+            ViewAllPayStubsList(validBiWeeklyDateRanges, this@ViewAllPayStubs)
         }
     }
 
@@ -145,4 +153,6 @@ class ViewAllPayStubs : AppCompatActivity() {
         hours.postValue(String.format("%.2f", totalHours).toDouble())
         income.postValue(String.format("%.2f", totalIncome).toDouble())
     }
+
+
 }

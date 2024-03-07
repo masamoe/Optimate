@@ -1,7 +1,22 @@
 package com.example.optimate.employeeFlow
 
+import android.Manifest
+import android.app.Activity
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.pdf.PdfDocument
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.text.TextPaint
 import android.util.Log
 import android.widget.Space
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +35,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -34,28 +50,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ComponentActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.example.optimate.loginAndRegister.getBusinessNameAndAddress
 import com.example.optimate.loginAndRegister.milliSecondsToHours
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun ViewAllPayStubsList(validBiWeeklyDateRanges: List<List<String>>) {
+fun ViewAllPayStubsList(validBiWeeklyDateRanges: List<List<String>>, context: Context) {
     LazyColumn {
         itemsIndexed(validBiWeeklyDateRanges) { _, worklog ->
-            ViewAllPayStubsRow(worklog)
+            ViewAllPayStubsRow(worklog, context)
         }
     }
 }
 
 @Composable
-fun ViewAllPayStubsRow(dateRange: List<String>) {
+fun ViewAllPayStubsRow(dateRange: List<String>,context: Context) {
     var hours by remember { mutableDoubleStateOf(0.0) }
     var income by remember { mutableDoubleStateOf(0.0) }
     val approvedWorkLogs = mutableListOf<Map<String, Any>>()
@@ -66,8 +93,19 @@ fun ViewAllPayStubsRow(dateRange: List<String>) {
     var isExpanded by remember { mutableStateOf(false) }
     val backgroundColor = Color(0xFFF2EBF3)
     val frameColor = Color(0xFF6750A4)
-
     val cornerRadius = 12.dp
+    // Define the permission launcher
+    val writePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted: Boolean ->
+            if (isGranted) {
+                generateAndDownloadPdf(context, dateRange, hours, income)
+            } else {
+                // Permission was not granted, handle this case
+                Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
 
     LaunchedEffect(dateRange) {
         getWorkedHoursForDateRange(dateRange, approvedWorkLogs) { totalHours, totalIncome ->
@@ -166,6 +204,26 @@ fun ViewAllPayStubsRow(dateRange: List<String>) {
                     text = "$${income*0.2}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.Blue
                 )
             }
+            Button(
+                onClick = {
+                    when (PackageManager.PERMISSION_GRANTED) {
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) -> {
+                            // Permission is already granted
+                            generateAndDownloadPdf(context, dateRange, hours, income)
+                        }
+                        else -> {
+                            // Request permission
+                            writePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        }
+                    }
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("Download PDF")
+            }
 
             }
         }
@@ -238,3 +296,96 @@ private fun countTotalHoursAndIncome(
     val totalIncomeToTwoDecimalPlaces = String.format("%.2f", totalIncome).toDouble()
     return Pair(totalHoursToTwoDecimalPlaces, totalIncomeToTwoDecimalPlaces)
 }
+fun generateAndDownloadPdf(
+    context: Context,
+    dateRange: List<String>,
+    hours: Double,
+    income: Double
+) {
+    Log.d("PDFGeneration", "Starting PDF generation")
+    getBusinessNameAndAddress(GlobalUserData.bid) { name, address ->
+        Log.d("PDFGeneration", "Business name and address retrieved: $name, $address")
+        val pdfDocument = PdfDocument()
+
+        // Set up the PdfDocument.PageInfo, create a page, and start drawing your content.
+        val pageInfo = PdfDocument.PageInfo.Builder(300, 600, 1).create()
+        val page = pdfDocument.startPage(pageInfo)
+        val canvas = page.canvas
+        val textPaint = TextPaint().apply {
+            color = android.graphics.Color.BLACK
+            textSize = 12f
+        }
+
+        // Draw the content on the canvas
+        canvas.apply {
+            val titleBaseLine = 30f
+            val leftMargin = 10f
+
+            drawText("Company Name: $name", leftMargin, titleBaseLine, textPaint)
+            drawText("Address: $address", leftMargin, titleBaseLine + 20, textPaint)
+            drawText("Employee Name: ${GlobalUserData.name}", leftMargin, titleBaseLine + 40, textPaint)
+            drawText("Date: ${formatDateRange(dateRange)}", leftMargin, titleBaseLine + 60, textPaint)
+            drawText("Total Hours: $hours", leftMargin, titleBaseLine + 80, textPaint)
+            drawText("Gross pay: $income", leftMargin, titleBaseLine + 100, textPaint)
+            drawText("Net pay: ${income * 0.8}", leftMargin, titleBaseLine + 120, textPaint)
+            drawText("Taxes: ${income * 0.2}", leftMargin, titleBaseLine + 140, textPaint)
+        }
+
+        pdfDocument.finishPage(page)
+        Log.d("PDFGeneration", "Page finished")
+
+        // Save the PDF to the Downloads directory
+        val fileName = "paystub_${dateRange[0]}_${dateRange[1]}.pdf"
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+            }
+        }
+
+        val resolver = context.contentResolver
+        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+
+        try {
+            uri?.let {
+                resolver.openOutputStream(it).use { outputStream ->
+                    pdfDocument.writeTo(outputStream)
+                    Log.d("PDFGeneration", "PDF written to Downloads successfully: $fileName")
+                    openPdf(context, uri)
+                }
+            } ?: throw IOException("Failed to create new MediaStore record.")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Log.e("PDFGeneration", "Error writing PDF to Downloads", e)
+        } finally {
+            pdfDocument.close()
+            Log.d("PDFGeneration", "PDFDocument closed")
+        }
+    }
+}
+
+fun formatDateRange(dateRange: List<String>): String {
+    val inputDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    val outputDateFormat = SimpleDateFormat("MMMM dd, YYYY", Locale.getDefault())
+    val startDate = inputDateFormat.parse(dateRange[0])
+    val endDate = inputDateFormat.parse(dateRange[1])
+    return "${outputDateFormat.format(startDate)} to ${outputDateFormat.format(endDate)}"
+}
+
+private fun openPdf(context: Context, uri: Uri) {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(uri, "application/pdf")
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    }
+
+    // Use a try-catch block to catch an ActivityNotFoundException
+    // This might occur if there's no PDF viewer installed on the device
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Toast.makeText(context, "No application found to open this file.", Toast.LENGTH_SHORT).show()
+    }
+}
+
