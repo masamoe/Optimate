@@ -196,7 +196,7 @@ class ModuleChoosingMain : AppCompatActivity() {
     private fun fetchPaymentIntent() {
         // Fetch payment intent client secret and customer config from your backend
         // This is just a placeholder, replace it with your actual network request code
-        "http://10.0.2.2:8080/payment-sheet".httpPost().responseJson { _, _, result ->
+        "https://optimateserver.onrender.com/payment-sheet".httpPost().responseJson { _, _, result ->
             if (result is Result.Success) {
                 val responseJson = result.get().obj()
                 paymentIntentClientSecret = responseJson.getString("paymentIntent")

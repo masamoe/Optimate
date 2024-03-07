@@ -43,7 +43,7 @@ class RequestTimeOff : AppCompatActivity() {
 
     private var db = Firebase.firestore
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8080") // Update with your server URL
+        .baseUrl("https://optimateserver.onrender.com") // Update with your server URL
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
