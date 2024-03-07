@@ -42,6 +42,7 @@ import com.example.optimate.businessOwner.Requests
 import com.example.optimate.businessOwner.SchedulerActivity
 import com.example.optimate.businessOwner.TitlesActivity
 import com.example.optimate.employeeFlow.ClockModule
+import com.example.optimate.employeeFlow.PayStub
 import com.example.optimate.employeeFlow.ScheduleModule
 import com.example.optimate.employeeFlow.ViewTimeOffRequests
 
@@ -122,6 +123,7 @@ fun ButtonList(AccessList: List<String>) {
                             "Requests" -> context.startActivity(Intent(context, Requests::class.java))
                             "View Employees" -> context.startActivity(Intent(context, AccountsActivity::class.java))
                             "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
+                            "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))
 
 
                         }},

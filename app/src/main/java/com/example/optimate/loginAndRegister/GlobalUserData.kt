@@ -78,7 +78,7 @@ fun getWage(uid: String, callback: (Double) -> Unit) {
         }
 }
 
-fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Double, description: String) {
+fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Double, description: String, approved: Boolean) {
     val db = Firebase.firestore
     val bid = GlobalUserData.bid
 
@@ -93,7 +93,7 @@ fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Double, descr
         "Date" to date,
         "Amount" to amount,
         "Description" to description,
-        "Approval" to true,
+        "Approval" to approved,
         "Name" to GlobalUserData.name,
         "Uploaded Date" to Timestamp(Date())
     )
@@ -132,3 +132,18 @@ fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Double, descr
         Log.w("AddRevenueOrExpenseActivity", "Error checking document existence", e)
     }
 }
+
+val biWeeklyDateRanges2024 = listOf(
+    listOf("20240101", "20240115"), listOf("20240116", "20240131"),
+    listOf("20240201", "20240215"), listOf("20240216", "20240229"),
+    listOf("20240301", "20240315"), listOf("20240316", "20240331"),
+    listOf("20240401", "20240415"), listOf("20240416", "20240430"),
+    listOf("20240501", "20240515"), listOf("20240516", "20240531"),
+    listOf("20240601", "20240615"), listOf("20240616", "20240630"),
+    listOf("20240701", "20240715"), listOf("20240716", "20240731"),
+    listOf("20240801", "20240815"), listOf("20240816", "20240831"),
+    listOf("20240901", "20240915"), listOf("20240916", "20240930"),
+    listOf("20241001", "20241015"), listOf("20241016", "20241031"),
+    listOf("20241101", "20241115"), listOf("20241116", "20241130"),
+    listOf("20241201", "20241215"), listOf("20241216", "20241231")
+)
