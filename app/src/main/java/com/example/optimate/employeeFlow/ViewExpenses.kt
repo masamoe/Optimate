@@ -3,10 +3,15 @@ package com.example.optimate.employeeFlow
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.optimate.R
@@ -17,6 +22,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.bumptech.glide.Glide
+import com.google.android.material.textfield.TextInputLayout
 
 class ExpenseRequestStatus(val status: String, val date: String) {
     companion object {
@@ -47,10 +53,14 @@ class ViewExpenses : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var currentUserUid: String
     private val cardImageStates = mutableMapOf<String, Pair<Boolean, String>>()
+    private var selectedStatus: String? = null
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_expenses)
+
+
 
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)
@@ -59,19 +69,56 @@ class ViewExpenses : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
+        // Initialize ProgressBar
+        progressBar = findViewById(R.id.progressBar)
+
+
         // Get current user's UID
         currentUserUid = auth.currentUser?.uid ?: ""
 
         Log.d("ViewRequests", "Current user UID: $currentUserUid")
 
         // Fetch time off requests and compare UIDs
-        fetchExpensesRequestsAndCompareUIDs()
+        progressBar.visibility = View.VISIBLE
+
+        // Your data fetching logic goes here
+
+        // Simulate data fetching with a delay
+        Handler(Looper.getMainLooper()).postDelayed({
+            // After fetching data, hide ProgressBar
+            progressBar.visibility = View.GONE
+
+            // Populate UI with fetched data
+            fetchExpensesRequestsAndCompareUIDs(selectedStatus)
+        }, 2000)
+
+        val textInputLayout: TextInputLayout = findViewById(R.id.requestStatusFilter)
+        val autoCompleteTextView: AutoCompleteTextView = textInputLayout.editText as AutoCompleteTextView
+
+        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+            selectedStatus = parent.getItemAtPosition(position).toString()
+            // Adjust the queries based on the selected item
+            when (selectedStatus) {
+                "all" -> {
+                    fetchExpensesRequestsAndCompareUIDs(null) // Pass null for status to fetch all requests
+                     // Pass null for status to fetch all requests
+                }
+                else -> {
+                    fetchExpensesRequestsAndCompareUIDs(selectedStatus)
+
+                }
+            }
+        }
+
     }
-    private fun fetchExpensesRequestsAndCompareUIDs() {
-        firestore.collection("expenseRequest")
+    private fun fetchExpensesRequestsAndCompareUIDs(status: String?) {
+        var query = firestore.collection("expenseRequest")
             .whereEqualTo("uid", currentUserUid)
             .whereNotEqualTo("status", ExpenseRequestStatus.CANCELLED)
-            .get()
+        if (status != null) {
+            query = query.whereEqualTo("status", status)
+        }
+        query.get()
             .addOnSuccessListener { documents ->
                 val expenseRequests = mutableListOf<ExpenseRequest>()
                 for (document in documents) {
@@ -114,7 +161,7 @@ class ViewExpenses : AppCompatActivity() {
                         .addOnSuccessListener {
                             Log.d("ViewRequests", "Request cancelled successfully.")
                             // After cancelling, fetch and display the updated list of time off requests
-                            fetchExpensesRequestsAndCompareUIDs()
+                            fetchExpensesRequestsAndCompareUIDs(selectedStatus)
                         }
                         .addOnFailureListener { exception ->
                             Log.e("ViewRequests", "Failed to cancel  request: ${exception.message}")

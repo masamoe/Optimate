@@ -44,11 +44,8 @@ class Requests : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_requests)
 
-        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
-        homeBtn.setOnClickListener {
-            val intent = Intent(this, DynamicLandingActivity::class.java)
-            startActivity(intent)
-        }
+        val topBar: XmlTopBar = findViewById(R.id.topBar)
+        topBar.setTitle("Requestes")
 
         /*val view_archive = findViewById<Button>(R.id.view_archive_btn)
         view_archive.setOnClickListener {

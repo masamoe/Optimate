@@ -26,9 +26,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topBar" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/requestStatusFilter"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:hint="Sort by"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
+
+        <AutoCompleteTextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            app:simpleItems="@array/statusList1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <ScrollView
+        android:id="@+id/scrollView4"
         android:layout_width="413dp"
-        android:layout_height="670dp"
+        android:layout_height="680dp"
         android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,23 +65,23 @@
                 android:id="@+id/placeHolder"
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
 
                     <!-- Media -->
-                    <ImageView
+                    <!--<ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:contentDescription="placeholder"
                         android:scaleType="fitCenter"
 
-                        app:srcCompat="@drawable/placeholder" />
+                        app:srcCompat="@drawable/placeholder" />-->
 
                 </LinearLayout>
 
@@ -72,4 +92,15 @@
 
 
     </ScrollView>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        app:indicatorSize="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
