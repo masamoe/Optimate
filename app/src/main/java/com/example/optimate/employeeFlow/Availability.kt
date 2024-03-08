@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.example.optimate.R
+import com.example.optimate.businessOwner.XmlTopBar
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.button.MaterialButton
@@ -103,12 +104,9 @@ class Availability : AppCompatActivity() {
         val editButton = findViewById<MaterialButton>(R.id.editButton)
         val saveIcon = ContextCompat.getDrawable(this, R.drawable.ic_save)
         val editIcon = ContextCompat.getDrawable(this, R.drawable.ic_settings)
-        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
 
-        homeBtn.setOnClickListener {
-            val intent = Intent(this, DynamicLandingActivity::class.java)
-            startActivity(intent)
-        }
+        val topBar: XmlTopBar = findViewById(R.id.topBar)
+        topBar.setTitle("Availability")
 
 
         toggleMondays = findViewById(R.id.toggleMondays)
