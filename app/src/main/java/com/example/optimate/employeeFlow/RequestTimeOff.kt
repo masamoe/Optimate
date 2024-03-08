@@ -230,7 +230,7 @@ class RequestTimeOff : AppCompatActivity() {
             autoCompleteTextView.setAdapter(adapter)
         }
 
-        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
             reason = parent.getItemAtPosition(position).toString()
             textInputLayoutReason.error = null
             // Now the selected item is stored in the 'reason' variable

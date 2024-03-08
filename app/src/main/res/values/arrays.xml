@@ -9,4 +9,11 @@
     <string-array name="language_array">
         <item>English</item>
     </string-array>
+    <string-array name="statusList">
+        <item>all</item>
+        <item>pending</item>
+        <item>approved</item>
+        <item>rejected</item>
+        <item>cancelled</item>
+    </string-array>
 </resources>

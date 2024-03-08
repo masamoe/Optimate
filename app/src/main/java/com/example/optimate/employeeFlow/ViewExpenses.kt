@@ -163,7 +163,7 @@ class ViewExpenses : AppCompatActivity() {
                 expenseRequestCard.findViewById<TextView>(R.id.expenseReqDate).text =
                     expenseRequest.expenseDate
                 expenseRequestCard.findViewById<TextView>(R.id.expenseRequestStatus).text =
-                    "Your time request for $${expenseRequest.amount} is ${expenseRequest.status}."
+                    "Your expense request for $${expenseRequest.amount} is ${expenseRequest.status}."
 
                 expenseRequestCard.findViewById<MaterialButton>(R.id.cancelReqBtn).setOnClickListener {
                     cancelExpenseRequest(expenseRequest)
