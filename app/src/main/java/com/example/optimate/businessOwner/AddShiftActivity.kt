@@ -13,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateListOf
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
@@ -25,6 +28,9 @@ class AddShiftActivity : AppCompatActivity() {
 
     private var db = Firebase.firestore
     private lateinit var adapter: ArrayAdapter<String>
+    private lateinit var dateTextView: TextView
+    private lateinit var startTimeEditText: EditText
+    private lateinit var endTimeEditText: EditText
 
     data class Shift(
         val day: String,
@@ -43,17 +49,29 @@ class AddShiftActivity : AppCompatActivity() {
         val topBar: XmlTopBar = findViewById(R.id.topBar)
         topBar.setTitle("Add Shift")
 
-        val date: TextView = findViewById(R.id.date)
+        dateTextView = findViewById(R.id.dateTextView)
         val selectedDate = intent.getLongExtra("SELECTED_DATE", 0)
 
         // Convert the selected date to a formatted string
         val formattedDate = getDateFormattedFromMillis(selectedDate)
         // Set the text of editTextDate to the selected date
-        date.text = formattedDate
+        dateTextView.text = formattedDate
 
-        val startTime = findViewById<EditText>(R.id.startTime)
-        val endTime = findViewById<EditText>(R.id.endTime)
+        startTimeEditText = findViewById(R.id.startTime)
+        endTimeEditText = findViewById(R.id.endTime)
         val employeeListView: ListView = findViewById(R.id.employeeListView)
+
+        dateTextView.setOnClickListener {
+            showDatePicker()
+        }
+
+        startTimeEditText.setOnClickListener {
+            showTimePicker(startTimeEditText)
+        }
+
+        endTimeEditText.setOnClickListener {
+            showTimePicker(endTimeEditText)
+        }
 
         adapter = ArrayAdapter<String>(
             this,
@@ -78,7 +96,7 @@ class AddShiftActivity : AppCompatActivity() {
         }
 
         saveShiftBtn.setOnClickListener {
-            saveShiftToFirebase(formattedDate, startTime, endTime)
+            saveShiftToFirebase(formattedDate, startTimeEditText, endTimeEditText)
         }
 
         // Now, call getEmployeesFromDB() after adapter initialization
@@ -99,16 +117,6 @@ class AddShiftActivity : AppCompatActivity() {
             startTime = startTime,
             endTime = endTime
         )
-        val timeRegex = Regex("""^(?:[01]\d|2[0-3]):(?:[0-5]\d)$""")
-        if (!startTime.matches(timeRegex) || !endTime.matches(timeRegex)) {
-            // If either startTime or endTime doesn't match the hh:mm format, show an error
-            Toast.makeText(
-                this,
-                "Invalid time format. Please use HH:MM format.",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
 
         val shiftMap = hashMapOf(
             "BID" to GlobalUserData.bid,
@@ -152,6 +160,51 @@ class AddShiftActivity : AppCompatActivity() {
                 Log.e("ScheduleMakerActivity", "Error getting employee data", exception)
                 Toast.makeText(this, "Failed to retrieve employees", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun showDatePicker() {
+        // Create a MaterialDatePicker instance for date picking
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select a date")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .build()
+
+        // Set positive button click listener to handle date selection
+        datePicker.addOnPositiveButtonClickListener { selectedDate ->
+            // Convert the selected date to a formatted string
+            val formattedDate = getDateFormattedFromMillis(selectedDate)
+
+            // Set the selected date to the date TextView
+            dateTextView.text = formattedDate
+        }
+
+        // Show the date picker
+        datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")
+    }
+
+    private fun showTimePicker(editText: EditText) {
+        val isStartTime = editText.id == R.id.startTime
+
+        // Create a MaterialTimePicker instance for time picking with 12-hour format
+        val timePicker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_12H)
+            .setTitleText("Select ${if (isStartTime) "Start" else "End"} Time")
+            .build()
+
+        // Set positive button click listener to handle time selection
+        timePicker.addOnPositiveButtonClickListener {
+            val amPm = if (timePicker.hour < 12) "AM" else "PM"
+            val hour12 = if (timePicker.hour % 12 == 0) 12 else timePicker.hour % 12
+            val hour = if (hour12 < 10) "0$hour12" else hour12
+            val minute = if (timePicker.minute < 10) "0${timePicker.minute}" else timePicker.minute
+            val timeString = "$hour:$minute $amPm"
+
+            // Set the selected time to the corresponding EditText
+            editText.setText(timeString)
+        }
+
+        // Show the time picker
+        timePicker.show(supportFragmentManager, "TIME_PICKER_TAG")
     }
 
     private fun getDateFormattedFromMillis(dateInMillis: Long): String {
