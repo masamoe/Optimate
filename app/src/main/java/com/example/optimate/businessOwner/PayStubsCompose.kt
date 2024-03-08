@@ -193,19 +193,23 @@ private fun getWorkedHoursForDateRange(dateRange: List<String>, onResult: (List<
             // Handle the error appropriately, maybe log or show a UI indication
         }
 }
+data class AggregatedLog(val totalHours: Long, val wage: Double)
 @Composable
 fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
     // Aggregate workLogs by UID, summing up the hours
     val aggregatedLogs = workLogs.groupBy { it["uid"] as? String ?: "" }
         .mapValues { entry ->
-            entry.value.sumOf { it["hours"] as? Long ?: 0L }
+            val totalHours = entry.value.sumOf { it["hours"] as? Long ?: 0L }
+            val wage = entry.value[0]["wage"] as? Double ?: 0.0
+            AggregatedLog(totalHours, wage)
         }
+
 
     // Wrap the card display logic in a LazyColumn for scrollable behavior
     LazyColumn {
-        itemsIndexed(aggregatedLogs.entries.toList()) { index, (uid, totalHours) ->
+        itemsIndexed(aggregatedLogs.entries.toList()) { index, (uid, AggregatedLog) ->
             // Convert milliseconds to hours in 2 decimal places
-            val hoursInDouble = milliSecondsToHours(totalHours)
+            val hoursInDouble = milliSecondsToHours(AggregatedLog.totalHours)
 
             // State for storing the name and wage fetched asynchronously
             var name by remember { mutableStateOf(uid) } // Initialize with UID as a fallback
@@ -222,12 +226,9 @@ fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
                         name = fetchedName // Update the name only if fetched name is not empty
                     }
                 }
-
-                getWage(uid) { fetchedWage ->
-                    wage = fetchedWage
-                    pay = hoursInDouble * wage // Calculate pay
-                }
             }
+            wage = AggregatedLog.wage
+            pay = wage * hoursInDouble
 
             // UI to display the user's name, the sum of hours, and the pay
             ElevatedCard(
@@ -248,6 +249,11 @@ fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
         }
     }
 }
+
+
+
+
+
 @Composable
 fun PayRequests(modifier: Modifier = Modifier) {
     val buttonColor = androidx.compose.material.MaterialTheme.colors.run { Color(0xFF75f8e2) }
