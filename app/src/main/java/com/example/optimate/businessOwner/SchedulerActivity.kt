@@ -167,7 +167,7 @@ class SchedulerActivity : AppCompatActivity() {
     }
 
     private fun getShiftData(selectedDate: String, callback: (List<Shift>) -> Unit) {
-        showToast("getShiftData: ${selectedDate}")
+        showToast("getShiftData: $selectedDate")
         db.collection("schedule")
             .whereEqualTo("BID", GlobalUserData.bid)
             .whereEqualTo("day", selectedDate)

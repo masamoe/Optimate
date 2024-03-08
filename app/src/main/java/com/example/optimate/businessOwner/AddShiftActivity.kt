@@ -142,9 +142,7 @@ class AddShiftActivity : AppCompatActivity() {
 
                 for (document in documents) {
                     val name = document.getString("name") ?: "N/A"
-                    if (name != null) {
-                        employeeNamesList.add(name)
-                    }
+                    employeeNamesList.add(name)
                 }
                 employeeNames.clear()
                 employeeNames.addAll(employeeNamesList)

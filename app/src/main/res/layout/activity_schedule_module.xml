@@ -59,17 +59,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/shift_or_no"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/scheduledOrNot"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                android:paddingStart="16dp"
                 android:text="@string/date_and_time_or_not_scheduled"
                 android:textAlignment="viewStart"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?android:attr/textColorSecondary" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>
 
