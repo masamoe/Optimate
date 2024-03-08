@@ -6,203 +6,113 @@
     android:layout_height="match_parent"
     tools:context=".employeeFlow.ScheduleModule">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <com.example.optimate.businessOwner.XmlTopBar
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:ignore="MissingConstraints">
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.03" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.50" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05109489" />
-
-            <View
-                android:id="@+id/baseline"
-                android:layout_width="370dp"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toStartOf="@id/guideline2"
-                app:layout_constraintStart_toStartOf="@id/guideline5"
-                app:layout_constraintTop_toBottomOf="parent" />
-
-            <TextView
-                android:id="@+id/topBarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toTopOf="@+id/guideline3"
-                tools:text="Schedule" />
-
-            <ImageView
-                android:id="@+id/homeBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:contentDescription="@string/home"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toTopOf="@+id/guideline3"
-                app:srcCompat="@drawable/home_btn" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card"
-            style="?attr/materialCardViewElevatedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout7">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Title, secondary and supporting text -->
-
-
-                    <TextView
-                        android:id="@+id/selectedDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/selected_date"
-                        android:textAppearance="?attr/textAppearanceTitleLarge" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp" />
-
-                    <CalendarView
-                        android:id="@+id/calendarView"
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:layout_marginTop="8dp"
-
-                        tools:layout_editor_absoluteX="34dp"
-                        tools:layout_editor_absoluteY="74dp" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/nextShiftOrNotScheduled"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/shift_or_no"
-                        android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                    <TextView
-                        android:id="@+id/scheduledOrNot"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/date_and_time_or_not_scheduled"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        style="?attr/materialCardViewElevatedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="@color/light_purple"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <Button
-                android:id="@+id/viewTimeRequests"
-                style="@style/Widget.Material3.Button.ElevatedButton"
+
+            <com.applandeo.materialcalendarview.CalendarView
+                android:id="@+id/calendarView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="34dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="68dp"
-                android:layout_weight="1"
-                android:backgroundTint="#C4F0E6"
-                android:text="@string/view_time_requests"
-                android:textColor="@color/black" />
+                android:background="@color/light_purple"
+                android:backgroundTint="@color/light_purple"
+                android:fadingEdge="horizontal"
+                app:abbreviationsBarColor="@color/light_purple"
+                app:headerColor="@color/dark_purple"
+                app:highlightedDaysLabelsColor="@color/light_green"
+                app:pagesColor="@color/light_purple"
+                app:selectionColor="@color/grey"
+                app:todayLabelColor="@color/dark_green"
+                app:type="one_day_picker" />
 
-            <Button
-                android:id="@+id/requestTimeOff"
-                style="@style/Widget.Material3.Button.ElevatedButton"
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/nextShiftOrNotScheduled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="34dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="68dp"
-                android:backgroundTint="#C4F0E6"
-                android:text="@string/request_time_off"
-                android:textColor="@color/black" />
+                android:text="@string/shift_or_no"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <TextView
+                android:id="@+id/scheduledOrNot"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:padding="4dp"
+                android:paddingStart="16dp"
+                android:text="@string/date_and_time_or_not_scheduled"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>
-    </LinearLayout>
 
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|center"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/viewTimeRequests"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="34dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:backgroundTint="#C4F0E6"
+            android:text="@string/view_time_requests"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/requestTimeOff"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="34dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="#C4F0E6"
+            android:text="@string/request_time_off"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
