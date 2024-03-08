@@ -123,7 +123,6 @@ class ModuleChoosingMain : AppCompatActivity() {
         if (newModules != null) {
             // User is signed in, show success message
             GlobalUserData.uid = user
-            Toast.makeText(this, "Now fo rpaying", Toast.LENGTH_SHORT).show()
 
             // Navigate to the Login activity
             presentPaymentSheet()
