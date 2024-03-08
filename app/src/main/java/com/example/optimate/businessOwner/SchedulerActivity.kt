@@ -26,6 +26,7 @@ class SchedulerActivity : AppCompatActivity() {
     private lateinit var dynamicContentContainer: LinearLayout
 
     data class Shift(
+        val BID: String,
         val day: String,
         val employees: List<String>?,
         val startTime: String,
@@ -34,6 +35,7 @@ class SchedulerActivity : AppCompatActivity() {
         // Add a no-argument constructor
         constructor() : this(
             // Initialize your properties here if needed
+            BID = GlobalUserData.bid,
             day = "",
             employees = null,
             startTime = "",

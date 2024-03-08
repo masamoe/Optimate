@@ -21,6 +21,7 @@ import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.properties.Delegates
 
 class AddShiftActivity : AppCompatActivity() {
 
@@ -31,8 +32,10 @@ class AddShiftActivity : AppCompatActivity() {
     private lateinit var dateTextView: TextView
     private lateinit var startTimeEditText: EditText
     private lateinit var endTimeEditText: EditText
+    private var selectedDate by Delegates.notNull<Long>()
 
     data class Shift(
+        val BID: String,  // Add this property
         val day: String,
         val employees: List<String>,
         val startTime: String,
@@ -50,7 +53,7 @@ class AddShiftActivity : AppCompatActivity() {
         topBar.setTitle("Add Shift")
 
         dateTextView = findViewById(R.id.dateTextView)
-        val selectedDate = intent.getLongExtra("SELECTED_DATE", 0)
+        selectedDate = intent.getLongExtra("SELECTED_DATE", 0)
 
         // Convert the selected date to a formatted string
         val formattedDate = getDateFormattedFromMillis(selectedDate)
@@ -100,7 +103,7 @@ class AddShiftActivity : AppCompatActivity() {
         }
 
         // Now, call getEmployeesFromDB() after adapter initialization
-        getEmployeesFromDB()
+        getEmployeesFromDB(selectedDate)
     }
 
     private fun saveShiftToFirebase(
@@ -111,7 +114,8 @@ class AddShiftActivity : AppCompatActivity() {
         val startTime = startTimeEditText.text.toString()
         val endTime = endTimeEditText.text.toString()
 
-        val shift = Shift(
+        val shift = SchedulerActivity.Shift(
+            BID = GlobalUserData.bid,
             day = selectedDate,
             employees = selectedEmployees,
             startTime = startTime,
@@ -140,27 +144,92 @@ class AddShiftActivity : AppCompatActivity() {
             }
     }
 
-    private fun getEmployeesFromDB() {
+    private fun getEmployeesFromDB(selectedDate: Long) {
         db.collection("users")
             .whereEqualTo("BID", GlobalUserData.bid)
             .whereIn("account_status.status", listOf("Created", "Active"))
             .get()
             .addOnSuccessListener { documents ->
-                val employeeNamesList = mutableListOf<String>()
+                val employeeDataList = mutableListOf<Pair<String, List<String>>>()
 
                 for (document in documents) {
                     val name = document.getString("name") ?: "N/A"
-                    employeeNamesList.add(name)
+                    val uid = document.getString("UID") ?: ""
+
+                    // Fetch availability for the selected date
+                    fetchAvailability(uid, selectedDate) { availability ->
+                        val employeeData = Pair(name, availability)
+                        employeeDataList.add(employeeData)
+
+                        // Notify the adapter when all data is fetched
+                        if (employeeDataList.size == documents.size()) {
+                            updateEmployeeListView(employeeDataList)
+                        }
+                    }
                 }
-                employeeNames.clear()
-                employeeNames.addAll(employeeNamesList)
-                adapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 Log.e("ScheduleMakerActivity", "Error getting employee data", exception)
                 Toast.makeText(this, "Failed to retrieve employees", Toast.LENGTH_SHORT).show()
             }
     }
+
+    private fun fetchAvailability(uid: String, selectedDate: Long, callback: (List<String>) -> Unit) {
+        // Fetch availability from the "availability" collection for the specified UID and selected date
+        db.collection("availability")
+            .whereEqualTo("BID", GlobalUserData.bid)
+            .whereEqualTo("UID", uid)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    // Use the availability from the first document (assuming there's only one)
+                    val documentSnapshot = querySnapshot.documents[0]
+                    val availabilityMap = documentSnapshot.get("availability") as? Map<String, List<String>>
+                    val dayOfWeek = getDayOfWeekFromDate(selectedDate)
+                    // Get the availability for the selected day of the week
+                    val availability = availabilityMap?.get(dayOfWeek) ?: emptyList()
+
+                    callback(availability)
+                } else {
+                    Log.e("ScheduleMakerActivity", "No availability documents found for UID: $uid")
+                    callback(emptyList())
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ScheduleMakerActivity", "Error getting availability data", exception)
+                callback(emptyList())
+            }
+    }
+
+    private fun updateEmployeeListView(employeeDataList: List<Pair<String, List<String>>>) {
+        // Clear existing data
+        employeeNames.clear()
+
+        // Add employee names with availability to the list
+        for ((name, availability) in employeeDataList) {
+            val formattedAvailability = if (availability.isNotEmpty()) {
+                availability.joinToString(", ") // Join multiple availability entries
+            } else {
+                "Not Available"
+            }
+
+            val employeeInfo = "$name - $formattedAvailability"
+            employeeNames.add(employeeInfo)
+        }
+
+        // Notify the adapter of the changes
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun getDayOfWeekFromDate(dateInMillis: Long): String {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = dateInMillis
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+
+        // Convert day of week to a string (e.g., "Monday")
+        return SimpleDateFormat("EEEE", Locale.getDefault()).format(calendar.time)
+    }
+
 
     private fun showDatePicker() {
         // Create a MaterialDatePicker instance for date picking
@@ -176,6 +245,7 @@ class AddShiftActivity : AppCompatActivity() {
 
             // Set the selected date to the date TextView
             dateTextView.text = formattedDate
+            getEmployeesFromDB(selectedDate)
         }
 
         // Show the date picker
