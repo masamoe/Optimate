@@ -15,6 +15,9 @@ import com.example.optimate.R
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class AddShiftActivity : AppCompatActivity() {
 
@@ -24,7 +27,7 @@ class AddShiftActivity : AppCompatActivity() {
     private lateinit var adapter: ArrayAdapter<String>
 
     data class Shift(
-        val day: CharSequence,
+        val day: String,
         val employees: List<String>,
         val startTime: String,
         val endTime: String
@@ -41,10 +44,12 @@ class AddShiftActivity : AppCompatActivity() {
         topBar.setTitle("Add Shift")
 
         val date: TextView = findViewById(R.id.date)
-        // Retrieve the selected date from the Intent extras
-        val selectedDate = intent.getStringExtra("SELECTED_DATE")
+        val selectedDate = intent.getLongExtra("SELECTED_DATE", 0)
+
+        // Convert the selected date to a formatted string
+        val formattedDate = getDateFormattedFromMillis(selectedDate)
         // Set the text of editTextDate to the selected date
-        date.text = selectedDate
+        date.text = formattedDate
 
         val startTime = findViewById<EditText>(R.id.startTime)
         val endTime = findViewById<EditText>(R.id.endTime)
@@ -73,7 +78,7 @@ class AddShiftActivity : AppCompatActivity() {
         }
 
         saveShiftBtn.setOnClickListener {
-            saveShiftToFirebase(date.text, startTime, endTime)
+            saveShiftToFirebase(formattedDate, startTime, endTime)
         }
 
         // Now, call getEmployeesFromDB() after adapter initialization
@@ -81,7 +86,7 @@ class AddShiftActivity : AppCompatActivity() {
     }
 
     private fun saveShiftToFirebase(
-        date: CharSequence,
+        selectedDate: String,
         startTimeEditText: EditText,
         endTimeEditText: EditText
     ) {
@@ -89,7 +94,7 @@ class AddShiftActivity : AppCompatActivity() {
         val endTime = endTimeEditText.text.toString()
 
         val shift = Shift(
-            day = date.toString(),
+            day = selectedDate,
             employees = selectedEmployees,
             startTime = startTime,
             endTime = endTime
@@ -151,5 +156,10 @@ class AddShiftActivity : AppCompatActivity() {
             }
     }
 
-
+    private fun getDateFormattedFromMillis(dateInMillis: Long): String {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = dateInMillis
+        val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        return dateFormat.format(calendar.time)
+    }
 }

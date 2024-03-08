@@ -7,26 +7,35 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.example.optimate.R
 import com.example.optimate.businessOwner.XmlTopBar
+import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
+
 
 class ScheduleModule : AppCompatActivity() {
     class ShiftInfo(
-        val BID: String?,
-        val day: String?,
-        val employees: List<String>?,
-        val endTime: String?,
-        val startTime: String?
-    )
+        val BID: String? = null,
+        val day: String? = null,
+        val employees: List<String>? = null,
+        val endTime: String? = null,
+        val startTime: String? = null
+    ) {
+        // Add a no-argument constructor
+        constructor() : this(
+            BID = null,
+            day = null,
+            employees = null,
+            endTime = null,
+            startTime = null
+        )
+    }
 
     private lateinit var nextShiftOrNotScheduledTextView: TextView
     private lateinit var scheduledOrNotTextView: TextView
@@ -49,10 +58,11 @@ class ScheduleModule : AppCompatActivity() {
         materialCalendarView = findViewById(R.id.calendarView)
 
         // Get today's date and format it
-        val todayDate = getCurrentDateFormatted()
+        var todayDate =
+            getDateFormattedFromMillis(materialCalendarView.firstSelectedDate.timeInMillis)
 
         // Check for scheduled shifts for the initial selected date
-        checkScheduledShifts(materialCalendarView.firstSelectedDate.time)
+        checkScheduledShifts(todayDate)
 
         // Set up the listener for day clicks
         materialCalendarView.setOnDayClickListener(object : OnDayClickListener {
@@ -60,7 +70,8 @@ class ScheduleModule : AppCompatActivity() {
                 val selectedDate = getDateFormattedFromMillis(eventDay.calendar.timeInMillis)
 
                 // Pass the time in milliseconds to checkScheduledShifts
-                checkScheduledShifts(Date(eventDay.calendar.timeInMillis))
+                checkScheduledShifts(selectedDate)
+                todayDate = selectedDate
             }
         })
 
@@ -84,93 +95,65 @@ class ScheduleModule : AppCompatActivity() {
 
     private fun fetchScheduledDatesForMonth(year: Int, month: Int) {
         val user = auth.currentUser
-         showToast("Checked Schedule Shifts Month")
-
         user?.let { currentUser ->
-            val userName = currentUser.displayName
-
+            val userName = GlobalUserData.name
             if (userName != null) {
                 val calendar = Calendar.getInstance()
                 calendar.set(year, month, 1)
-
                 val firstDayOfMonth = calendar.timeInMillis
                 calendar.add(Calendar.MONTH, 1)
                 val firstDayOfNextMonth = calendar.timeInMillis
 
                 db.collection("schedule")
-                    .whereEqualTo("BID" , GlobalUserData.bid)
+                    .whereEqualTo("BID", GlobalUserData.bid)
                     .whereArrayContains("employees", userName)
-                    .whereGreaterThanOrEqualTo("day", getDateFormattedFromMillis(firstDayOfMonth))
-                    .whereLessThan("day", getDateFormattedFromMillis(firstDayOfNextMonth))
                     .get()
                     .addOnSuccessListener { documents ->
-                        if (document.isEmpty) {
-                            Log.e("FirestoreData","Schedule has no document")
-                        }
-                        showToast("Checked Schedule Shifts Month Success Getting")
+                        if (documents.isEmpty) {
+                            Log.e("FirestoreData", "No scheduled documents found")
+                        } else {
+                            val events = mutableListOf<EventDay>()
 
-                        val scheduledDates = mutableListOf<CalendarDay>()
+                            for (document in documents) {
+                                val shift = document.toObject(ShiftInfo::class.java)
 
-                        for (document in documents) {
-                            val shift = document.toObject(ShiftInfo::class.java)
+                                // Check if shift.day is not null before attempting to convert
+                                val shiftDateMillis =
+                                    shift.day?.let { getDateInMillisFromFormatted(it) } ?: 0L
+                                // Perform the comparison locally
+                                if (shiftDateMillis in firstDayOfMonth..<firstDayOfNextMonth) {
+                                    val calendar = Calendar.getInstance().apply {
+                                        timeInMillis = shiftDateMillis
+                                    }
+                                    val eventDay = EventDay(calendar, R.drawable.arrow_drop_up)
+                                    events.add(eventDay)
 
-                            // Check if shift.day is not null before attempting to convert
-                            val shiftDateMillis =
-                                shift.day?.let { getDateInMillisFromFormatted(it) } ?: 0L
-
-                            // Create a new Calendar instance and set the time
-                            val calendar = Calendar.getInstance().apply {
-                                timeInMillis = shiftDateMillis
+                                    // Logging added
+                                    Log.d("ScheduledDates", "Added event for: ${getDateFormattedFromMillis(shiftDateMillis)}")
+                                }
                             }
 
-                            // Create a new CalendarDay instance and add it to scheduledDates
-                            val calendarDay = CalendarDay(calendar)
-                            scheduledDates.add(calendarDay)
+                            materialCalendarView.setEvents(events)
                         }
-
-                        val decorators = mutableListOf<EventDay>()
-
-                        // Highlight the scheduled dates
-                        for (calendarDay in scheduledDates) {
-                            val decorator = EventDay(calendarDay.calendar, R.color.light_green)
-                            decorators.add(decorator)
-                        }
-
-                        materialCalendarView.setEvents(decorators)
                     }
                     .addOnFailureListener { exception ->
                         val failureToastText =
                             "Failed to fetch scheduled dates. Error: ${exception.message}"
                         showToast(failureToastText)
+                        Log.e("FirestoreData", "Error fetching scheduled dates", exception)
                     }
             }
         }
     }
 
-    private fun getCurrentDateFormatted(): String {
-         showToast("Current Date Format")
-        val dateFormat = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
-        return dateFormat.format(Calendar.getInstance().time)
-    }
-
-    private fun getDateFormatted(year: Int, month: Int, dayOfMonth: Int): String {
-                 showToast("get Date Format")
-
-        val dateFormat = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
-        val calendar = Calendar.getInstance()
-        calendar.set(year, month, dayOfMonth)
-        return dateFormat.format(calendar.time)
-    }
-
-    private fun checkScheduledShifts(selectedDate: Date) {
+    private fun checkScheduledShifts(selectedDate: String) {
         val user = auth.currentUser
-        showToast("Checked Schedule Shifts Day")
         user?.let { currentUser ->
             // Fetch the shifts for the current user from the database
-            val userName = currentUser.displayName
+            val userName = GlobalUserData.name
 
             if (userName != null) {
-                val selectedDateString = getDateFormattedFromMillis(selectedDate.time)
+                val selectedDateString = selectedDate
 
                 db.collection("schedule")
                     .whereEqualTo("BID", GlobalUserData.bid)
@@ -181,11 +164,10 @@ class ScheduleModule : AppCompatActivity() {
                     .whereEqualTo("day", selectedDateString)
                     .get()
                     .addOnSuccessListener { documents ->
-                        if (document.isEmpty) {
-                            Log.e("FirestoreData","Scheduale has no document")
+                        if (documents.isEmpty) {
+                            Log.e("FirestoreData", "checkScheduledShifts: Schedule has no document")
                         }
-                         showToast("Checked Schedule Shifts Day Success Getting")
-                        
+
                         val shiftList = mutableListOf<ShiftInfo>()
 
                         for (document in documents) {
@@ -195,7 +177,7 @@ class ScheduleModule : AppCompatActivity() {
                         }
 
                         displayShiftData(shiftList)
-                       
+
                     }
                     .addOnFailureListener { exception ->
                         val failureToastText =
@@ -206,18 +188,15 @@ class ScheduleModule : AppCompatActivity() {
         }
     }
 
-
     private fun displayShiftData(shiftList: List<ShiftInfo>) {
-                 showToast("Displaying shiftlist")
-
         // Clear previous text
         nextShiftOrNotScheduledTextView.text = ""
         scheduledOrNotTextView.text = ""
 
         if (shiftList.isNotEmpty()) {
+            nextShiftOrNotScheduledTextView.append("You are scheduled:")
             for (shiftInfo in shiftList) {
-                val shiftDetails = "${shiftInfo.day} ${shiftInfo.startTime} to ${shiftInfo.endTime}"
-                nextShiftOrNotScheduledTextView.append("You are scheduled next:\n")
+                val shiftDetails = "${shiftInfo.startTime} to ${shiftInfo.endTime}"
                 scheduledOrNotTextView.append("$shiftDetails\n")
             }
         } else {
@@ -228,32 +207,20 @@ class ScheduleModule : AppCompatActivity() {
     }
 
     private fun getDateFormattedFromMillis(dateInMillis: Long): String {
-                 showToast("from millis Format")
-
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = dateInMillis
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         return dateFormat.format(calendar.time)
     }
 
     private fun getDateInMillisFromFormatted(formattedDate: String): Long {
-                 showToast("get millis Format")
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         val date = dateFormat.parse(formattedDate)
         return date?.time ?: 0L
     }
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun buildToastText(shiftList: List<ShiftInfo>): String {
-        val toastTextBuilder = StringBuilder("Shifts:\n")
-        for (shiftInfo in shiftList) {
-            toastTextBuilder.append("${shiftInfo.day} ${shiftInfo.startTime} to ${shiftInfo.endTime}\n")
-        }
-        return toastTextBuilder.toString()
     }
 }
 
