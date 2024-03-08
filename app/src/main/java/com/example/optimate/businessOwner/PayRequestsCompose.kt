@@ -1,9 +1,8 @@
 package com.example.optimate.businessOwner
 
 
-import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
-import android.graphics.Paint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
@@ -29,11 +27,9 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,14 +42,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.zIndex
 import com.example.optimate.employeeFlow.NoDataFound
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.addRevenueOrExpenseToDB
@@ -68,7 +62,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.String.format
 import java.text.SimpleDateFormat
-import java.util.Date
 
 //workLogsWaitForApproval:
 // {lV0Hg8ikbRM6GZZN6FjslXki4MD2=[{20240229=4000}],
@@ -248,7 +241,7 @@ fun ApproveBtn(modifier: Modifier = Modifier, uid: String, date: String, expense
             ApproveDialog(
                 onConfirm = {
                     setApprovedToTrue(uid, date)
-                    addRevenueOrExpenseToDB("expense", expensesDate, pay, "Pay to $uid")
+                    addRevenueOrExpenseToDB("expense", expensesDate, pay, "Pay to $uid", true)
                     showDialog = false
                     showLoading = true // Show loading dialog
 
@@ -256,9 +249,12 @@ fun ApproveBtn(modifier: Modifier = Modifier, uid: String, date: String, expense
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(2000) // Wait for 2 seconds
                         showLoading = false // Hide loading dialog before restarting the activity
-                        val restartIntent = Intent(approveBtn, PayRequestsActivity::class.java)
-                        restartIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        approveBtn.startActivity(restartIntent)
+                        (approveBtn as? Activity)?.let { activity ->
+                            activity.finish() // Finish the current activity
+                            val restartIntent = Intent(activity, PayRequestsActivity::class.java)
+                            activity.startActivity(restartIntent) // Start the new instance of the activity
+                        }
+
                     }
                 },
                 onDismiss = {
