@@ -437,7 +437,7 @@ class Availability : AppCompatActivity() {
 
 // Similarly, add click listeners for buttons representing other days and time slots...
 
-
+        fetchAvailabilityData()
 
 
     }
@@ -484,6 +484,45 @@ class Availability : AppCompatActivity() {
             toggleList[i].isEnabled = enable && switchList[i].isChecked
             switchList[i].isEnabled = enable
         }
+    }
+
+    private fun fetchAvailabilityData() {
+        db.collection("availability")
+            .whereEqualTo("UID", GlobalUserData.uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isNotEmpty) {
+                    // Data found, update your UI with fetched availability data
+                    val document = documents.first()
+                    val availabilityData = document["availability"] as? Map<String, List<String>>
+
+                    availabilityData?.forEach { (day, statusList) ->
+                        val toggle = when (day) {
+                            "Monday" -> toggleMondays
+                            "Tuesday" -> toggleTuesdays
+                            "Wednesday" -> toggleWednesdays
+                            "Thursday" -> toggleThursdays
+                            "Friday" -> toggleFridays
+                            "Saturday" -> toggleSaturdays
+                            "Sunday" -> toggleSundays
+                            else -> null
+                        }
+                        toggle?.let {
+                            val isEnabled = statusList.isNotEmpty()
+                            toggleState(isEnabled, it)
+
+                            // Update the availabilityMap
+                            availabilityMap[day]?.clear()
+                            statusList.forEach { status ->
+                                availabilityMap[day]?.add(AvailabilityStatus.valueOf(status))
+                            }
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("AvailabilityActivity", "Error fetching availability data", e)
+            }
     }
 
 
