@@ -2,6 +2,7 @@ package com.example.optimate.loginAndRegister
 
 import android.content.Intent
 import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import com.example.optimate.businessOwner.Requests
 import com.example.optimate.businessOwner.SchedulerActivity
 import com.example.optimate.businessOwner.TitlesActivity
 import com.example.optimate.employeeFlow.ClockModule
+import com.example.optimate.employeeFlow.PayStub
 import com.example.optimate.employeeFlow.ScheduleModule
 import com.example.optimate.employeeFlow.ViewTimeOffRequests
 
@@ -64,39 +66,48 @@ private val businessOwnerAccessList= listOf(
     "Titles",
     "Accounts",
     "Finances",
-    "Schedule",
     "Scheduling",
     "Requests",
 )
 @Composable
-fun DynamicLandingScreen(accessList: List<String>, title:String){
+fun DynamicLandingScreen(accessList: List<String>, title: String) {
+    val businessOwnerBackgroundColor = Color(0xFFFFD7D7)
+    val employeeBackgroundColor = Color(0xFFC4F0E6)
+    val managerBackgroundColor = Color(0xFFE2EFFF)
+    val businessOwnerFrameColor = Color(0xFFFF5E5E)
+    val employeeFrameColor = Color(0xFF14B8A6)
+    val managerFrameColor = Color(0xFF84BDFF)
     Scaffold(
-        content = {innerPadding ->
-            if (title == "businessOwner"){
-                ButtonList(AccessList = businessOwnerAccessList)
-                Log.d("compose", "access: $accessList")
-            }else {
-                // Call ButtonList with the provided accessList when it's not empty
-                ButtonList(AccessList = accessList)
-                Log.d("compose", "access: $accessList")
+        content = { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {  // Apply the padding to the Box
+                if (title == "businessOwner") {
+                    ButtonList(AccessList = businessOwnerAccessList, BackgroundColor=businessOwnerBackgroundColor, FrameColor=businessOwnerFrameColor)
+                    Log.d("compose", "access: $accessList")
+                }
+                else if (title == "Employee") {
+                    ButtonList(AccessList = accessList, BackgroundColor=employeeBackgroundColor, FrameColor=employeeFrameColor)
+                    Log.d("compose", "access: $accessList")
+                } else {
+                    ButtonList(AccessList = accessList, BackgroundColor=managerBackgroundColor, FrameColor=managerFrameColor)
+                    Log.d("compose", "access: $accessList")
+                }
             }
         }
-
     )
 }
 
 @Composable
-fun ButtonList(AccessList: List<String>) {
+fun ButtonList(AccessList: List<String>, BackgroundColor: Color, FrameColor: Color) {
     val context = LocalContext.current
-    val lightPurple = colorResource(id = R.color.light_purple)
-    val modifiedList = AccessList.plus("Notifications").filter { item ->
+
+    val modifiedList = AccessList.filter { item ->
         item != "Request Time-off" && item != "Add Expense"
     }
 
     ElevatedCard(
         modifier = Modifier.fillMaxSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = lightPurple),
+        colors = CardDefaults.cardColors(containerColor = BackgroundColor),
     ) {
         Box(
             contentAlignment = Alignment.Center, // This centers its children
@@ -122,10 +133,12 @@ fun ButtonList(AccessList: List<String>) {
                             "Requests" -> context.startActivity(Intent(context, Requests::class.java))
                             "View Employees" -> context.startActivity(Intent(context, AccountsActivity::class.java))
                             "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
+                            "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))
 
 
                         }},
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        FrameColor = FrameColor
                     )
                 }
             }
@@ -135,8 +148,8 @@ fun ButtonList(AccessList: List<String>) {
 
 
 @Composable
-fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
-    val buttonColor = colorResource(id = R.color.ic_roles_background)
+fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, FrameColor: Color) {
+    val frameColor = Color(0xFF6750A4)
     val buttonImg = when (text) {
         "Titles" -> painterResource(id =R.drawable.ic_accounts_foreground)
         "Accounts" -> painterResource(id =R.drawable.accounts)
@@ -149,7 +162,6 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
         "View Schedule" -> painterResource(id =R.drawable.ic_schedule_foreground)
         "Clock-in/out" -> painterResource(id =R.drawable.clock)
         "View Payroll" -> painterResource(id =R.drawable.payroll)
-        "Notifications" -> painterResource(id =R.drawable.ic_notifications_foreground)
         else -> painterResource(id =R.drawable.ic_roles_foreground)
     }
     val buttonText = when(text) {
@@ -172,8 +184,9 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
                 .wrapContentSize()
                 .height(80.dp)
                 .width(80.dp),
+                //.border(3.dp, FrameColor, shape = RoundedCornerShape(15.dp)),
             shape = RoundedCornerShape(15.dp),
-            colors = ButtonDefaults.buttonColors(buttonColor),
+            colors = ButtonDefaults.buttonColors(FrameColor),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 16.dp)
 
         ) {
@@ -182,7 +195,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier) {
                 painter = buttonImg,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                tint = Color.Black
+                tint = Color.White
             )
 
         }

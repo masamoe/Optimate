@@ -4,16 +4,23 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.optimate.R
+import com.example.optimate.businessOwner.XmlTopBar
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.Timestamp
@@ -45,19 +52,22 @@ class ViewTimeOffRequests : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var currentUserUid: String
+    private var selectedStatus: String? = null
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_time_off_requests)
 
-        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
-        homeBtn.setOnClickListener {
-            val intent = Intent(this, DynamicLandingActivity::class.java)
-            startActivity(intent)
-        }
+        val topBar: XmlTopBar = findViewById(R.id.topBar)
+        topBar.setTitle("Time Off Requests")
 
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+
+        // Initialize ProgressBar
+        progressBar = findViewById(R.id.progressBar)
+
 
         // Get current user's UID
         currentUserUid = auth.currentUser?.uid ?: ""
@@ -65,15 +75,48 @@ class ViewTimeOffRequests : AppCompatActivity() {
         Log.d("ViewTimeOffRequests", "Current user UID: $currentUserUid")
 
         // Fetch time off requests and compare UIDs
-        fetchTimeOffRequestsAndCompareUIDs()
+
+        progressBar.visibility = View.VISIBLE
+
+        // Your data fetching logic goes here
+
+        // Simulate data fetching with a delay
+        Handler(Looper.getMainLooper()).postDelayed({
+            // After fetching data, hide ProgressBar
+            progressBar.visibility = View.GONE
+            // Populate UI with fetched data
+            fetchTimeOffRequestsAndCompareUIDs(selectedStatus)
+        }, 2000)
+
+        val textInputLayout: TextInputLayout = findViewById(R.id.requestStatusFilter)
+        val autoCompleteTextView: AutoCompleteTextView = textInputLayout.editText as AutoCompleteTextView
+
+        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+            selectedStatus = parent.getItemAtPosition(position).toString()
+            // Adjust the queries based on the selected item
+            when (selectedStatus) {
+                "all" -> {
+                    fetchTimeOffRequestsAndCompareUIDs(null) // Pass null for status to fetch all requests
+
+                }
+                else -> {
+                    fetchTimeOffRequestsAndCompareUIDs(selectedStatus)
+
+                }
+            }
+        }
+
     }
 
-    private fun fetchTimeOffRequestsAndCompareUIDs() {
+    private fun fetchTimeOffRequestsAndCompareUIDs(status: String?) {
         // Assuming timeOffRequests is a collection reference in Firestore
-        firestore.collection("timeOffRequest")
+        var query = firestore.collection("timeOffRequest")
             .whereEqualTo("uid", currentUserUid)
             .whereNotEqualTo("status", TimeRequestStatus.CANCELLED)
-            .get()
+        if (status != null) {
+            query = query.whereEqualTo("status", status)
+        }
+        query.get()
             .addOnSuccessListener { documents ->
                 val timeRequests = mutableListOf<TimeRequest>()
                 for (document in documents) {
@@ -112,7 +155,7 @@ class ViewTimeOffRequests : AppCompatActivity() {
                         .addOnSuccessListener {
                             Log.d("ViewTimeOffRequests", "Time off request cancelled successfully.")
                             // After cancelling, fetch and display the updated list of time off requests
-                            fetchTimeOffRequestsAndCompareUIDs()
+                            fetchTimeOffRequestsAndCompareUIDs(selectedStatus)
                         }
                         .addOnFailureListener { exception ->
                             Log.e("ViewTimeOffRequests", "Failed to cancel time off request: ${exception.message}")

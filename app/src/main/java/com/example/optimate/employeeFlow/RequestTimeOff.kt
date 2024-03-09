@@ -71,6 +71,7 @@ class RequestTimeOff : AppCompatActivity() {
         cancelBtn.setOnClickListener {
             val intent = Intent(this, ScheduleModule::class.java)
             startActivity(intent)
+            finish()
         }
 
 
@@ -247,7 +248,7 @@ class RequestTimeOff : AppCompatActivity() {
             autoCompleteTextView.setAdapter(adapter)
         }
 
-        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
             reason = parent.getItemAtPosition(position).toString()
             textInputLayoutReason.error = null
             // Now the selected item is stored in the 'reason' variable

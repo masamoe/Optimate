@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
     <uses-permission android:name="com.google.firebase.messaging.default_notification_channel_id" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,13 +22,30 @@
         android:theme="@style/Theme.Optimate"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
-
-        <activity android:name=".businessOwner.ViewArchive" />
-        <activity android:name=".businessOwner.Requests" />
-        <activity android:name=".businessOwner.ScheduleMakerActivity" />
-        <activity android:name=".businessOwner.AddShiftActivity" />
-        <activity android:name=".businessOwner.SchedulerActivity" />
+        <activity
+            android:name=".employeeFlow.ViewExpenses"
+            android:exported="false" />
+        <activity
+            android:name=".businessOwner.ViewArchive"
+            android:exported="false" />
+        <activity
+            android:name=".businessOwner.Requests"
+            android:exported="false" />
+        <activity
+            android:name=".businessOwner.ScheduleMakerActivity"
+            android:exported="true"
+            android:label="@string/title_activity_schedule_maker"
+            android:theme="@style/Theme.Optimate" />
+        <activity
+            android:name=".businessOwner.AddShiftActivity"
+            android:exported="true"
+            android:label="@string/title_activity_add_shift_page"
+            android:theme="@style/Theme.Optimate" />
+        <activity
+            android:name=".businessOwner.SchedulerActivity"
+            android:exported="true"
+            android:label="@string/title_activity_schedule_maker"
+            android:theme="@style/Theme.Optimate"></activity>
         <activity android:name=".loginAndRegister.NewUserPasswordChange" />
         <activity
             android:name=".loginAndRegister.LandingMain"
@@ -65,12 +84,26 @@
         <activity android:name=".businessOwner.PayRequestsActivity" />
         <activity android:name=".employeeFlow.RequestTimeOff" />
         <activity android:name=".employeeFlow.ViewHistory" />
-        <activity android:name=".employeeFlow.ScheduleModule" />
+        <activity
+            android:name=".employeeFlow.ScheduleModule"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LANDING" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".employeeFlow.ViewTimeOffRequests" />
         <activity android:name=".employeeFlow.ClockModule" />
         <activity android:name=".employeeFlow.PayStub" />
         <activity android:name=".employeeFlow.ViewAllPayStubs" />
-        <activity android:name=".employeeFlow.EditProfile" />
+        <activity
+            android:name=".employeeFlow.EditProfile"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".employeeFlow.ProfilePage" />
         <activity android:name=".employeeFlow.SubmitExpenses" />
 

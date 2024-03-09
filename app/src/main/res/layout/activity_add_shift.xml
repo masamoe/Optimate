@@ -37,10 +37,10 @@
             app:helperTextEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/date"
+                android:id="@+id/dateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="true"
+                android:focusable="false"
                 android:focusableInTouchMode="true"
                 android:inputType="datetime|date" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -62,7 +62,7 @@
                 android:id="@+id/startTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="true"
+                android:focusable="false"
                 android:focusableInTouchMode="true"
                 android:inputType="datetime|time" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -85,7 +85,7 @@
                 android:id="@+id/endTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="true"
+                android:focusable="false"
                 android:focusableInTouchMode="true"
                 android:inputType="datetime|time" />
         </com.google.android.material.textfield.TextInputLayout>

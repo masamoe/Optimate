@@ -1,7 +1,6 @@
 package com.example.optimate.businessOwner
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.icons.Icons
@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.optimate.employeeFlow.NoDataFound
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.example.optimate.loginAndRegister.biWeeklyDateRanges2024
 import com.example.optimate.loginAndRegister.getWage
 import com.example.optimate.loginAndRegister.milliSecondsToHours
 import com.example.optimate.loginAndRegister.uidToName
@@ -49,21 +50,6 @@ import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-val biWeeklyDateRanges2024 = listOf(
-    listOf("20240101", "20240115"), listOf("20240116", "20240131"),
-    listOf("20240201", "20240215"), listOf("20240216", "20240229"),
-    listOf("20240301", "20240315"), listOf("20240316", "20240331"),
-    listOf("20240401", "20240415"), listOf("20240416", "20240430"),
-    listOf("20240501", "20240515"), listOf("20240516", "20240531"),
-    listOf("20240601", "20240615"), listOf("20240616", "20240630"),
-    listOf("20240701", "20240715"), listOf("20240716", "20240731"),
-    listOf("20240801", "20240815"), listOf("20240816", "20240831"),
-    listOf("20240901", "20240915"), listOf("20240916", "20240930"),
-    listOf("20241001", "20241015"), listOf("20241016", "20241031"),
-    listOf("20241101", "20241115"), listOf("20241116", "20241130"),
-    listOf("20241201", "20241215"), listOf("20241216", "20241231")
-)
 
 @Composable
 fun PayStubsScreen() {
@@ -87,7 +73,7 @@ fun PayStubsScreen() {
 @Composable
 fun BiWeeklyDropDown(biWeeklyDateRanges2024: List<List<String>>, today: String) {
     var expanded by remember { mutableStateOf(false) }
-    val validBiWeeklyDateRanges = biWeeklyDateRanges2024.filter { it[1] < today || it[0] == today }
+    val validBiWeeklyDateRanges = biWeeklyDateRanges2024.filter { it[0] <= today}
 
     // Find the current or nearest future bi-weekly period index
     val currentPeriodIndex = validBiWeeklyDateRanges.indexOfFirst { today >= it[0] && today <= it[1] }
@@ -185,8 +171,9 @@ private fun getWorkedHoursForDateRange(dateRange: List<String>, onResult: (List<
                                         val logDate = SimpleDateFormat("yyyyMMdd").parse(dateKey)
                                         if (logDate in startDate..endDate) {
                                             val hours = log[dateKey] as? Long ?: 0L // Assuming hours are stored as Long
+                                            val wage = (log["wage"] as? Number)?.toDouble() ?: 0.0
                                             // Create a new map that includes the UID, the date, and the hours
-                                            val logWithUid = mapOf("uid" to uid, "date" to dateKey, "hours" to hours)
+                                            val logWithUid = mapOf("uid" to uid, "date" to dateKey, "hours" to hours, "wage" to wage)
                                             approvedWorkLogs.add(logWithUid)
                                         }
                                     } catch (e: Exception) {
@@ -206,21 +193,23 @@ private fun getWorkedHoursForDateRange(dateRange: List<String>, onResult: (List<
             // Handle the error appropriately, maybe log or show a UI indication
         }
 }
-
-
+data class AggregatedLog(val totalHours: Long, val wage: Double)
 @Composable
 fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
     // Aggregate workLogs by UID, summing up the hours
     val aggregatedLogs = workLogs.groupBy { it["uid"] as? String ?: "" }
         .mapValues { entry ->
-            entry.value.sumOf { it["hours"] as? Long ?: 0L }
+            val totalHours = entry.value.sumOf { it["hours"] as? Long ?: 0L }
+            val wage = entry.value[0]["wage"] as? Double ?: 0.0
+            AggregatedLog(totalHours, wage)
         }
+
 
     // Wrap the card display logic in a LazyColumn for scrollable behavior
     LazyColumn {
-        itemsIndexed(aggregatedLogs.entries.toList()) { index, (uid, totalHours) ->
+        itemsIndexed(aggregatedLogs.entries.toList()) { index, (uid, AggregatedLog) ->
             // Convert milliseconds to hours in 2 decimal places
-            val hoursInDouble = milliSecondsToHours(totalHours)
+            val hoursInDouble = milliSecondsToHours(AggregatedLog.totalHours)
 
             // State for storing the name and wage fetched asynchronously
             var name by remember { mutableStateOf(uid) } // Initialize with UID as a fallback
@@ -237,12 +226,9 @@ fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
                         name = fetchedName // Update the name only if fetched name is not empty
                     }
                 }
-
-                getWage(uid) { fetchedWage ->
-                    wage = fetchedWage
-                    pay = hoursInDouble * wage // Calculate pay
-                }
             }
+            wage = AggregatedLog.wage
+            pay = wage * hoursInDouble
 
             // UI to display the user's name, the sum of hours, and the pay
             ElevatedCard(
@@ -263,6 +249,10 @@ fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
         }
     }
 }
+
+
+
+
 
 @Composable
 fun PayRequests(modifier: Modifier = Modifier) {

@@ -81,10 +81,10 @@
     <com.google.android.material.card.MaterialCardView
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="380dp"
-        android:layout_height="560dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="86dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,8 +107,11 @@
                 android:id="@+id/outlinedExpenseDate"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
                 android:hint="Date"
+                app:errorEnabled="true"
                 app:endIconDrawable="@drawable/date_icon"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true">
@@ -122,15 +125,21 @@
                     android:inputType="none"
                     android:text="MM/DD/YYYY" />
 
-
             </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/outlinedExpenseAmount"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
                 android:hint="Amount"
+                app:errorEnabled="true"
                 app:endIconMode="clear_text"
                 app:expandedHintEnabled="true">
 
@@ -146,7 +155,10 @@
                 android:id="@+id/outlinedReceiptPhoto"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                app:errorEnabled="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
                 android:hint="Upload a photo"
                 app:endIconDrawable="@drawable/attach_icon"
                 app:endIconMode="custom">
@@ -167,8 +179,11 @@
                 android:id="@+id/outlinedReasonField"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
                 android:hint="Add reason"
+                app:errorEnabled="true"
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -191,6 +206,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sendExpenseReq"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"

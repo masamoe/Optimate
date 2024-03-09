@@ -39,7 +39,7 @@ class DynamicLandingActivity : AppCompatActivity(){
         val settingPage = findViewById<ImageView>(R.id.businessIcon)
         getAccountAccess(GlobalUserData.title, GlobalUserData.bid) {
             composeView.setContent {
-                DynamicLandingScreen(GlobalUserData.access, GlobalUserData.title)
+                DynamicLandingScreen(GlobalUserData.access, GlobalUserData.role)
             }
         }
         if (GlobalUserData.profilePic != "") {

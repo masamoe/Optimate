@@ -142,5 +142,10 @@
     <string name="clock_title">Clock In / Out</string>
     <string name="already_clocked">Thank you!</string>
     <string name="profile">Profile</string>
+    <string name="payroll">Payroll</string>
+    <string name="percent80">80%</string>
+    <string name="percent20">20%</string>
+    <string name="submit_an_expense">Submit an expense</string>
+    <string name="pay_stubs">Pay Stubs</string>
 
 </resources>

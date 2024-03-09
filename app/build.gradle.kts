@@ -65,8 +65,7 @@ android {
 
 dependencies {
 
-
-
+    implementation ("com.google.accompanist:accompanist-permissions:0.20.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -96,7 +95,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-storage")
+
     implementation ("com.google.firebase:firebase-messaging")
 
 
@@ -115,10 +114,9 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-core:1.6.2")
     implementation ("androidx.compose.material:material-icons-extended:1.6.2")
     // Integration with activities
-    implementation ("androidx.activity:activity-compose:1.8.2")
-    // Navigation
-    implementation ("androidx.navigation:navigation-compose:2.7.7")
 
+    implementation ("androidx.activity:activity-compose:1.8.2")
+    implementation ("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
     implementation ("com.github.bumptech.glide:glide:4.12.0")
@@ -143,9 +141,6 @@ dependencies {
     debugImplementation ("androidx.compose.ui:ui-tooling:1.6.3")
     debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.3")
     implementation ("com.google.accompanist:accompanist-pager:0.20.0")
-
-
-
-
+    implementation ("com.applandeo:material-calendar-view:1.9.0-rc04")
 
 }

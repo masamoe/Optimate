@@ -7,87 +7,24 @@
     tools:context=".employeeFlow.Availability">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout4"
+    <com.example.optimate.businessOwner.XmlTopBar
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.95" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.03" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.50" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.05109489" />
-
-        <View
-            android:id="@+id/baseline"
-            android:layout_width="370dp"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintEnd_toStartOf="@id/guideline2"
-            app:layout_constraintStart_toStartOf="@id/guideline5"
-            app:layout_constraintTop_toBottomOf="parent" />
-
-        <TextView
-            android:id="@+id/topBarTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline4"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toTopOf="@+id/guideline3"
-            tools:text="Availability" />
-
-        <ImageView
-            android:id="@+id/homeBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:contentDescription="@string/home"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
-            app:layout_constraintTop_toTopOf="@+id/guideline3"
-            app:srcCompat="@drawable/home_btn" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <com.google.android.material.card.MaterialCardView
         style="@style/Widget.Material3.CardView.Elevated"
-        android:layout_width="400dp"
-        android:layout_height="750dp"
+        android:layout_width="match_parent"
+        android:layout_height="770dp"
+        android:layout_margin="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
 
 
         <LinearLayout
@@ -134,50 +71,22 @@
                 android:layout_margin="8dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mondays"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
+
                     android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleMondays"
-                        android:layout_width="315dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        app:singleSelection="true">
+                        android:text="Mondays"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/mondaysM"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Morning" />
+                    </TextView>
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/mondaysE"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Evening" />
 
-                        <Button
-                            android:id="@+id/mondaysA"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Any" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/disableEnableMondays"
@@ -185,8 +94,45 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:checked="true"
+                        android:gravity="end"
+                        android:layout_weight="1"
+                        android:text="Not available"
+
                         android:enabled="false" />
                 </LinearLayout>
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleMondays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mondaysM"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Morning" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mondaysE"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Evening" />
+
+                    <Button
+                        android:id="@+id/mondaysA"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Any" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
 
             <LinearLayout
@@ -195,59 +141,66 @@
                 android:layout_margin="8dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TUESDAYS"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleTuesdays"
-                        android:layout_width="315dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        app:singleSelection="true">
+                        android:text="TUESDAYS"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                        <Button
-                            android:id="@+id/tuesdaysM"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Morning" />
+                    </TextView>
 
-                        <Button
-                            android:id="@+id/tuesdaysE"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Evening" />
 
-                        <Button
-                            android:id="@+id/tuesdaysA"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Any" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/disableEnableTuesdays"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
+                        android:gravity="end"
+                        android:layout_weight="1"
+                        android:text="Not available"
                         android:checked="true"
                         android:enabled="false" />
                 </LinearLayout>
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleTuesdays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:singleSelection="true">
+
+                    <Button
+                        android:id="@+id/tuesdaysM"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Morning" />
+
+                    <Button
+                        android:id="@+id/tuesdaysE"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Evening" />
+
+                    <Button
+                        android:id="@+id/tuesdaysA"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Any" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
 
             <LinearLayout
@@ -256,59 +209,66 @@
                 android:layout_margin="8dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="WEDNESDAYS"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleWednesdays"
-                        android:layout_width="315dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        app:singleSelection="true">
+                        android:text="WEDNESDAYS"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                        <Button
-                            android:id="@+id/wednesdaysM"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Morning" />
+                    </TextView>
 
-                        <Button
-                            android:id="@+id/wednesdaysE"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Evening" />
 
-                        <Button
-                            android:id="@+id/wednesdaysA"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Any" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/disableEnableWednesdays"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
+                        android:gravity="end"
+                        android:layout_weight="1"
+                        android:text="Not available"
                         android:checked="true"
                         android:enabled="false" />
                 </LinearLayout>
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleWednesdays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:singleSelection="true">
+
+                    <Button
+                        android:id="@+id/wednesdaysM"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Morning" />
+
+                    <Button
+                        android:id="@+id/wednesdaysE"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Evening" />
+
+                    <Button
+                        android:id="@+id/wednesdaysA"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Any" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
 
 
@@ -318,59 +278,66 @@
                 android:layout_margin="8dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="THURSDAYS"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleThursdays"
-                        android:layout_width="315dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        app:singleSelection="true">
+                        android:text="THURSDAYS"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                        <Button
-                            android:id="@+id/thursdaysM"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Morning" />
+                    </TextView>
 
-                        <Button
-                            android:id="@+id/thursdaysE"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Evening" />
 
-                        <Button
-                            android:id="@+id/thursdaysA"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Any" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/disableEnableThursdays"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
+                        android:gravity="end"
+                        android:layout_weight="1"
+                        android:text="Not available"
                         android:checked="true"
                         android:enabled="false" />
                 </LinearLayout>
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleThursdays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:singleSelection="true">
+
+                    <Button
+                        android:id="@+id/thursdaysM"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Morning" />
+
+                    <Button
+                        android:id="@+id/thursdaysE"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Evening" />
+
+                    <Button
+                        android:id="@+id/thursdaysA"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Any" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
 
 
@@ -380,62 +347,69 @@
                 android:layout_margin="8dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="FRIDAYS"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleFridays"
-                        android:layout_width="315dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        app:singleSelection="true">
+                        android:text="FRIDAYS"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                        <Button
-                            android:id="@+id/fridaysM"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
+                    </TextView>
 
-                            android:text="Morning" />
 
-                        <Button
-                            android:id="@+id/fridaysE"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-
-                            android:checked="true"
-                            android:text="Evening" />
-
-                        <Button
-                            android:id="@+id/fridaysA"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Any" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/disableEnableFridays"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
+                        android:gravity="end"
+                        android:layout_weight="1"
+                        android:text="Not available"
                         android:checked="true"
                         android:enabled="false" />
                 </LinearLayout>
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleFridays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:singleSelection="true">
+
+                    <Button
+                        android:id="@+id/fridaysM"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+
+                        android:text="Morning" />
+
+                    <Button
+                        android:id="@+id/fridaysE"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+
+                        android:checked="true"
+                        android:text="Evening" />
+
+                    <Button
+                        android:id="@+id/fridaysA"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Any" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
 
             <LinearLayout
@@ -444,59 +418,67 @@
                 android:layout_margin="8dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SATURDAYS"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleSaturdays"
-                        android:layout_width="315dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        app:singleSelection="true">
+                        android:text="SATURDAYS"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                        <Button
-                            android:id="@+id/saturdaysM"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Morning" />
+                    </TextView>
 
-                        <Button
-                            android:id="@+id/saturdaysE"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Evening" />
 
-                        <Button
-                            android:id="@+id/saturdaysA"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Any" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/disableEnableSaturdays"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
+                        android:gravity="end"
+                        android:layout_weight="1"
+                        android:text="Not available"
                         android:checked="true"
                         android:enabled="false" />
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleSaturdays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:singleSelection="true">
+
+                    <Button
+                        android:id="@+id/saturdaysM"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Morning" />
+
+                    <Button
+                        android:id="@+id/saturdaysE"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Evening" />
+
+                    <Button
+                        android:id="@+id/saturdaysA"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Any" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
 
 
@@ -506,59 +488,66 @@
                 android:layout_margin="8dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SUNDAYS"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleSundays"
-                        android:layout_width="315dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        app:singleSelection="true">
+                        android:text="SUNDAYS"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
-                        <Button
-                            android:id="@+id/sundaysM"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Morning" />
+                    </TextView>
 
-                        <Button
-                            android:id="@+id/sundaysE"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Evening" />
-
-                        <Button
-                            android:id="@+id/sundaysA"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="105dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/button_toggle_color"
-                            android:text="Any" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/disableEnableSundays"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
+                        android:gravity="end"
+                        android:layout_weight="1"
+                        android:text="Not available"
                         android:checked="true"
                         android:enabled="false" />
                 </LinearLayout>
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleSundays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:singleSelection="true">
+
+                    <Button
+                        android:id="@+id/sundaysM"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Morning" />
+
+                    <Button
+                        android:id="@+id/sundaysE"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Evening" />
+
+                    <Button
+                        android:id="@+id/sundaysA"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/button_toggle_color"
+                        android:text="Any" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
             </LinearLayout>
 
 
@@ -566,4 +555,18 @@
 
 
     </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline65"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.048661802" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline66"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="871dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
