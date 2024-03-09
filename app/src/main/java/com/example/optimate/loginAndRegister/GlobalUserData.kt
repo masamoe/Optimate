@@ -25,6 +25,7 @@ object GlobalUserData {
     var phone: String = ""
     var first_time: Boolean = false
     var profilePic: String = ""
+    var deviceToken: String = ""
     lateinit var account_status: AccountStatus
     lateinit var modules: List<String>
 

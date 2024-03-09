@@ -4,7 +4,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 
+    <uses-permission android:name="com.google.firebase.messaging.default_notification_channel_id" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
+
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Optimate"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".employeeFlow.ViewExpenses"
@@ -50,20 +57,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".loginAndRegister.PaymentConfirm" />
-        <activity android:name=".loginAndRegister.ModuleChoosingMain" />
-        <activity android:name=".loginAndRegister.PasswordReset" />
-        <activity android:name=".loginAndRegister.Login" />
-        <activity android:name=".loginAndRegister.Register" />
-        <activity android:name=".loginAndRegister.DynamicLandingActivity" />
-        <activity
-            android:name=".businessOwner.BusinessLanding"
-            android:exported="true">
+        <activity android:name=".loginAndRegister.ModuleChoosingMain"  android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.LANDING" />
+                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".loginAndRegister.PasswordReset" />
+        <activity android:name=".loginAndRegister.Login" />
+        <activity android:name=".loginAndRegister.Register" />
+        <activity android:name=".loginAndRegister.DynamicLandingActivity" />
+        <activity android:name=".businessOwner.BusinessLanding" />
         <activity android:name=".employeeFlow.Availability" />
         <activity android:name=".businessOwner.TitlesActivity" />
         <activity android:name=".businessOwner.AddTitle" />
@@ -102,9 +107,20 @@
         <activity android:name=".employeeFlow.ProfilePage" />
         <activity android:name=".employeeFlow.SubmitExpenses" />
 
+        <service
+            android:name=".loginAndRegister.PushNotificationService"
+            android:directBootAware="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
+
 
 </manifest>
