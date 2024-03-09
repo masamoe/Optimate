@@ -11,11 +11,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.provider.Settings
 import android.text.TextPaint
 import android.util.Log
-import android.widget.Space
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,7 +33,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -50,39 +51,81 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.MutableLiveData
+import com.example.optimate.businessOwner.Requests.Companion.TAG
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.getBusinessNameAndAddress
 import com.example.optimate.loginAndRegister.milliSecondsToHours
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 fun ViewAllPayStubsList(validBiWeeklyDateRanges: List<List<String>>, context: Context) {
+    val manageExternalStoragePermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) {
+                Log.d("Permission", "Manage External Storage Permissions Granted")
+            } else {
+                Toast.makeText(context, "Storage Permissions Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    val checkStoragePermissions = remember {
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Environment.isExternalStorageManager()
+            } else {
+                val writePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                val readPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                writePermission == PackageManager.PERMISSION_GRANTED && readPermission == PackageManager.PERMISSION_GRANTED
+            }
+        }
+    }
+
+    val requestForStoragePermissions = remember {
+        {
+            if (!checkStoragePermissions()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                        data = Uri.parse("package:${context.packageName}")
+                    }
+                    manageExternalStoragePermissionLauncher.launch(intent)
+                } else {
+                    ActivityCompat.requestPermissions(
+                        context as Activity,
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
+                        23 // STORAGE_PERMISSION_CODE
+                    )
+                }
+            }
+        }
+    }
+
+    // Use the requestForStoragePermissions function inside user interaction events or LaunchedEffect blocks to ensure it's called after the composable has been laid out and the launcher is initialized.
+    // Example usage might be a Button's onClick event or inside a LaunchedEffect block with an appropriate key.
+
     LazyColumn {
         itemsIndexed(validBiWeeklyDateRanges) { _, worklog ->
-            ViewAllPayStubsRow(worklog, context)
+            ViewAllPayStubsRow(worklog, context, checkStoragePermissions, requestForStoragePermissions)
         }
     }
 }
 
 @Composable
-fun ViewAllPayStubsRow(dateRange: List<String>,context: Context) {
+fun ViewAllPayStubsRow(dateRange: List<String>,
+                       context: Context,
+                       checkStoragePermissions: () -> Boolean,
+                       requestForStoragePermissions: () -> Unit) {
     var hours by remember { mutableDoubleStateOf(0.0) }
     var income by remember { mutableDoubleStateOf(0.0) }
     val approvedWorkLogs = mutableListOf<Map<String, Any>>()
@@ -94,18 +137,6 @@ fun ViewAllPayStubsRow(dateRange: List<String>,context: Context) {
     val backgroundColor = Color(0xFFF2EBF3)
     val frameColor = Color(0xFF6750A4)
     val cornerRadius = 12.dp
-    // Define the permission launcher
-    val writePermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted: Boolean ->
-            if (isGranted) {
-                generateAndDownloadPdf(context, dateRange, hours, income)
-            } else {
-                // Permission was not granted, handle this case
-                Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-    )
 
     LaunchedEffect(dateRange) {
         getWorkedHoursForDateRange(dateRange, approvedWorkLogs) { totalHours, totalIncome ->
@@ -206,18 +237,11 @@ fun ViewAllPayStubsRow(dateRange: List<String>,context: Context) {
             }
             Button(
                 onClick = {
-                    when (PackageManager.PERMISSION_GRANTED) {
-                        ContextCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) -> {
-                            // Permission is already granted
-                            generateAndDownloadPdf(context, dateRange, hours, income)
-                        }
-                        else -> {
-                            // Request permission
-                            writePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        }
+                    if (checkStoragePermissions() ){
+                        // Permissions are already granted, perform your action here
+                        generateAndDownloadPdf(context, dateRange, hours, income)
+                    } else {
+                        requestForStoragePermissions()
                     }
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
