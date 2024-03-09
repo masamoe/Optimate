@@ -493,6 +493,9 @@ class Availability : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 if (documents.isNotEmpty) {
                     // Data found, update your UI with fetched availability data
+                    return@addOnSuccessListener
+                }
+
                     val document = documents.first()
                     val availabilityData = document["availability"] as? Map<String, List<String>>
 
