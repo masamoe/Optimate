@@ -54,7 +54,7 @@ class DynamicLandingActivity : AppCompatActivity(){
             finish()
         }
         requestNotificationPermission()
-        updateMessagingToken()
+        //updateMessagingToken()
     }
 
     // Modify getAccountAccess to accept a callback function
@@ -96,7 +96,7 @@ class DynamicLandingActivity : AppCompatActivity(){
             }
         }
     }
-    private fun updateMessagingToken() {
+    /*private fun updateMessagingToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
@@ -139,7 +139,7 @@ class DynamicLandingActivity : AppCompatActivity(){
                     }
             }
 
-    }
+    }*/
 
 
 }

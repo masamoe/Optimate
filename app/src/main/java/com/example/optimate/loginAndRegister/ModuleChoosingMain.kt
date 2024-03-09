@@ -23,9 +23,9 @@ import com.stripe.android.paymentsheet.PaymentSheetResult
 
 class ModuleChoosingMain : AppCompatActivity() {
     private var db = Firebase.firestore
-    lateinit var paymentSheet: PaymentSheet
-    lateinit var customerConfig: PaymentSheet.CustomerConfiguration
-    lateinit var paymentIntentClientSecret: String
+    //lateinit var paymentSheet: PaymentSheet
+    //lateinit var customerConfig: PaymentSheet.CustomerConfiguration
+    //lateinit var paymentIntentClientSecret: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_module_choosing_main)
@@ -43,8 +43,8 @@ class ModuleChoosingMain : AppCompatActivity() {
         var currentAmount = 0.00
         val amount = findViewById<TextView>(R.id.Amount)
         val moduleList = mutableListOf<String>()
-        paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
-        fetchPaymentIntent()
+        //paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
+        //fetchPaymentIntent()
 
 
 
@@ -125,9 +125,11 @@ class ModuleChoosingMain : AppCompatActivity() {
             GlobalUserData.uid = user
 
             // Navigate to the Login activity
-            presentPaymentSheet()
+            //presentPaymentSheet()
 
-
+            val intent = Intent(this, PaymentConfirm::class.java)
+            startActivity(intent)
+            finish()
             // Finish the current activity so the user can't go back to it
         } else {
             // User is null, stay on the register page or show an error message
@@ -161,7 +163,7 @@ class ModuleChoosingMain : AppCompatActivity() {
     private fun reload() {
         // Reload the current activity or perform other actions if the user is already signed in
     }
-    fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
+   /* fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
         when(paymentSheetResult) {
             is PaymentSheetResult.Canceled -> {
                 print("Canceled")
@@ -207,5 +209,5 @@ class ModuleChoosingMain : AppCompatActivity() {
                 PaymentConfiguration.init(this, publishableKey)
             }
         }
-    }
+    }*/
 }
