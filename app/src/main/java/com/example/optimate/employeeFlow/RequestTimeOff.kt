@@ -1,6 +1,8 @@
 package com.example.optimate.employeeFlow
 
+
 import android.content.Intent
+import retrofit2.converter.gson.GsonConverterFactory
 import android.os.Bundle
 import android.util.Log
 import android.widget.AdapterView
@@ -11,24 +13,39 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.optimate.R
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
+import com.example.optimate.loginAndRegister.FcmApi
 import com.example.optimate.loginAndRegister.GlobalUserData
+
+import com.example.optimate.loginAndRegister.SendMessageDTO
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class RequestTimeOff : AppCompatActivity() {
 
     private var db = Firebase.firestore
+    /*private val retrofit = Retrofit.Builder()
+        .baseUrl("https://optimateserver.onrender.com ") // Update with your server URL
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()*/
 
 
 
@@ -56,6 +73,7 @@ class RequestTimeOff : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
 
 
 
@@ -285,7 +303,9 @@ class RequestTimeOff : AppCompatActivity() {
             }
 
             // If all fields are filled, proceed to save the request
-            saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb, endDatetoDb, reason)
+            lifecycleScope.launch {
+                saveTimeOffRequestToFirestore(startTime, endTime, startDatetoDb, endDatetoDb, reason)
+            }
         }
 
 
@@ -293,10 +313,7 @@ class RequestTimeOff : AppCompatActivity() {
 
     }
 
-    private fun saveTimeOffRequestToFirestore(startTime: String, endTime: String, startDate: String, endDate: String, reason: String) {
-
-
-
+    private suspend fun saveTimeOffRequestToFirestore(startTime: String, endTime: String, startDate: String, endDate: String, reason: String) {
         val timeOffRequest = hashMapOf(
             "dateOfRequest" to Date(),
             "startTime" to startTime,
@@ -310,20 +327,74 @@ class RequestTimeOff : AppCompatActivity() {
             "reason" to reason
         )
 
-        db.collection("timeOffRequest")
-            .add(timeOffRequest)
-            .addOnSuccessListener { documentReference ->
-                Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
-                Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, ScheduleModule::class.java))
+        try {
+            val documentReference = db.collection("timeOffRequest")
+                .add(timeOffRequest)
+                .await()
+            Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
+            Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
 
+            //sendNotificationToManagers() // Call the suspend function within a coroutine scope
+            startActivity(Intent(this, ScheduleModule::class.java))
+        } catch (e: Exception) {
+            Log.e("EditAccountActivity", "Error creating new record", e)
+            Toast.makeText(this, "Error in Sending", Toast.LENGTH_SHORT).show()
+            // Handle the error, for example, show an error message to the user
+        }
+    }
+
+
+    private suspend fun getManagerTokens(): List<String> = suspendCoroutine { continuation ->
+        val docRef = db.collection("users")
+            .whereEqualTo("BID", GlobalUserData.bid)
+            .whereEqualTo("role", "Manager")
+
+        docRef.get()
+            .addOnSuccessListener { querySnapshot ->
+                val managerTokens = mutableListOf<String>()
+                for (document in querySnapshot.documents) {
+                    val Manageruid = document.getString("deviceToken")
+                    if (Manageruid != null) {
+                        managerTokens.add(Manageruid)
+                    } else {
+                        Log.e("SendNotification", "Manager's FCM token not found for document ${document.id}")
+                    }
+                }
+                continuation.resume(managerTokens)
             }
-            .addOnFailureListener { e ->
-                Log.e("EditAccountActivity", "Error creating new record", e)
-                Toast.makeText(this, "Error in Sending", Toast.LENGTH_SHORT).show()
-                // Handle the error, for example, show an error message to the user
+            .addOnFailureListener { exception ->
+                Log.e("SendNotification", "Error getting manager tokens", exception)
+                continuation.resumeWithException(exception)
             }
     }
+
+
+        /*suspend fun sendNotificationToManagers() {
+            val managerTokens = getManagerTokens()
+            val fcmApi = retrofit.create(FcmApi::class.java)
+
+            for (managerToken in managerTokens) {
+                if (managerToken != null && managerToken.isNotBlank()) {
+
+                        val titleData = "New Time-Off Request"
+                        val bodyData = "A new time-off request requires your approval."
+
+
+                    try {
+                        fcmApi.sendMessage(SendMessageDTO(deviceToken = managerToken, title = titleData, body = bodyData))
+                        Log.e("SendNotification", "Success")
+                        // Notification sent successfully
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Log.e("SendNotification", "Fail", e)
+                        // Handle failure to send notification
+                    }
+                } else {
+                    // Handle case where manager token is not found or blank
+                    println("Manager's FCM token not found or blank.")
+                }
+            }
+        }*/
 }
 
 
