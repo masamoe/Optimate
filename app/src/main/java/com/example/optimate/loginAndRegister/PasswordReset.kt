@@ -39,10 +39,10 @@ class PasswordReset : AppCompatActivity() {
         FirebaseAuth.getInstance().sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if(task.isSuccessful ){
-                    Toast.makeText(this, "Email Sent", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "An email will be sent if have an account with us", Toast.LENGTH_SHORT).show()
                     updateUI(email)
                 }else{
-                    Toast.makeText(this, task.exception!!.message.toString(),Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Please enter a valid email",Toast.LENGTH_LONG).show()
                 }
             }
     }
