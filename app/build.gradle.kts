@@ -130,8 +130,8 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.stripe:stripe-android:20.39.0")
     implementation ("com.github.kittinunf.fuel:fuel:2.3.1")
-   implementation ("com.github.kittinunf.fuel:fuel-json:2.3.1")
-   implementation ("com.android.ndk.thirdparty:openssl:1.1.1q-beta-1")
+    implementation ("com.github.kittinunf.fuel:fuel-json:2.3.1")
+    implementation ("com.android.ndk.thirdparty:openssl:1.1.1q-beta-1")
 
     // Testing
     testImplementation ("junit:junit:4.13.2")
