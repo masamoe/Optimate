@@ -1,16 +1,15 @@
 package com.example.optimate.employeeFlow
 
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
+import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.example.optimate.R
+import com.example.optimate.businessOwner.Requests.Companion.TAG
 import com.example.optimate.businessOwner.XmlTopBar
-import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -31,6 +30,7 @@ class Availability : AppCompatActivity() {
     private var db = Firebase.firestore
 
     private var isEditing = false
+
 
 
     private val availabilityMap = mutableMapOf(
@@ -108,7 +108,6 @@ class Availability : AppCompatActivity() {
         val topBar: XmlTopBar = findViewById(R.id.topBar)
         topBar.setTitle("Availability")
 
-
         toggleMondays = findViewById(R.id.toggleMondays)
         toggleTuesdays = findViewById(R.id.toggleTuesdays)
         toggleWednesdays = findViewById(R.id.toggleWednesdays)
@@ -158,6 +157,8 @@ class Availability : AppCompatActivity() {
 
         // Set initial state
         setEditingState(editButton, editIcon)
+
+
 
         editButton.setOnClickListener {
             isEditing = !isEditing
@@ -491,42 +492,70 @@ class Availability : AppCompatActivity() {
             .whereEqualTo("UID", GlobalUserData.uid)
             .get()
             .addOnSuccessListener { documents ->
-                if (documents.isNotEmpty) {
-                    // Data found, update your UI with fetched availability data
+                if (documents.isEmpty) {
+                    // Handle case where no availability data is found
                     return@addOnSuccessListener
                 }
 
-                    val document = documents.first()
-                    val availabilityData = document["availability"] as? Map<String, List<String>>
+                // At least one document found
+                val document = documents.first()
+                val availabilityData = document["availability"] as? Map<String, List<String>>
 
-                    availabilityData?.forEach { (day, statusList) ->
-                        val toggle = when (day) {
-                            "Monday" -> toggleMondays
-                            "Tuesday" -> toggleTuesdays
-                            "Wednesday" -> toggleWednesdays
-                            "Thursday" -> toggleThursdays
-                            "Friday" -> toggleFridays
-                            "Saturday" -> toggleSaturdays
-                            "Sunday" -> toggleSundays
-                            else -> null
-                        }
-                        toggle?.let {
-                            val isEnabled = statusList.isNotEmpty()
-                            toggleState(isEnabled, it)
+                availabilityData?.forEach { (day, statusList) ->
+                    // Clear existing status list for the day
+                    availabilityMap[day]?.clear()
 
-                            // Update the availabilityMap
-                            availabilityMap[day]?.clear()
-                            statusList.forEach { status ->
-                                availabilityMap[day]?.add(AvailabilityStatus.valueOf(status))
-                            }
-                        }
+                    // Update availability status for the day
+                    statusList.forEach { status ->
+                        availabilityMap[day]?.add(AvailabilityStatus.valueOf(status))
                     }
+
+                    // Update UI for the day based on availability status
+                    updateUIToggleButtons(day, availabilityMap[day])
                 }
             }
             .addOnFailureListener { e ->
+                // Handle failure to fetch availability data
                 Log.e("AvailabilityActivity", "Error fetching availability data", e)
             }
     }
+
+    private fun updateUIToggleButtons(day: String, statusList: List<AvailabilityStatus>?) {
+        // Find the corresponding buttons for the day
+        val buttons = when (day) {
+            "Monday" -> listOf(mondaysM, mondaysE, mondaysA, disableEnableMondays)
+            "Tuesday" -> listOf(tuesdaysM, tuesdaysE, disableEnableTuesdays)
+            "Wednesday" -> listOf(wednesdaysM, wednesdaysE, wednesdaysA,disableEnableWednesdays)
+            "Thursday" -> listOf(thursdaysM, thursdaysE, thursdaysA, disableEnableThursdays)
+            "Friday" -> listOf(fridaysM, fridaysE, fridaysA, disableEnableFridays)
+            "Saturday" -> listOf(saturdaysM, saturdaysE, saturdaysA, disableEnableSaturdays)
+            "Sunday" -> listOf(sundaysM, sundaysE, sundaysA, disableEnableSundays)
+            else -> return // Handle unexpected day
+        }
+
+        // Enable the buttons if in editing mode
+        buttons.forEach { it.isEnabled = true }
+
+        // Set checked state for the buttons based on the fetched availability status and editing mode
+        statusList?.forEach { status ->
+            when (status) {
+                AvailabilityStatus.MORNING -> buttons[0].isChecked = true
+                AvailabilityStatus.EVENING -> buttons[1].isChecked = true
+                AvailabilityStatus.ALL_DAY -> buttons[2].isChecked = true
+                // For NOT_AVAILABLE status, no need to set any button checked
+                AvailabilityStatus.NOT_AVAILABLE -> buttons[3].isChecked = false
+            }
+        }
+
+        // Disable the buttons if not in editing mode
+        buttons.forEach { it.isEnabled = isEditing }
+    }
+
+
+
+
+
+
 
 
     private fun updateUser(availabilityMap: MutableMap<String, MutableList<AvailabilityStatus>>) {
@@ -572,5 +601,12 @@ class Availability : AppCompatActivity() {
                 Log.e("EditAccountActivity", "Error fetching account", e)
             }
     }
+
+
+
+
+
+
+
 
 }
