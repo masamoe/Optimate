@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,11 +44,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.optimate.R
 import com.example.optimate.employeeFlow.NoDataFound
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.addRevenueOrExpenseToDB
@@ -62,6 +65,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.String.format
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 //workLogsWaitForApproval:
 // {lV0Hg8ikbRM6GZZN6FjslXki4MD2=[{20240229=4000}],
@@ -112,8 +117,8 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
     var wage by remember { mutableStateOf(0.0) }
     var pay by remember { mutableStateOf(0.0) }
     var isExpanded by remember { mutableStateOf(false) }
-    val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
-
+    val backgroundColor = colorResource(id =R.color.light_purple)
+    val cornerRadius = 12.dp
     // State to hold work logs details for the date
     val workLogsDetails = remember { mutableStateListOf<Map<String, String>>() }
 
@@ -142,11 +147,18 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
     ElevatedCard(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .border(1.dp, Color.LightGray, shape = RoundedCornerShape(cornerRadius)),
         colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(cornerRadius),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
+            //format yyyyMMdd to MM/dd/yyyy
+            val originalFormat = SimpleDateFormat("yyyyMMdd")
+            val targetFormat = SimpleDateFormat("MM/dd/yyyy")
+            val parsedDate = originalFormat.parse(date)
+            val formattedDate = targetFormat.format(parsedDate)
             Column {
                 Row(
                     modifier = Modifier
@@ -160,16 +172,18 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
+                        Spacer(modifier = Modifier.height(3.dp))
                         Text(
-                            text = "$date: ${milliSecondsToHours(hours)} hs",
+                            text = "$formattedDate: ${milliSecondsToHours(hours)} hs",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal
                         )
+                        Spacer(modifier = Modifier.height(3.dp))
                         Text(
                             text = "Pay: $${format("%.2f", pay)}",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal,
-                            color = Color.Blue
+                            color = colorResource(id = R.color.blue)
                         )
                     }
                 }
@@ -182,7 +196,7 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                                         text = "$key: $value",
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal,
-                                        color = Color.Blue
+                                        color = Color.Black
                                     )
                                     Spacer(modifier = Modifier.height(3.dp))
                                 }
@@ -195,7 +209,7 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                         val formattedDate = targetFormat.format(parsedDate)
 
 
-                        ApproveBtn(modifier = Modifier.fillMaxWidth(), uid = userId, date = date, expensesDate = formattedDate, pay = pay)
+                        ApproveBtn(modifier = Modifier.fillMaxWidth(), uid = userId, date = date, expensesDate = formattedDate, pay = pay, name =userName)
                     }
                 }
             }
@@ -231,7 +245,7 @@ fun LoadingDialog(showDialog: Boolean) {
 }
 
 @Composable
-fun ApproveBtn(modifier: Modifier = Modifier, uid: String, date: String, expensesDate: String, pay: Double) {
+fun ApproveBtn(modifier: Modifier = Modifier, uid: String, date: String, expensesDate: String, pay: Double, name: String) {
     val approveBtn = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
     var showLoading by remember { mutableStateOf(false) } // State to control the visibility of the loading dialog
@@ -241,7 +255,7 @@ fun ApproveBtn(modifier: Modifier = Modifier, uid: String, date: String, expense
             ApproveDialog(
                 onConfirm = {
                     setApprovedToTrue(uid, date)
-                    addRevenueOrExpenseToDB("expense", expensesDate, pay, "Pay to $uid", true)
+                    addRevenueOrExpenseToDB("expense", expensesDate, pay, "Pay to $name", true)
                     showDialog = false
                     showLoading = true // Show loading dialog
 
@@ -265,11 +279,11 @@ fun ApproveBtn(modifier: Modifier = Modifier, uid: String, date: String, expense
 
         Button(
             onClick = { showDialog = true },
-            colors = ButtonDefaults.buttonColors(Color(0xFF75f8e2)),
+            colors = ButtonDefaults.buttonColors(colorResource(id = R.color.light_green)),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Approve", fontSize = 12.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+            Text("Approve", fontSize = 15.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
         }
 
         LoadingDialog(showDialog = showLoading) // Show the loading dialog when showLoading is true
@@ -381,6 +395,7 @@ fun setApprovedToTrue(uid: String, date: String) {
 //        }
 //}
 
+
 @Preview
 @Composable
 fun ExpensesRequestsScreenPreview() {
@@ -394,3 +409,5 @@ fun ExpensesRequestsScreenPreview() {
     workLogsWaitForApproval["KbClYhd5vXhRPf84jbCPr7cAglq1"] = listOf(mapOf("20240229" to 4000), mapOf("20240228" to 40000))
     PayRequestsScreen(workLogsWaitForApproval)
 }
+
+

@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.optimate.R
 import com.example.optimate.businessOwner.XmlTopBar
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -51,7 +53,7 @@ fun ViewHistoryScreen(showDateRangePicker: (updateDateRange: (String, String) ->
     val totalHoursForPeriod = remember { mutableLongStateOf(0L) }
 
     Scaffold(
-        topBar = { XmlTopBar(titleText = "View Clock In / Out History") },
+        topBar = { XmlTopBar(titleText = "View History") },
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
                 Row(
@@ -92,12 +94,12 @@ fun ViewHistoryScreen(showDateRangePicker: (updateDateRange: (String, String) ->
 }
 @Composable
 fun SelectDatesButton(onClick: () -> Unit) {
-    val buttonColor = MaterialTheme.colors.run { Color(0xFF75f8e2) }
+    val buttonColor = colorResource(id = R.color.light_green)
     Button(onClick = onClick,
         colors = ButtonDefaults.run { buttonColors(buttonColor) },
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp))
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp))
     {
-        Text("Select Dates",fontSize = 13.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+        Text("Select Dates",fontSize = 15.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
 
     }
 }
@@ -273,7 +275,8 @@ fun TotalHours(totalDurationInMillis: Long) {
 fun NoDataFound(text: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(top = 100.dp)
     ) {
         Icon(

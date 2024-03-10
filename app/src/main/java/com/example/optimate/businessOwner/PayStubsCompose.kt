@@ -1,6 +1,7 @@
 package com.example.optimate.businessOwner
 
 import android.content.Intent
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,11 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -34,11 +37,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.example.optimate.R
 import com.example.optimate.employeeFlow.NoDataFound
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.biWeeklyDateRanges2024
@@ -74,6 +79,8 @@ fun PayStubsScreen() {
 fun BiWeeklyDropDown(biWeeklyDateRanges2024: List<List<String>>, today: String) {
     var expanded by remember { mutableStateOf(false) }
     val validBiWeeklyDateRanges = biWeeklyDateRanges2024.filter { it[0] <= today}
+    val originalFormat = SimpleDateFormat("yyyyMMdd")
+    val targetFormat = SimpleDateFormat("MM/dd/yyyy")
 
     // Find the current or nearest future bi-weekly period index
     val currentPeriodIndex = validBiWeeklyDateRanges.indexOfFirst { today >= it[0] && today <= it[1] }
@@ -81,6 +88,7 @@ fun BiWeeklyDropDown(biWeeklyDateRanges2024: List<List<String>>, today: String) 
 
     // Prepare to store and display fetched work logs
     var workLogs by remember { mutableStateOf<List<Map<String, Any>>>(emptyList()) }
+    val cornerRadius = 12.dp
 
     // React to selection changes and fetch data
     LaunchedEffect(selectedIndex) {
@@ -93,9 +101,10 @@ fun BiWeeklyDropDown(biWeeklyDateRanges2024: List<List<String>>, today: String) 
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable { expanded = !expanded },
+            .clickable { expanded = !expanded }
+            .border(1.dp, Color.Gray, shape = RoundedCornerShape(cornerRadius)),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+        shape = RoundedCornerShape(cornerRadius),
     ) {
         Column(
             modifier = Modifier
@@ -106,8 +115,10 @@ fun BiWeeklyDropDown(biWeeklyDateRanges2024: List<List<String>>, today: String) 
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
+
                 val selectedRangeText = if (validBiWeeklyDateRanges.isNotEmpty())
-                    "${validBiWeeklyDateRanges[selectedIndex][0]} to ${validBiWeeklyDateRanges[selectedIndex][1]}"
+                //format to MM/dd/yyyy
+                    "${targetFormat.format(originalFormat.parse(validBiWeeklyDateRanges[selectedIndex][0])!!)} to ${targetFormat.format(originalFormat.parse(validBiWeeklyDateRanges[selectedIndex][1])!!)}"
                 else
                     "Select Date Range"
 
@@ -125,7 +136,7 @@ fun BiWeeklyDropDown(biWeeklyDateRanges2024: List<List<String>>, today: String) 
                 Divider(color = Color.LightGray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
                 validBiWeeklyDateRanges.forEachIndexed { index, dateRange ->
                     Text(
-                        "${dateRange[0]} to ${dateRange[1]}",
+                        text = "${targetFormat.format(originalFormat.parse(dateRange[0])!!)} to ${targetFormat.format(originalFormat.parse(dateRange[1])!!)}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
@@ -215,9 +226,10 @@ fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
             var name by remember { mutableStateOf(uid) } // Initialize with UID as a fallback
             var wage by remember { mutableStateOf(0.0) }
             var pay by remember { mutableStateOf(0.0) }
+            val cornerRadius = 12.dp
 
             // Determine the background color based on the index
-            val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
+            val backgroundColor = colorResource(id = R.color.light_purple)
 
             // Fetch the user's name based on the UID and calculate pay
             LaunchedEffect(uid) {
@@ -234,29 +246,27 @@ fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
             ElevatedCard(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .border(1.dp, Color.LightGray, shape = RoundedCornerShape(cornerRadius)),
                 colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(cornerRadius),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(text = "$name ($$wage)", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(text = "$hoursInDouble hrs", fontSize = 16.sp, fontWeight = FontWeight.Normal)
                     Spacer(modifier = Modifier.height(3.dp))
-                    Text(text = "$%.2f".format(pay), fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.Blue)
+                    Text(text = "$%.2f".format(pay), fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(
+                        id = R.color.blue))
                 }
             }
         }
     }
 }
-
-
-
-
-
 @Composable
 fun PayRequests(modifier: Modifier = Modifier) {
-    val buttonColor = androidx.compose.material.MaterialTheme.colors.run { Color(0xFF75f8e2) }
+    val buttonColor = colorResource(id = R.color.light_green)
     val payRequestsBtn = LocalContext.current
     Button(
         onClick = {
@@ -265,9 +275,9 @@ fun PayRequests(modifier: Modifier = Modifier) {
         },
         modifier = modifier.zIndex(1f) ,
         colors = ButtonDefaults.run { buttonColors(buttonColor) },
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
     ) {
-        Text("Pay Requests", fontSize = 12.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+        Text("Pay Requests", fontSize = 15.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
     }
 }
 

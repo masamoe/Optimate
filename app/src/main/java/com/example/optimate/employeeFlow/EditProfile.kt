@@ -30,7 +30,7 @@ import java.util.UUID
 class EditProfile : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private var db = Firebase.firestore
-    private var storageRef = Firebase.storage.reference;
+    private val storageRef = Firebase.storage.reference
 
 
     companion object {

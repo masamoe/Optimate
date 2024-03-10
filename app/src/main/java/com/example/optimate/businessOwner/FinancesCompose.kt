@@ -33,10 +33,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.optimate.R
+
 @Composable
 fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<FinancesActivity.AmountWithDate>) {
     var fromDate by remember { mutableStateOf("") }
@@ -98,7 +101,7 @@ fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<Fina
 
 @Composable
 fun AddRevenue() {
-    val buttonColor = colors.run { Color(0xFFC4F0E6) }
+    val buttonColor = colors.run { colorResource(id = R.color.light_blue) }
     val addRevenueBtn = LocalContext.current
 
     // Add Revenue button
@@ -110,15 +113,15 @@ fun AddRevenue() {
             addRevenueBtn.startActivity(intent)
         },
         colors = ButtonDefaults.run { buttonColors(buttonColor) },
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
     ) {
-        Text("Add Revenue", color = Color.Black, fontWeight = FontWeight.SemiBold)
+        Text("Add Revenue", color = Color.Black, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
     }
 }
 
 @Composable
 fun AddExpense() {
-    val buttonColor = colors.run { Color(0xFFFFDFE7)}
+    val buttonColor = colors.run { colorResource(id = R.color.light_red)}
     val addExpenseBtn = LocalContext.current
 
     // Add Expense button
@@ -130,10 +133,10 @@ fun AddExpense() {
             addExpenseBtn.startActivity(intent)
         },
         colors = ButtonDefaults.run { buttonColors(buttonColor) },
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
 
     ) {
-        Text("Add Expense", color = Color.Black, fontWeight = FontWeight.SemiBold)
+        Text("Add Expense", color = Color.Black, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
     }
 }
 
@@ -144,7 +147,7 @@ fun Search(
     amountWithDate: List<FinancesActivity.AmountWithDate>,
     onFilterResult: (Double, Double, List<FinancesActivity.AmountWithDate>, String, String) -> Unit
 ) {
-    val buttonColor = colors.run { Color(0xFF75f8e2) }
+    val buttonColor = colorResource(id = R.color.light_green)
     Button(
         onClick = {
             if (from.isNotEmpty() && to.isNotEmpty()) {
@@ -176,15 +179,15 @@ fun Search(
             .padding(top = 20.dp, start = 4.dp, end = 4.dp, bottom = 4.dp)
             .height(36.dp),
         colors = ButtonDefaults.run { buttonColors(buttonColor) },
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
     ) {
-        Text("Search", fontSize = 10.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+        Text("Search", fontSize = 15.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
     }
 }
 
 @Composable
 fun PayStubs() {
-    val buttonColor = colors.run { Color(0xFF75f8e2) }
+    val buttonColor = colorResource(id = R.color.light_green)
     val payStubsBtn = LocalContext.current
     Button(
         onClick = {
@@ -192,9 +195,9 @@ fun PayStubs() {
             payStubsBtn.startActivity(intent)
         },
         colors = ButtonDefaults.run { buttonColors(buttonColor) },
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
     ) {
-        Text("Pay-stubs", fontSize = 12.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+        Text("Pay-stubs", fontSize = 15.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -202,16 +205,16 @@ fun PayStubs() {
 @Composable
 fun ViewMore(){
     val viewMoreBtn = LocalContext.current
-    val buttonColor = colors.run { Color(0xFF75f8e2) }
+    val buttonColor = colorResource(id = R.color.light_green)
     Button(
         onClick = {
             val intent = Intent(viewMoreBtn, FinancesDetailActivity::class.java)
             viewMoreBtn.startActivity(intent)
         },
-        colors = ButtonDefaults.buttonColors(buttonColor),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        colors = ButtonDefaults.run { buttonColors(buttonColor) },
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
     ) {
-        Text("View More", color = Color.Black, fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
+        Text("View More", color = Color.Black, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
     }
 }
 
@@ -221,8 +224,8 @@ fun DonutChart(revenues: Double, expenses: Double, from: String = "", to: String
     val total = if (revenues == 0.0 && expenses == 0.0) 1.0 else revenues + expenses // Avoid division by zero
     val revenueAngle = if (revenues == 0.0 && expenses == 0.0) 360f else (revenues / total * 360).toFloat()
     val expensesAngle = if (revenues == 0.0 && expenses == 0.0) 0f else 360f - revenueAngle
-    val revenueColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else Color(0xFFC4F0E6)
-    val expenseColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else Color(0xFFFFDFE7)
+    val revenueColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else colorResource(id = R.color.light_blue)
+    val expenseColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else colorResource(id = R.color.light_red)
 
     ElevatedCard(
         modifier = Modifier
@@ -246,9 +249,9 @@ fun DonutChart(revenues: Double, expenses: Double, from: String = "", to: String
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Revenue: $${String.format("%.2f", revenues)}", fontSize = 12.sp, fontWeight = FontWeight.Normal, modifier = Modifier.padding(bottom = 8.dp))
-                Text("Expenses: $${String.format("%.2f", expenses)}", fontSize = 12.sp, fontWeight = FontWeight.Normal, modifier = Modifier.padding(bottom = 8.dp))
-                Text("Balance: $${String.format("%.2f", revenues - expenses)}", fontSize = 12.sp, fontWeight = FontWeight.Normal)
+                Text("Revenue: $${String.format("%.2f", revenues)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Expenses: $${String.format("%.2f", expenses)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Balance: $${String.format("%.2f", revenues - expenses)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
             }
 
             Column(

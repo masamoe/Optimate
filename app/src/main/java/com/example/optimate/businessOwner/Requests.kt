@@ -45,7 +45,7 @@ class Requests : AppCompatActivity() {
         setContentView(R.layout.activity_requests)
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)
-        topBar.setTitle("Requestes")
+        topBar.setTitle("Requests")
 
         /*val view_archive = findViewById<Button>(R.id.view_archive_btn)
         view_archive.setOnClickListener {

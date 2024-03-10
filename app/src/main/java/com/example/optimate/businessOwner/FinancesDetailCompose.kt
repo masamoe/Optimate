@@ -1,5 +1,6 @@
 package com.example.optimate.businessOwner
 import android.app.DatePickerDialog
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -19,6 +21,8 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -32,11 +36,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.optimate.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -73,7 +79,7 @@ fun SearchDate(
     finances: List<Finances>,
     onFilterResult: (List<Finances>) -> Unit
 ) {
-    val buttonColor = colors.run { Color(0xFF75f8e2)}
+    val buttonColor = colors.run { colorResource(id = R.color.light_green)}
     Button(
         onClick = {
             if (fromDate.isNotEmpty() && toDate.isNotEmpty()) {
@@ -96,12 +102,12 @@ fun SearchDate(
             .padding(top = 20.dp, start = 4.dp, end = 4.dp, bottom = 4.dp)
             .height(36.dp),
         colors = ButtonDefaults.run { buttonColors(buttonColor) },
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
 
 
 
     ) {
-        Text("Search",fontSize = 10.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+        Text("Search",fontSize = 15.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -118,22 +124,28 @@ fun FinancesRow(finance: Finances) {
     var isExpanded by remember { mutableStateOf(false) }
 
     // Decide the card color based on the type
-    val revenueColor = colors.run { Color(0xFFC4F0E6) }
-    val expenseColor = colors.run { Color(0xFFFFDFE7)}
+    val revenueColor = colors.run { colorResource(id = R.color.light_blue)}
+    val expenseColor = colors.run { colorResource(id = R.color.light_red)}
     val cardColor = if (finance.type == "Expenses") expenseColor else revenueColor
+    val cornerRadius = 12.dp
 
-    Card(
-        backgroundColor = cardColor,
+    ElevatedCard(
         modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 2.dp)
+            .padding(horizontal = 20.dp, vertical = 5.dp)
             .fillMaxWidth()
-            .clickable { isExpanded = !isExpanded } // Toggle isExpanded on click
+            .clickable { isExpanded = !isExpanded } ,// Toggle isExpanded on click
+        //.border(2.dp, cardColor, shape = RoundedCornerShape(cornerRadius))
+
+        colors = CardDefaults.elevatedCardColors(containerColor = cardColor),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(cornerRadius),
     ) {
         Column(
             modifier = Modifier
                 .padding(5.dp)
                 .fillMaxWidth()
         ) {
+            Text(text = " " , fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
@@ -141,13 +153,13 @@ fun FinancesRow(finance: Finances) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
                 if(finance.type =="Expenses"){
-                    Text(text = "-$" + finance.amount, style = MaterialTheme.typography.bodyLarge)
+                    Text(text = "-$" + finance.amount, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                 }
                 else{
-                    Text(text = "+$" + finance.amount, style = MaterialTheme.typography.bodyLarge)
+                    Text(text = "+$" + finance.amount, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                 }
                 Row {
-                    Text(text = finance.date, style = MaterialTheme.typography.bodyLarge)
+                    Text(text = finance.date, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                     Icon(
                         imageVector = if (isExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
                         contentDescription = if (isExpanded) "Collapse" else "Expand",
@@ -155,11 +167,18 @@ fun FinancesRow(finance: Finances) {
                     )
                 }
             }
+            Text(text = " " , fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
 
             // Expandable content
             if (isExpanded) {
-                Text(text = "'" + finance.description + "'", style = MaterialTheme.typography.bodySmall )
-                Text(text = "From: " + finance.name, style = MaterialTheme.typography.bodySmall)
+                Column(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth()
+                ){
+                    Text(text = "'" + finance.description + "'", fontSize = 18.sp, fontWeight = FontWeight.Normal )
+                    Text(text = "From: " + finance.name, fontSize = 18.sp, fontWeight = FontWeight.Normal )
+                }
             }
         }
     }

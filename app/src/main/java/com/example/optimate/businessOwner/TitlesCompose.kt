@@ -8,9 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,8 +23,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 //noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Button
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.ButtonDefaults
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -38,11 +40,15 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -113,19 +119,18 @@ fun XmlTopBar(titleText: String = "Titles") {
 @Composable
 fun AddTitleButton(modifier: Modifier = Modifier) {
     val addTitleBtn = LocalContext.current
-    val buttonColor = MaterialTheme.colors.run {
-        if (isLight) Color(0xFF75f8e2) else Color(0xFF91C9B7)}
+    val buttonColor = colorResource(id = R.color.light_green)
     Button(
         onClick = {
             val intent = Intent(addTitleBtn, AddTitle::class.java)
             addTitleBtn.startActivity(intent)
         },
-        colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
+        colors = androidx.compose.material3.ButtonDefaults.run { buttonColors(buttonColor) },
         modifier = modifier
             .padding(6.dp)
             .height(40.dp),
         //add shadow to the button
-        elevation = ButtonDefaults.elevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = androidx.compose.material3.ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
     ) {
         Text("+ Add Title", color = Color.Black, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
     }
@@ -142,7 +147,7 @@ fun TitlesList(titles: List<Title>, onClickTitle: (Title) -> Unit) { // Add onCl
                 Header(title = category)
             }
             itemsIndexed(titles) { index, title ->
-                TitleRow(title, index) {
+                TitleRow(title, index, category) {
                     onClickTitle(title) // Call onClickTitle with the title
                 }
             }
@@ -162,41 +167,52 @@ fun Header(title: String) {
     )
 }
 @Composable
-fun TitleRow(title: Title, index: Int, onClick: () -> Unit) {
-    val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
+fun TitleRow(title: Title, index: Int, category: String, onClick: () -> Unit) {
+    val backgroundColor = if (category == "Managers:" ){
+        colorResource(id = R.color.light_blue)
+    } else {
+        colorResource(id = R.color.light_red)
+    }
+    val cornerRadius = 12.dp
 
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable(onClick = onClick),
-        elevation = 2.dp,
-        backgroundColor = backgroundColor
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(cornerRadius),
+
         ) {
-            // Role icon and title
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        Column {
+            Text(text = " ", fontSize = 10.sp)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Role icon and title
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Role Icon",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(text = title.title, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                }
+
+                // Right arrow icon at the end of the card
                 Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Role Icon",
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                    contentDescription = "Go to title details",
                     modifier = Modifier.size(24.dp)
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = title.title, fontSize = 18.sp)
             }
-
-            // Right arrow icon at the end of the card
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = "Go to title details",
-                modifier = Modifier.size(24.dp)
-            )
+            Text(text = " ", fontSize = 10.sp)
         }
     }
 }

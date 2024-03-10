@@ -37,6 +37,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -51,11 +52,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.optimate.R
 import com.example.optimate.businessOwner.Requests.Companion.TAG
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.getBusinessNameAndAddress
@@ -150,9 +153,9 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .border(3.dp, frameColor, shape = RoundedCornerShape(cornerRadius)),
-        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+            .border(1.dp, Color.Gray, shape = RoundedCornerShape(cornerRadius)),
+        colors = CardDefaults.elevatedCardColors(containerColor = colorResource(id = R.color.light_purple)),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(cornerRadius),
     ){
         Box(modifier = Modifier.fillMaxSize()){
@@ -164,90 +167,93 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                        Text(
-                            text = outputDateFormat.format(startDate)+ " to " + outputDateFormat.format(endDate),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Icon(
-                            imageVector = if (isExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                            contentDescription = if (isExpanded) "Collapse" else "Expand",
-                            modifier = Modifier
-                                .clickable { isExpanded = !isExpanded }
-                        )
+                    Text(
+                        text = outputDateFormat.format(startDate)+ " to " + outputDateFormat.format(endDate),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Icon(
+                        imageVector = if (isExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                        contentDescription = if (isExpanded) "Collapse" else "Expand",
+                        modifier = Modifier
+                            .clickable { isExpanded = !isExpanded }
+                    )
 
                 }
                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
+            }
         }
-    }
 
-    if (isExpanded) {
-        Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)){
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = "Total Hours:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "$hours hrs", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.Blue
-                )
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = "Gross pay:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "$$income", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.Blue
-                )
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = "Net pay:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "$${income*0.8}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.Blue
-                )
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = "Taxes:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "$${income*0.2}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.Blue
-                )
-            }
-            Button(
-                onClick = {
-                    if (checkStoragePermissions() ){
-                        // Permissions are already granted, perform your action here
-                        generateAndDownloadPdf(context, dateRange, hours, income)
-                    } else {
-                        requestForStoragePermissions()
-                    }
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("Download PDF")
-            }
+        if (isExpanded) {
+            Column(modifier = Modifier.padding(16.dp)){
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Total Hours:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "${String.format("%.2f", hours)}hrs", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
+                    )
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Gross pay:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "$${String.format("%.2f", income)}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
+                    )
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Net pay:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "$${String.format("%.2f", income.times(0.8))}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
+                    )
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Taxes:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "$${String.format("%.2f", income.times(0.2))}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
+                    )
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Button(
+                    onClick = {
+                        if (checkStoragePermissions() ){
+                            // Permissions are already granted, perform your action here
+                            generateAndDownloadPdf(context, dateRange, hours, income)
+                        } else {
+                            requestForStoragePermissions()
+                        }
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    colors = ButtonDefaults.run { buttonColors(colorResource(id = R.color.light_green)) },
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
+                ) {
+                    Text("Download PDF", color = Color.Black, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                }
 
             }
         }
