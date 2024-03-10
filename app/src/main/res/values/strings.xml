@@ -146,5 +146,6 @@
     <string name="submit_an_expense">Submit an expense</string>
     <string name="pay_stubs">Pay Stubs</string>
     <string name="clock_in_out">Clock In / Out</string>
+    <string name="archive">Archive</string>
 
 </resources>

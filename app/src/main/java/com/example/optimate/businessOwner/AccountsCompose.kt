@@ -122,8 +122,8 @@ fun AccountRow(account: Account, index: Int, onClick:() ->Unit){
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(8.dp)
-            .border(1.dp, Color.LightGray, shape = RoundedCornerShape(cornerRadius)),
-        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+            .border(1.dp, colorResource(id = R.color.blue), shape = RoundedCornerShape(cornerRadius)),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(cornerRadius),
     ) {

@@ -247,8 +247,8 @@ fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .fillMaxWidth()
-                    .border(1.dp, Color.LightGray, shape = RoundedCornerShape(cornerRadius)),
-                colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+                    .border(1.dp, colorResource(id = R.color.blue), shape = RoundedCornerShape(cornerRadius)),
+                colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
                 shape = RoundedCornerShape(cornerRadius),
             ) {

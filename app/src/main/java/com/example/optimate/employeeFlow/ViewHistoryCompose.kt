@@ -1,6 +1,7 @@
 package com.example.optimate.employeeFlow
 
 import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
@@ -20,6 +22,8 @@ import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -99,7 +103,7 @@ fun SelectDatesButton(onClick: () -> Unit) {
         colors = ButtonDefaults.run { buttonColors(buttonColor) },
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp))
     {
-        Text("Select Dates",fontSize = 15.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
+        Text("Select Dates",fontSize = 12.sp, color = Color.Black, fontWeight = FontWeight.SemiBold)
 
     }
 }
@@ -132,7 +136,7 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>, totalHoursForPe
 
     fun formatDate(dateString: String): String {
         return if (dateString.length == 8) {
-            "${dateString.substring(0, 4)}/${dateString.substring(4, 6)}/${dateString.substring(6, 8)}"
+            "${dateString.substring(4,6)}/${dateString.substring(6,8)}/${dateString.substring(0,4)}"
         } else {
             dateString // Return the original string if it's not in the expected format
         }
@@ -147,6 +151,7 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>, totalHoursForPe
         val breakStartTimes = mutableListOf<Long>()
         val breakEndTimes = mutableListOf<Long>()
         containsClockOut = false
+        val cornerRadius = 12.dp
 
         logs.forEach { log ->
             log.forEach { (key, value) ->
@@ -178,54 +183,83 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>, totalHoursForPe
             totalHoursForPeriod.value += 0L
         }
 
-        // Determine the background color based on the index
-        val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
-        Card(
-            backgroundColor = backgroundColor,
+        ElevatedCard(
             modifier = Modifier
                 .padding(horizontal = 20.dp, vertical = 5.dp)
                 .fillMaxWidth()
-                .clickable { isExpanded = !isExpanded } // Toggle isExpanded on click
+                .clickable { isExpanded = !isExpanded }
+                .border(
+                    1.dp,
+                    colorResource(id = R.color.blue),
+                    shape = RoundedCornerShape(cornerRadius)
+                ),
+            colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(cornerRadius),
         ) {
             Column(
                 modifier = Modifier
                     .padding(5.dp)
                     .fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                Column {
+                    Text(text = " ", fontSize = 10.sp)
 
-                    if(containsClockOut){
-                        val styledText = buildAnnotatedString {
-                            append(formatDate(date) + " ")
-                            // Apply a SpanStyle to "Total Hours" part
-                            withStyle(style = SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Light, color = Color.Blue)) {
-                                append("(Total Hours: %02d:%02d:%02d)".format(totalHours, totalMinutes, totalSeconds))
-                            }
-                        }
-                        Text(text = styledText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    }
-                    else{
-                        val styledText = buildAnnotatedString {
-                            append(formatDate(date) + " ")
-                            // Apply a SpanStyle to "Total Hours" part
-                            withStyle(style = SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Light, color = Color.Blue)) {
-                                append("(Total Hours: 00:00:00)")
-                            }
-                        }
-                        Text(text = styledText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    }
 
-                    Icon(
-                        imageVector = if (isExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                        contentDescription = if (isExpanded) "Collapse" else "Expand",
-                        modifier = Modifier.clickable { isExpanded = !isExpanded }
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+
+                        if (containsClockOut) {
+                            val styledText = buildAnnotatedString {
+                                append(formatDate(date) + " ")
+                                // Apply a SpanStyle to "Total Hours" part
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = colorResource(id = R.color.blue)
+                                    )
+                                ) {
+                                    append(
+                                        "(Total Hours: %02d:%02d:%02d)".format(
+                                            totalHours,
+                                            totalMinutes,
+                                            totalSeconds
+                                        )
+                                    )
+                                }
+                            }
+                            Text(text = styledText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        } else {
+                            val styledText = buildAnnotatedString {
+                                append(formatDate(date) + " ")
+                                // Apply a SpanStyle to "Total Hours" part
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = colorResource(id = R.color.blue)
+                                    )
+                                ) {
+                                    append("(Total Hours: 00:00:00)")
+                                }
+                            }
+                            Text(text = styledText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        }
+
+                        Icon(
+                            imageVector = if (isExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                            contentDescription = if (isExpanded) "Collapse" else "Expand",
+                            modifier = Modifier.clickable { isExpanded = !isExpanded }
+                        )
+                    }
+                    Text(text = " ", fontSize = 10.sp)
                 }
+
 
                 // Expandable content for each card
                 if (isExpanded) {
@@ -246,7 +280,7 @@ fun WorkLogsRow(workLog: Map<String, List<Map<String, String>>>, totalHoursForPe
                                     Text(text = "Break Start:", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                                 if (key =="breakEnd")
                                     Text(text = "Break End:", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                                Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.Normal, color = Color.Blue)
+                                Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue))
                             }
                         }
                     }

@@ -127,6 +127,7 @@ fun ButtonList(AccessList: List<String>) {
                         "Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
                         "Scheduling" -> context.startActivity(Intent(context, SchedulerActivity::class.java))
                         "Requests" -> context.startActivity(Intent(context, Requests::class.java))
+                        "Time-off Requests Approval" -> context.startActivity(Intent(context, Requests::class.java))
                         "View Employees" -> context.startActivity(Intent(context, AccountsActivity::class.java))
                         "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
                         "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))

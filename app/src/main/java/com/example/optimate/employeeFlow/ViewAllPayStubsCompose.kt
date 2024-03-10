@@ -153,8 +153,8 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .border(1.dp, Color.Gray, shape = RoundedCornerShape(cornerRadius)),
-        colors = CardDefaults.elevatedCardColors(containerColor = colorResource(id = R.color.light_purple)),
+            .border(1.dp, colorResource(id = R.color.blue), shape = RoundedCornerShape(cornerRadius)),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(cornerRadius),
     ){
@@ -355,10 +355,10 @@ fun generateAndDownloadPdf(
             drawText("Address: $address", leftMargin, titleBaseLine + 20, textPaint)
             drawText("Employee Name: ${GlobalUserData.name}", leftMargin, titleBaseLine + 40, textPaint)
             drawText("Date: ${formatDateRange(dateRange)}", leftMargin, titleBaseLine + 60, textPaint)
-            drawText("Total Hours: $hours", leftMargin, titleBaseLine + 80, textPaint)
-            drawText("Gross pay: $income", leftMargin, titleBaseLine + 100, textPaint)
-            drawText("Net pay: ${income * 0.8}", leftMargin, titleBaseLine + 120, textPaint)
-            drawText("Taxes: ${income * 0.2}", leftMargin, titleBaseLine + 140, textPaint)
+            drawText("Total Hours: ${hours}hrs", leftMargin, titleBaseLine + 80, textPaint)
+            drawText("Gross pay: $$income", leftMargin, titleBaseLine + 100, textPaint)
+            drawText("Net pay: $${income * 0.8}", leftMargin, titleBaseLine + 120, textPaint)
+            drawText("Taxes: $${income * 0.2}", leftMargin, titleBaseLine + 140, textPaint)
         }
 
         pdfDocument.finishPage(page)

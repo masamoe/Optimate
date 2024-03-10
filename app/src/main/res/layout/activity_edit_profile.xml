@@ -44,7 +44,10 @@
             android:id="@+id/baseline"
             android:layout_width="370dp"
             android:layout_height="1dp"
+
+            android:layout_marginBottom="2dp"
             android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline2"
             app:layout_constraintStart_toStartOf="@id/guideline5"
             app:layout_constraintTop_toBottomOf="parent" />
@@ -55,10 +58,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
+            android:text="@string/profile"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="@string/profile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintHorizontal_bias="0.0"
@@ -80,12 +83,12 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="235dp"
-        android:layout_height="235dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="250dp"
 
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        app:cardCornerRadius="250dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout10">
@@ -106,23 +109,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/toolbar8">
 
                 <!-- Image with overlay -->
-                <ImageView
-                    android:id="@+id/imageProfile"
-                    android:layout_width="230dp"
-                    android:layout_height="230dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/placeholder" />
 
 
                 <!-- Overlay layer -->
 
                 <!-- Icon -->
 
-                <View
-                    android:id="@+id/imageInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#8000" />
+                <ImageView
+                    android:id="@+id/imageProfile"
+                    android:layout_width="230dp"
+                    android:layout_height="230dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder" />
 
                 <Button
                     android:id="@+id/iconButton"
@@ -156,11 +154,10 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:text=" @Role"
         android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
 
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintBottom_toTopOf="@+id/guideline73"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -169,10 +166,10 @@
         android:layout_width="360dp"
         android:layout_height="400dp"
 
-        android:layout_marginBottom="44dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline34"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline73">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -184,32 +181,38 @@
 
             <com.google.android.material.textfield.TextInputLayout
 
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="13dp"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                app:boxStrokeColor="@color/dark_purple"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="13dp"
+                android:hint="Email address"
                 android:textColorHint="@color/dark_purple"
-                app:endIconMode="clear_text"
-                android:hint="Email address">
+                app:boxStrokeColor="@color/dark_purple"
+                app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailUpdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <View
+                    android:id="@+id/imageInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#8000" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/outlinedTextField"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="18dp"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                app:boxStrokeColor="@color/dark_purple"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="18dp"
+                android:hint="Password"
                 android:textColorHint="@color/dark_purple"
-                app:endIconMode="password_toggle"
-                android:hint="Password">
+                app:boxStrokeColor="@color/dark_purple"
+                app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordUpdate"
@@ -219,17 +222,16 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
             <com.google.android.material.textfield.TextInputLayout
 
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="18dp"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                app:boxStrokeColor="@color/dark_purple"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="18dp"
+                android:hint="Home address"
                 android:textColorHint="@color/dark_purple"
-                app:endIconMode="clear_text"
-                android:hint="Home address">
+                app:boxStrokeColor="@color/dark_purple"
+                app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/addresUpdate"
@@ -238,19 +240,16 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
-
             <com.google.android.material.textfield.TextInputLayout
 
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="18dp"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                app:boxStrokeColor="@color/dark_purple"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="18dp"
+                android:hint="Phone number"
                 android:textColorHint="@color/dark_purple"
-                app:endIconMode="clear_text"
-                android:hint="Phone number">
+                app:boxStrokeColor="@color/dark_purple"
+                app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phoneUpdate"
@@ -272,5 +271,19 @@
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline73"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 
 class AddTitle : AppCompatActivity(){
     private lateinit var homeBtn : ImageView
@@ -27,7 +28,7 @@ class AddTitle : AppCompatActivity(){
         homeBtn = findViewById(R.id.homeBtn)
         homeBtn.setOnClickListener {
             // Go to the BusinessLanding activity
-            startActivity(Intent(this, BusinessLanding::class.java))
+            startActivity(Intent(this, DynamicLandingActivity::class.java))
         }
 
     }

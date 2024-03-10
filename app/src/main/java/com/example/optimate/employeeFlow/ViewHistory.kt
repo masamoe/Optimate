@@ -72,7 +72,7 @@ class ViewHistory : AppCompatActivity() {
         val formattedDay = if (day <= 9) "0$day" else "$day"
         val formattedMonth = if (month <= 9) "0$month" else "$month"
 
-        return "$year/$formattedMonth/$formattedDay"
+        return "$formattedMonth/$formattedDay/$year"
     }
     private fun getWorkLogs() {
         val bid = GlobalUserData.bid
@@ -103,7 +103,7 @@ class ViewHistory : AppCompatActivity() {
             filteredWorkLogsList.clear()
 
             val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                DateTimeFormatter.ofPattern("yyyy/MM/dd")
+                DateTimeFormatter.ofPattern("MM/dd/yyyy")
             } else {
                 TODO("VERSION.SDK_INT < O")
             }

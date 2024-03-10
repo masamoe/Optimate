@@ -78,7 +78,7 @@ fun PayRequestsScreen(workLogsWaitForApproval: MutableMap<String, List<Map<Strin
         topBar = { XmlTopBar( titleText = "Pay Requests" ) },
         content = {innerPadding ->
             Column(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding).padding(top = 16.dp)
             ) {
                 if (workLogsWaitForApproval.isEmpty()) {
                     NoDataFound(text = "No pay requests found")
@@ -148,8 +148,8 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .border(1.dp, Color.LightGray, shape = RoundedCornerShape(cornerRadius)),
-        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+            .border(1.dp, colorResource(id = R.color.blue), shape = RoundedCornerShape(cornerRadius)),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(cornerRadius),
     ) {
