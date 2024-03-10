@@ -2,6 +2,7 @@ package com.example.optimate.businessOwner
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,10 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Button
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.ButtonDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -31,15 +29,21 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.optimate.R
 import com.example.optimate.employeeFlow.NoDataFound
 
 data class Account(val name: String, val title: String, val uid: String)
@@ -78,7 +82,7 @@ fun AccountsScreen(accounts: List<Account>) {
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun AddAccountButton(modifier: Modifier = Modifier) {
-    val buttonColor = MaterialTheme.colors.run { if (isLight) Color(0xFF75f8e2) else Color(0xFF91C9B7) }
+    val buttonColor = colorResource(id = R.color.light_green)
     val addAccountBtn = LocalContext.current
 
     Button(
@@ -86,11 +90,11 @@ fun AddAccountButton(modifier: Modifier = Modifier) {
             val intent = Intent(addAccountBtn, AddAccountActivity::class.java)
             addAccountBtn.startActivity(intent)
         },
-        colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
+        colors = ButtonDefaults.run { buttonColors(buttonColor) },
         modifier = modifier
             .padding(16.dp)
             .height(40.dp),
-        elevation = ButtonDefaults.elevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
     ) {
         Text(text = "Add Account", color = Color.Black, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
     }
@@ -110,44 +114,51 @@ fun AccountsList(accounts: List<Account>, onClickAccount: (Account) -> Unit) {
 
 @Composable
 fun AccountRow(account: Account, index: Int, onClick:() ->Unit){
-    val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
-    val titleColor = Color(0xFF007FFF)
-    Card(
+    val backgroundColor = colorResource(id = R.color.light_purple)
+    val titleColor = colorResource(id = R.color.blue)
+    val cornerRadius = 12.dp
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(8.dp),
-        elevation = 2.dp,
-        backgroundColor = backgroundColor
+            .padding(8.dp)
+            .border(1.dp, Color.LightGray, shape = RoundedCornerShape(cornerRadius)),
+        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(cornerRadius),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Role icon and title
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        Column {
+            Text(text = " ", fontSize = 10.sp)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Role icon and title
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Role Icon",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column(verticalArrangement = Arrangement.Center) {
+                        Text(text = account.name, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                        Text(text = account.title, fontSize = 15.sp, color = titleColor)
+
+                    }
+                }
+
+                // Right arrow icon at the end of the card
                 Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Role Icon",
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                    contentDescription = "Go to account details",
                     modifier = Modifier.size(24.dp)
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(verticalArrangement = Arrangement.Center) {
-                    Text(text = account.name, fontSize = 16.sp)
-                    Text(text = account.title, fontSize = 13.sp, color = titleColor)
-
-                }
             }
-
-            // Right arrow icon at the end of the card
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = "Go to account details",
-                modifier = Modifier.size(24.dp)
-            )
+            Text(text = " ", fontSize = 10.sp)
         }
     }
 }

@@ -41,8 +41,6 @@
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
     <string name="select_reason">Select a reason</string>
-    <string name="msg_token_fmt">Your FCM token is: %1$s</string>
-
 
     <string name="selected_date">Selected date</string>
     <string name="shift_or_no">Shift or no shift</string>
@@ -147,5 +145,6 @@
     <string name="percent20">20%</string>
     <string name="submit_an_expense">Submit an expense</string>
     <string name="pay_stubs">Pay Stubs</string>
+    <string name="clock_in_out">Clock In / Out</string>
 
 </resources>

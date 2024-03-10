@@ -45,6 +45,7 @@ import com.example.optimate.businessOwner.TitlesActivity
 import com.example.optimate.employeeFlow.ClockModule
 import com.example.optimate.employeeFlow.PayStub
 import com.example.optimate.employeeFlow.ScheduleModule
+import com.example.optimate.employeeFlow.SubmitExpenses
 import com.example.optimate.employeeFlow.ViewTimeOffRequests
 
 private val managerAccessList = listOf(
@@ -67,6 +68,7 @@ private val businessOwnerAccessList= listOf(
     "Accounts",
     "Finances",
     "Scheduling",
+    "Schedule",
     "Requests",
 )
 @Composable
@@ -81,14 +83,14 @@ fun DynamicLandingScreen(accessList: List<String>, title: String) {
         content = { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {  // Apply the padding to the Box
                 if (title == "businessOwner") {
-                    ButtonList(AccessList = businessOwnerAccessList, BackgroundColor=businessOwnerBackgroundColor, FrameColor=businessOwnerFrameColor)
+                    ButtonList(AccessList = businessOwnerAccessList)
                     Log.d("compose", "access: $accessList")
                 }
                 else if (title == "Employee") {
-                    ButtonList(AccessList = accessList, BackgroundColor=employeeBackgroundColor, FrameColor=employeeFrameColor)
+                    ButtonList(AccessList = accessList)
                     Log.d("compose", "access: $accessList")
                 } else {
-                    ButtonList(AccessList = accessList, BackgroundColor=managerBackgroundColor, FrameColor=managerFrameColor)
+                    ButtonList(AccessList = accessList)
                     Log.d("compose", "access: $accessList")
                 }
             }
@@ -97,72 +99,67 @@ fun DynamicLandingScreen(accessList: List<String>, title: String) {
 }
 
 @Composable
-fun ButtonList(AccessList: List<String>, BackgroundColor: Color, FrameColor: Color) {
+fun ButtonList(AccessList: List<String>) {
     val context = LocalContext.current
 
     val modifiedList = AccessList.filter { item ->
         item != "Request Time-off" && item != "Add Expense"
     }
-
-    ElevatedCard(
-        modifier = Modifier.fillMaxSize(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = BackgroundColor),
+    Box(
+        //contentAlignment = Alignment.Center, // This centers its children
+        modifier = Modifier.fillMaxSize() // This ensures the Box occupies the entire ElevatedCard
     ) {
-        Box(
-            contentAlignment = Alignment.Center, // This centers its children
-            modifier = Modifier.fillMaxSize() // This ensures the Box occupies the entire ElevatedCard
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(start = 15.dp, end = 15.dp, top = 20.dp, bottom = 20.dp),
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
+            verticalArrangement = Arrangement.spacedBy(30.dp),
+            modifier = Modifier.fillMaxWidth() // You might adjust this for better centering, depending on your design
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(20.dp),
-                horizontalArrangement = Arrangement.spacedBy(15.dp),
-                verticalArrangement = Arrangement.spacedBy(30.dp),
-                modifier = Modifier.fillMaxWidth() // You might adjust this for better centering, depending on your design
-            ) {
-                itemsIndexed(modifiedList) { index, item ->
-                    EachButton(
-                        text = item,
-                        onClick = { when (item) {
-                            "Titles" -> context.startActivity(Intent(context, TitlesActivity::class.java))
-                            "Accounts" -> context.startActivity(Intent(context, AccountsActivity::class.java))
-                            "Finances" -> context.startActivity(Intent(context, FinancesActivity::class.java))
-                            "Clock-in/out" -> context.startActivity(Intent(context, ClockModule::class.java))
-                            "Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
-                            "Scheduling" -> context.startActivity(Intent(context, SchedulerActivity::class.java))
-                            "Requests" -> context.startActivity(Intent(context, Requests::class.java))
-                            "View Employees" -> context.startActivity(Intent(context, AccountsActivity::class.java))
-                            "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
-                            "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))
+            itemsIndexed(modifiedList) { index, item ->
+                EachButton(
+                    text = item,
+                    onClick = { when (item) {
+                        "Titles" -> context.startActivity(Intent(context, TitlesActivity::class.java))
+                        "Accounts" -> context.startActivity(Intent(context, AccountsActivity::class.java))
+                        "Finances" -> context.startActivity(Intent(context, FinancesActivity::class.java))
+                        "Clock-in/out" -> context.startActivity(Intent(context, ClockModule::class.java))
+                        "Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
+                        "Scheduling" -> context.startActivity(Intent(context, SchedulerActivity::class.java))
+                        "Requests" -> context.startActivity(Intent(context, Requests::class.java))
+                        "View Employees" -> context.startActivity(Intent(context, AccountsActivity::class.java))
+                        "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
+                        "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))
+                        "Add Expense" -> context.startActivity(Intent(context, SubmitExpenses::class.java))
 
 
-                        }},
-                        modifier = Modifier.fillMaxWidth(),
-                        FrameColor = FrameColor
-                    )
-                }
+                    }},
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }
+
 }
 
 
 @Composable
-fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, FrameColor: Color) {
-    val frameColor = Color(0xFF6750A4)
+fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
+
     val buttonImg = when (text) {
-        "Titles" -> painterResource(id =R.drawable.ic_accounts_foreground)
-        "Accounts" -> painterResource(id =R.drawable.accounts)
+        "View Schedule" -> painterResource(id =R.drawable.ic_schedule_foreground)
+        "Clock-in/out" -> painterResource(id =R.drawable.clock)
+        "View Payroll" -> painterResource(id =R.drawable.payroll)
+        "Titles" -> painterResource(id =R.drawable.accounts)
+        "Accounts" -> painterResource(id =R.drawable.ic_roles_foreground)
         "Finances" -> painterResource(id =R.drawable.ic_finances_foreground)
         "Schedule" -> painterResource(id =R.drawable.ic_schedule_foreground)
         "Scheduling" -> painterResource(id =R.drawable.scheduling)
         "Requests" -> painterResource(id =R.drawable.ic_requests_foreground)
         "View Employees" -> painterResource(id =R.drawable.ic_roles_foreground)
         "Time-off Requests Approval" -> painterResource(id =R.drawable.ic_requests_foreground)
-        "View Schedule" -> painterResource(id =R.drawable.ic_schedule_foreground)
-        "Clock-in/out" -> painterResource(id =R.drawable.clock)
-        "View Payroll" -> painterResource(id =R.drawable.payroll)
-        else -> painterResource(id =R.drawable.ic_roles_foreground)
+
+        else -> painterResource(id =R.drawable.ic_requests_foreground)
     }
     val buttonText = when(text) {
         "Scheduling" -> "Scheduler"
@@ -171,7 +168,24 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, FrameColor
         "Clock-in/out" -> "Clock-In/Out"
         "View Payroll" -> "Payroll"
         "Time-off Requests Approval" -> "Requests"
+        "Add Expense" -> "Expenses"
         else -> text
+    }
+    val buttonColor = when (text) {
+        "View Schedule" -> colorResource(id = R.color.purple_button)
+        "Clock-in/out" -> colorResource(id = R.color.gray_button)
+        "View Payroll" -> colorResource(id = R.color.green_button)
+        "Titles" -> colorResource(id = R.color.purple_button)
+        "Accounts" -> colorResource(id = R.color.blue_button)
+        "Finances" -> colorResource(id = R.color.green_button)
+        "Schedule" -> colorResource(id = R.color.purple_button)
+        "Scheduling" -> colorResource(id = R.color.red_button)
+        "Requests" -> colorResource(id = R.color.red_button)
+        "View Employees" -> colorResource(id = R.color.blue_button)
+        "Time-off Requests Approval" -> Color(0xFFE57373)
+
+
+        else -> Color(0xFF90A4AE)
     }
 
     Column(
@@ -182,12 +196,13 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, FrameColor
             onClick = onClick,
             modifier = modifier
                 .wrapContentSize()
-                .height(80.dp)
-                .width(80.dp),
-                //.border(3.dp, FrameColor, shape = RoundedCornerShape(15.dp)),
+                .height(90.dp)
+                .width(90.dp),
+            //.border(3.dp, FrameColor, shape = RoundedCornerShape(15.dp)),
             shape = RoundedCornerShape(15.dp),
-            colors = ButtonDefaults.buttonColors(FrameColor),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 16.dp)
+            colors = ButtonDefaults.buttonColors(Color.White),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 16.dp),
+            contentPadding = PaddingValues(8.dp)
 
         ) {
 
@@ -195,14 +210,14 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, FrameColor
                 painter = buttonImg,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                tint = Color.White
+                tint = buttonColor
             )
 
         }
         Text(
             text = buttonText,
-            modifier = Modifier.padding(top = 4.dp),
-            fontSize = 15.sp,
+            modifier = Modifier.padding(top = 6.dp),
+            fontSize = 18.sp,
             color = Color.Black,
             fontWeight = FontWeight.Bold
         )

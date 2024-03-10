@@ -41,11 +41,17 @@ class ViewAllPayStubs : AppCompatActivity() {
     private val yearlyWorkLogs = mutableStateListOf<Map<String, Any>>()
     private lateinit var validBiWeeklyDateRanges: List<List<String>>
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_all_pay_stubs)
+        val today = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        validBiWeeklyDateRanges = biWeeklyDateRanges2024.filter { it[0] <= today }
+        validBiWeeklyDateRanges = validBiWeeklyDateRanges.dropLast(1)
+        val previousBiWeeklyDateRanges = validBiWeeklyDateRanges.last()
+        Log.d("ViewAllPayStubs", "previousBiWeeklyDateRanges: $previousBiWeeklyDateRanges")
         getWorkedHoursForDateRange(
-            listOf("20240101", "20241231"),
+            listOf("20240101", previousBiWeeklyDateRanges[1]),
             yearlyWorkLogs,
             yearlyTotalHour,
             yearlyIncome
@@ -57,9 +63,9 @@ class ViewAllPayStubs : AppCompatActivity() {
         val totalTaxesAnnual = findViewById<TextView>(R.id.taxesTotalAnnual)
 
         yearlyIncome.observe(this) { income ->
-            totalGrossPayAnnual.text = "$${income}"
-            totalNetPayAnnual.text = "$${income?.times(0.8)}"
-            totalTaxesAnnual.text = "$${income?.times(0.2)}"
+            totalGrossPayAnnual.text = "$${String.format("%.2f", income)}"
+            totalNetPayAnnual.text = "$${String.format("%.2f", income?.times(0.8))}"
+            totalTaxesAnnual.text = "$${String.format("%.2f", income?.times(0.2))}"
         }
 
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
@@ -73,8 +79,7 @@ class ViewAllPayStubs : AppCompatActivity() {
         val todaysDate: TextView = findViewById(R.id.todaysDate)
         todaysDate.text = "As of $formattedDate:"
 
-        val today = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
-        validBiWeeklyDateRanges = biWeeklyDateRanges2024.filter { it[0] <= today }
+
 
         val composeView = findViewById<ComposeView>(R.id.compose_view)
         composeView.setContent {
@@ -153,6 +158,7 @@ class ViewAllPayStubs : AppCompatActivity() {
         hours.postValue(String.format("%.2f", totalHours).toDouble())
         income.postValue(String.format("%.2f", totalIncome).toDouble())
     }
+
 
 
 }

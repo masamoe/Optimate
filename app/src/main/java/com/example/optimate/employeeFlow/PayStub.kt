@@ -29,10 +29,6 @@ import java.util.Locale
 class PayStub : AppCompatActivity() {
 
     private val today = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
-    private val currentApprovedWorkLogs = mutableStateListOf<Map<String, Any>>()
-    private var currentBiWeek = mutableStateListOf<String>()
-    private val currentBiWeekTotalHour = MutableLiveData<Double>().apply { value = 0.0 }
-    private val currentBiWeekIncome = MutableLiveData<Double>().apply { value = 0.0 }
 
     private val previousApprovedWorkLogs = mutableStateListOf<Map<String, Any>>()
     private var previousBiWeek = mutableStateListOf<String>()
@@ -43,64 +39,66 @@ class PayStub : AppCompatActivity() {
     private var secPreviousBiWeek = mutableStateListOf<String>()
     private val secPreviousBiWeekTotalHour = MutableLiveData<Double>().apply { value = 0.0 }
     private val secPreviousBiWeekIncome = MutableLiveData<Double>().apply { value = 0.0 }
+
+    private val thirdPreviousApprovedWorkLogs = mutableStateListOf<Map<String, Any>>()
+    private var thirdPreviousBiWeek = mutableStateListOf<String>()
+    private val thirdPreviousBiWeekTotalHour = MutableLiveData<Double>().apply { value = 0.0 }
+    private val thirdPreviousBiWeekIncome = MutableLiveData<Double>().apply { value = 0.0 }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pay_stub)
         getBiWeek(biWeeklyDateRanges2024,today)
-        Log.d("WorkLogs", "Current bi-week: $currentBiWeek")
-        getWorkedHoursForDateRange(currentBiWeek, currentApprovedWorkLogs)
         getWorkedHoursForDateRange(previousBiWeek, previousApprovedWorkLogs)
         getWorkedHoursForDateRange(secPreviousBiWeek, secPreviousApprovedWorkLogs)
+        getWorkedHoursForDateRange(thirdPreviousBiWeek, thirdPreviousApprovedWorkLogs)
 
-        currentBiWeekIncome.observe(this, Observer { income ->
+        previousBiWeekIncome.observe(this, Observer { income ->
             // Assuming you want to update the pay stub when the income changes
             showPayStub(income * 0.8, income)
 
             val grossAmount = findViewById<TextView>(R.id.grossAmount)
-            grossAmount.text = "$${income}"
+            grossAmount.text = "$${String.format("%.2f", income)}"
             val netPayAmount = findViewById<TextView>(R.id.netPayAmount)
-            netPayAmount.text = "$${income?.times(0.8)}"
+            netPayAmount.text = "$${String.format("%.2f", income?.times(0.8))}"
             val taxesAmount = findViewById<TextView>(R.id.taxesAmount)
-            taxesAmount.text = "$${income?.times(0.2)}"
+            taxesAmount.text = "$${String.format("%.2f", income?.times(0.2))}"
         })
 
-        currentBiWeekTotalHour.observe(this, Observer { hours ->
+        previousBiWeekTotalHour.observe(this, Observer { hours ->
             val totalHours = findViewById<TextView>(R.id.totalHours)
-            totalHours.text = "${hours}hrs"
-        })
-
-        previousBiWeekIncome.observe(this, Observer { income ->
-            val previousBiWeekIncome = findViewById<TextView>(R.id.previousAmount)
-            previousBiWeekIncome.text = "Net pay: $${income*0.8}"
+            totalHours.text = "${String.format("%.2f", hours)}hrs"
         })
 
         secPreviousBiWeekIncome.observe(this, Observer { income ->
+            val previousBiWeekIncome = findViewById<TextView>(R.id.previousAmount)
+            previousBiWeekIncome.text = "Net pay: $${String.format("%.2f", income?.times(0.8))}"
+        })
+
+        thirdPreviousBiWeekIncome.observe(this, Observer { income ->
             val secPreviousBiWeekIncome = findViewById<TextView>(R.id.secPreviousAmount)
-            secPreviousBiWeekIncome.text = "Net pay: $${income*0.8}"
+            secPreviousBiWeekIncome.text = "Net pay: $${String.format("%.2f", income?.times(0.8))}"
         })
 
 
         val currentBiWeekText = findViewById<TextView>(R.id.currentBiWeek)
         //change YYYYMMDD to YYYY/MM/DD
-        val startDate = "${currentBiWeek[0].substring(0,4)}/${currentBiWeek[0].substring(4,6)}/${currentBiWeek[0].substring(6,8)}"
-        val endDate= "${currentBiWeek[1].substring(0,4)}/${currentBiWeek[1].substring(4,6)}/${currentBiWeek[1].substring(6,8)}"
+        val startDate = "${previousBiWeek[0].substring(0,4)}/${previousBiWeek[0].substring(4,6)}/${previousBiWeek[0].substring(6,8)}"
+        val endDate= "${previousBiWeek[1].substring(0,4)}/${previousBiWeek[1].substring(4,6)}/${previousBiWeek[1].substring(6,8)}"
         currentBiWeekText.text = "${startDate} - ${endDate}"
 
         val previousBiWeekText = findViewById<TextView>(R.id.previousBiWeek)
-        val startDate2 = "${previousBiWeek[0].substring(0,4)}/${previousBiWeek[0].substring(4,6)}/${previousBiWeek[0].substring(6,8)}"
-        val endDate2= "${previousBiWeek[1].substring(0,4)}/${previousBiWeek[1].substring(4,6)}/${previousBiWeek[1].substring(6,8)}"
+        val startDate2 = "${secPreviousBiWeek[0].substring(0,4)}/${secPreviousBiWeek[0].substring(4,6)}/${secPreviousBiWeek[0].substring(6,8)}"
+        val endDate2= "${secPreviousBiWeek[1].substring(0,4)}/${secPreviousBiWeek[1].substring(4,6)}/${secPreviousBiWeek[1].substring(6,8)}"
         previousBiWeekText.text = "${startDate2} - ${endDate2}"
 
         val secPreviousBiWeekText = findViewById<TextView>(R.id.secPreviousBiWeek)
-        val startDate3 = "${secPreviousBiWeek[0].substring(0,4)}/${secPreviousBiWeek[0].substring(4,6)}/${secPreviousBiWeek[0].substring(6,8)}"
-        val endDate3= "${secPreviousBiWeek[1].substring(0,4)}/${secPreviousBiWeek[1].substring(4,6)}/${secPreviousBiWeek[1].substring(6,8)}"
+        val startDate3 = "${thirdPreviousBiWeek[0].substring(0,4)}/${thirdPreviousBiWeek[0].substring(4,6)}/${thirdPreviousBiWeek[0].substring(6,8)}"
+        val endDate3= "${thirdPreviousBiWeek[1].substring(0,4)}/${thirdPreviousBiWeek[1].substring(4,6)}/${thirdPreviousBiWeek[1].substring(6,8)}"
         secPreviousBiWeekText.text = "${startDate3} - ${endDate3}"
 
         val viewMorePayStubsBtn = findViewById<Button>(R.id.viewMorePayStubsBtn)
         val submitExpensesBtn = findViewById<Button>(R.id.submitExpensesBtn)
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
-        val viewExpensesBtn = findViewById<Button>(R.id.viewExpensesBtn)
-
 
         viewMorePayStubsBtn.setOnClickListener {
             startActivity(Intent(this,ViewAllPayStubs::class.java))
@@ -112,16 +110,13 @@ class PayStub : AppCompatActivity() {
             startActivity(Intent(this,DynamicLandingActivity::class.java))
         }
 
-        viewExpensesBtn.setOnClickListener {
-            startActivity(Intent(this,ViewExpenses::class.java))
-        }
     }
 
     override fun onResume() {
         super.onResume()
-        getWorkedHoursForDateRange(currentBiWeek, currentApprovedWorkLogs)
         getWorkedHoursForDateRange(previousBiWeek, previousApprovedWorkLogs)
         getWorkedHoursForDateRange(secPreviousBiWeek, secPreviousApprovedWorkLogs)
+        getWorkedHoursForDateRange(thirdPreviousBiWeek, thirdPreviousApprovedWorkLogs)
 
     }
 
@@ -133,7 +128,7 @@ class PayStub : AppCompatActivity() {
         val progressPercentage = (netIncome / maxIncome) * 100
 
         // Set indicator color
-        donutChart.setIndicatorColor(getColor(R.color.light_green))
+        donutChart.setIndicatorColor(getColor(R.color.light_blue))
 
         // Set track color
         donutChart.trackColor = getColor(R.color.light_red)
@@ -182,12 +177,12 @@ class PayStub : AppCompatActivity() {
                         }
                     }
                 }
-                countTotalHoursAndIncome(currentApprovedWorkLogs, currentBiWeekTotalHour, currentBiWeekIncome)
                 countTotalHoursAndIncome(previousApprovedWorkLogs, previousBiWeekTotalHour, previousBiWeekIncome)
                 countTotalHoursAndIncome(secPreviousApprovedWorkLogs, secPreviousBiWeekTotalHour, secPreviousBiWeekIncome)
-                Log.d("WorkLogs", "Approved work logs: ${currentApprovedWorkLogs.joinToString(separator = ", ", transform = { it.toString() })}")
-                Log.d("WorkLogs", "Total hours: $currentBiWeekTotalHour")
-                Log.d("WorkLogs", "Total income: $currentBiWeekIncome")
+                countTotalHoursAndIncome(thirdPreviousApprovedWorkLogs, thirdPreviousBiWeekTotalHour, thirdPreviousBiWeekIncome)
+                Log.d("WorkLogs", "Approved work logs: ${previousApprovedWorkLogs.joinToString(separator = ", ", transform = { it.toString() })}")
+                Log.d("WorkLogs", "Total hours: $previousBiWeekTotalHour")
+                Log.d("WorkLogs", "Total income: $previousBiWeekIncome")
             }
             .addOnFailureListener { e ->
                 // Handle the error appropriately, maybe log or show a UI indication
@@ -218,7 +213,6 @@ class PayStub : AppCompatActivity() {
 
             // Check for the current bi-week
             if (today in startDate..endDate) {
-                currentBiWeek = dateRange.toMutableStateList()
                 previousBiWeek = if(index >0){
                     biWeeklyDateRanges2024[(index - 1)].toMutableStateList()
                 }else{
@@ -229,10 +223,15 @@ class PayStub : AppCompatActivity() {
                 }else{
                     biWeeklyDateRanges2024[0].toMutableStateList()
                 }
+                thirdPreviousBiWeek = if(index >2){
+                    biWeeklyDateRanges2024[(index - 3)].toMutableStateList()
+                }else{
+                    biWeeklyDateRanges2024[0].toMutableStateList()
+                }
 
             }
-    }
+        }
 
-}
+    }
 
 }

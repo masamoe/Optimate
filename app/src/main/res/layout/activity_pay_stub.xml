@@ -222,6 +222,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableStart="@drawable/red_circle"
+                        android:drawableLeft="@drawable/red_circle"
                         android:drawablePadding="8dp"
                         android:text="Taxes (20%)"
                         android:textAppearance="?attr/textAppearanceBodySmall"
@@ -306,7 +307,7 @@
                         android:layout_weight="1"
                         android:text="amount"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="#0089F6" />
+                        android:textColor="@color/blue" />
 
                 </LinearLayout>
 
@@ -334,21 +335,11 @@
                         android:id="@+id/secPreviousAmount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
                         android:layout_weight="1"
                         android:text="amount"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="#2196F3" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="date"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -452,18 +443,6 @@
         app:layout_constraintStart_toStartOf="@+id/guideline66"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout11"
         tools:text="2024/03/01 - 2024/03/15" />
-
-    <Button
-        android:id="@+id/viewExpensesBtn"
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View expenses history"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submitExpensesBtn"
-        app:layout_constraintVertical_bias="0.204" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

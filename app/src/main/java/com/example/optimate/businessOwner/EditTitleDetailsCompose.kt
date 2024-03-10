@@ -13,8 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.ButtonDefaults
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -36,6 +35,9 @@ import androidx.compose.material.Switch
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -48,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -173,7 +176,7 @@ fun EditTitleUI(
                                 )
                             }
                             itemsIndexed(managerAccessList) { index, access ->
-                                AccessItem(access, index, selectedAccess) { accessName, isSelected ->
+                                AccessItem(access, index, selectedAccess,role) { accessName, isSelected ->
                                     if (isSelected) selectedAccess.add(accessName) else selectedAccess.remove(accessName)
                                 }
                             }
@@ -190,7 +193,7 @@ fun EditTitleUI(
                             )
                         }
                         itemsIndexed(employeeAccessList) { index, access ->
-                            AccessItem(access, index, selectedAccess) { accessName, isSelected ->
+                            AccessItem(access, index, selectedAccess,role) { accessName, isSelected ->
                                 if (isSelected) selectedAccess.add(accessName) else selectedAccess.remove(accessName)
                             }
                         }
@@ -259,10 +262,10 @@ fun SaveButton(
     initialValue: String,
     modifier: Modifier = Modifier
 ) {
-    val buttonColor = MaterialTheme.colors.run { if (isLight) Color(0xFF75f8e2) else Color(0xFF91C9B7) }
+    val buttonColor = colorResource(id = R.color.light_green)
 
     Button(
-        colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
+        colors = androidx.compose.material3.ButtonDefaults.run { buttonColors(buttonColor) },
         onClick = {
             when {
                 titleText.isBlank() -> {
@@ -278,9 +281,9 @@ fun SaveButton(
             }
         },
         modifier = modifier,
-        elevation = ButtonDefaults.elevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
+        elevation = androidx.compose.material3.ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp)
     ) {
-        Text("Save", fontSize = 15.sp)
+        Text("Save", fontSize = 15.sp, color = Color.Black, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
     }
 }
 
@@ -290,18 +293,20 @@ fun SaveButton(
 fun AccessItem(
     access: String,
     index: Int,
-    selectedAccess: MutableList<String>, // Pass the list of selected accesses
+    selectedAccess: MutableList<String>,
+    role: String,
     onAccessSelected: (String, Boolean) -> Unit
 ) {
-    val backgroundColor = if (index % 2 == 0) Color(0xFFC0C2EC) else Color(0xFFF2EBF3)
+    val backgroundColor = if (role == "Manager") colorResource(id = R.color.light_blue) else colorResource(id = R.color.light_red)
     var switchState by remember { mutableStateOf(access in selectedAccess) } // Check if the switch should be on
 
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        elevation = 2.dp,
-        backgroundColor = backgroundColor
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Row(
             modifier = Modifier
@@ -310,7 +315,7 @@ fun AccessItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = access, fontSize = 18.sp)
+            Text(text = access, fontSize = 18.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
             Switch(
                 checked = switchState,
                 onCheckedChange = {
