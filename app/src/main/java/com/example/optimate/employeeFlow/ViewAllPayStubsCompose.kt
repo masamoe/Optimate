@@ -64,6 +64,7 @@ import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.getBusinessNameAndAddress
 import com.example.optimate.loginAndRegister.milliSecondsToHours
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.firestore
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -140,20 +141,32 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
     val backgroundColor = Color(0xFFF2EBF3)
     val frameColor = Color(0xFF6750A4)
     val cornerRadius = 12.dp
+    var expenses by remember { mutableDoubleStateOf(0.0) }
+    var claimed by remember { mutableDoubleStateOf(0.0) }
 
     LaunchedEffect(dateRange) {
         getWorkedHoursForDateRange(dateRange, approvedWorkLogs) { totalHours, totalIncome ->
             hours = totalHours
             income = totalIncome
         }
+
+        getExpensesByDateRange(dateRange) { totalExpenses, totalClaimed ->
+            expenses = totalExpenses
+            claimed = totalClaimed
+        }
+
     }
 
 
     ElevatedCard(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth()
-            .border(1.dp, colorResource(id = R.color.blue), shape = RoundedCornerShape(cornerRadius)),
+            .border(
+                1.dp,
+                colorResource(id = R.color.blue),
+                shape = RoundedCornerShape(cornerRadius)
+            ),
         colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(cornerRadius),
@@ -239,11 +252,39 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
                     )
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Expenses Submitted:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "$${String.format("%.2f", expenses)}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
+                    )
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Expenses Claimed:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "$${String.format("%.2f", claimed)}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
+                    )
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Divider()
+                Spacer(modifier = Modifier.padding(4.dp))
                 Button(
                     onClick = {
                         if (checkStoragePermissions() ){
                             // Permissions are already granted, perform your action here
-                            generateAndDownloadPdf(context, dateRange, hours, income)
+                            generateAndDownloadPdf(context, dateRange, hours, income, expenses, claimed)
                         } else {
                             requestForStoragePermissions()
                         }
@@ -326,11 +367,58 @@ private fun countTotalHoursAndIncome(
     val totalIncomeToTwoDecimalPlaces = String.format("%.2f", totalIncome).toDouble()
     return Pair(totalHoursToTwoDecimalPlaces, totalIncomeToTwoDecimalPlaces)
 }
+
+fun getExpensesByDateRange(dateRange: List<String>, callback: (Double, Double) -> Unit) {
+    val db = Firebase.firestore
+    val startDate = SimpleDateFormat("yyyyMMdd").parse(dateRange[0])
+    val endDate = SimpleDateFormat("yyyyMMdd").parse(dateRange[1])
+
+    db.collection("expenseRequest")
+        .whereEqualTo("uid", GlobalUserData.uid)
+        .whereNotEqualTo("status", "cancelled")
+        .get()
+        .addOnSuccessListener { documents ->
+            var totalExpenses = 0.0
+            var totalClaimed = 0.0
+
+            for (document in documents) {
+                val expenseDate = (document["dateOfRequest"] as Timestamp).toDate()
+                val formattedExpenseDate = SimpleDateFormat("yyyyMMdd").format(expenseDate)
+                val dateOfRequest = SimpleDateFormat("yyyyMMdd").parse(formattedExpenseDate)
+
+                if (dateOfRequest in startDate..endDate) {
+                    val amount = (document["amount"] as String).toDoubleOrNull()
+                    val status = document["status"] as? String ?: ""
+                    if (amount != null) {
+                        totalExpenses += amount
+                        if (status == "approved") {
+                            totalClaimed += amount
+
+                        }
+                    } else {
+                        Log.e("getExpensesByDateRange", "Invalid amount for document: ${document.id}")
+                    }
+                }
+            }
+
+            // Callback with both claimed and total expenses
+            callback(totalExpenses,totalClaimed)
+            Log.d("getExpensesByDateRange", "Total expenses: $totalExpenses, Total claimed: $totalClaimed")
+        }
+        .addOnFailureListener { e ->
+            Log.e("getExpensesByDateRange", "Error getting documents: ", e)
+            // Callback with total expenses as 0 in case of failure
+            callback(0.0, 0.0)
+        }
+}
+
 fun generateAndDownloadPdf(
     context: Context,
     dateRange: List<String>,
     hours: Double,
-    income: Double
+    income: Double,
+    expenses: Double,
+    claimed: Double
 ) {
     Log.d("PDFGeneration", "Starting PDF generation")
     getBusinessNameAndAddress(GlobalUserData.bid) { name, address ->
@@ -359,6 +447,8 @@ fun generateAndDownloadPdf(
             drawText("Gross pay: $$income", leftMargin, titleBaseLine + 100, textPaint)
             drawText("Net pay: $${income * 0.8}", leftMargin, titleBaseLine + 120, textPaint)
             drawText("Taxes: $${income * 0.2}", leftMargin, titleBaseLine + 140, textPaint)
+            drawText("Expenses Submitted: $$expenses", leftMargin, titleBaseLine + 160, textPaint)
+            drawText("Expenses Claimed: $$claimed", leftMargin, titleBaseLine + 180, textPaint)
         }
 
         pdfDocument.finishPage(page)

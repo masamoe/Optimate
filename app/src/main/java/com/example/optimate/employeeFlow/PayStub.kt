@@ -44,6 +44,7 @@ class PayStub : AppCompatActivity() {
     private var thirdPreviousBiWeek = mutableStateListOf<String>()
     private val thirdPreviousBiWeekTotalHour = MutableLiveData<Double>().apply { value = 0.0 }
     private val thirdPreviousBiWeekIncome = MutableLiveData<Double>().apply { value = 0.0 }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pay_stub)
@@ -196,8 +197,6 @@ class PayStub : AppCompatActivity() {
         hours.postValue(String.format("%.2f", totalHours).toDouble())
         income.postValue(String.format("%.2f", totalIncome).toDouble())
     }
-
-
     private fun getBiWeek(biWeeklyDateRanges2024: List<List<String>>, today: String) {
         biWeeklyDateRanges2024.forEachIndexed { index, dateRange ->
             val startDate = dateRange[0]

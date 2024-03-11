@@ -57,10 +57,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
+            android:text="@string/pay_stubs"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="@string/pay_stubs"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintHorizontal_bias="0.0"
@@ -83,13 +83,14 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView2"
-        style="?attr/materialCardViewElevatedStyle"
-        android:layout_width="380dp"
-        android:layout_height="665dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
+
+        android:backgroundTint="@color/white"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline72"
+        app:layout_constraintEnd_toEndOf="@+id/guideline77"
+        app:layout_constraintStart_toStartOf="@+id/guideline75"
+        app:layout_constraintTop_toTopOf="@+id/guideline78">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -189,12 +190,57 @@
 
                 </LinearLayout>
 
-                <com.google.android.material.divider.MaterialDivider
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="16dp">
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal">
 
-                </com.google.android.material.divider.MaterialDivider>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/expenses_submitted_year_to_date"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/expenses"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="$0,000.00"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/expenses_claimed_year_to_date"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/claimed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="$0,000.00"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
@@ -205,11 +251,10 @@
         android:id="@+id/compose_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="20dp"
         android:translationZ="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/materialCardView2"
-        app:layout_constraintEnd_toEndOf="@+id/materialCardView2"
-        app:layout_constraintStart_toStartOf="@+id/materialCardView2"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline79"
+        app:layout_constraintEnd_toEndOf="@+id/guideline77"
+        app:layout_constraintStart_toStartOf="@+id/guideline75"
         app:layout_constraintTop_toTopOf="@+id/guideline72" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -217,7 +262,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        app:layout_constraintGuide_percent="0.45" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline75"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline77"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline78"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline79"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

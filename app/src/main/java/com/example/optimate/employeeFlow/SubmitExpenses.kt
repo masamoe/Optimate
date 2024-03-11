@@ -9,6 +9,7 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.DatePicker
 import android.widget.ImageView
 import android.widget.Toast
@@ -70,6 +71,11 @@ class SubmitExpenses : AppCompatActivity() {
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
         homeBtn.setOnClickListener {
             startActivity(Intent(this, DynamicLandingActivity::class.java))
+        }
+
+        val viewExpensesBtn = findViewById<MaterialButton>(R.id.viewExpensesBtn)
+        viewExpensesBtn.setOnClickListener {
+            startActivity(Intent(this, ViewExpenses::class.java))
         }
 
         val sendBtn = findViewById<MaterialButton>(R.id.sendExpenseReq)

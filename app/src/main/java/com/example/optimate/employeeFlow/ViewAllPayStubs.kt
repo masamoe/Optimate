@@ -28,6 +28,7 @@ import com.example.optimate.loginAndRegister.biWeeklyDateRanges2024
 import com.example.optimate.loginAndRegister.getBusinessNameAndAddress
 import com.example.optimate.loginAndRegister.milliSecondsToHours
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.firestore
 import java.io.File
 import java.io.FileOutputStream
@@ -46,6 +47,7 @@ class ViewAllPayStubs : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_all_pay_stubs)
         val today = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        val dateRange = listOf("20240101", today)
         validBiWeeklyDateRanges = biWeeklyDateRanges2024.filter { it[0] <= today }
         validBiWeeklyDateRanges = validBiWeeklyDateRanges.dropLast(1)
         val previousBiWeeklyDateRanges = validBiWeeklyDateRanges.last()
@@ -61,6 +63,14 @@ class ViewAllPayStubs : AppCompatActivity() {
         val totalGrossPayAnnual = findViewById<TextView>(R.id.totalGrossPayAnnual)
         val totalNetPayAnnual = findViewById<TextView>(R.id.netPayTotalAnnual)
         val totalTaxesAnnual = findViewById<TextView>(R.id.taxesTotalAnnual)
+        val expenses = findViewById<TextView>(R.id.expenses)
+        val claimed = findViewById<TextView>(R.id.claimed)
+
+        getExpensesByDateRange(dateRange) {totalExpenses,totalClaimed ->
+            // Set total expenses and total claimed to TextViews
+            expenses.text = "$${String.format("%.2f", totalExpenses)}"
+            claimed.text = "$${String.format("%.2f", totalClaimed)}"
+        }
 
         yearlyIncome.observe(this) { income ->
             totalGrossPayAnnual.text = "$${String.format("%.2f", income)}"
@@ -158,7 +168,5 @@ class ViewAllPayStubs : AppCompatActivity() {
         hours.postValue(String.format("%.2f", totalHours).toDouble())
         income.postValue(String.format("%.2f", totalIncome).toDouble())
     }
-
-
 
 }

@@ -57,10 +57,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
+            android:text="@string/submit_an_expense"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="@string/submit_an_expense"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintHorizontal_bias="0.0"
@@ -82,12 +82,13 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView3"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:backgroundTint="@color/white"
         android:layout_marginEnd="16dp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,13 +110,13 @@
                 android:id="@+id/outlinedExpenseDate"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginStart="20dp"
                 android:hint="Date"
-                app:errorEnabled="true"
                 app:endIconDrawable="@drawable/date_icon"
                 app:endIconMode="custom"
+                app:errorEnabled="true"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -130,19 +131,17 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/outlinedExpenseAmount"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
 
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginStart="20dp"
                 android:hint="Amount"
-                app:errorEnabled="true"
                 app:endIconMode="clear_text"
+                app:errorEnabled="true"
                 app:expandedHintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -157,13 +156,13 @@
                 android:id="@+id/outlinedReceiptPhoto"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
-                app:errorEnabled="true"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginStart="20dp"
                 android:hint="Upload a photo"
                 app:endIconDrawable="@drawable/attach_icon"
-                app:endIconMode="custom">
+                app:endIconMode="custom"
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/receiptPhoto"
@@ -181,12 +180,12 @@
                 android:id="@+id/outlinedReasonField"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginStart="20dp"
                 android:hint="Add reason"
-                app:errorEnabled="true"
-                app:endIconMode="clear_text">
+                app:endIconMode="clear_text"
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/reasonField"
@@ -214,6 +213,9 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
+                    android:backgroundTint="@color/light_green"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
                     android:text="Send">
 
                 </com.google.android.material.button.MaterialButton>
@@ -225,4 +227,24 @@
 
 
     </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline74"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.96" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/viewExpensesBtn"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/view_expenses"
+        android:backgroundTint="@color/light_green"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/materialCardView3"
+        app:layout_constraintEnd_toStartOf="@+id/guideline74"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
 </androidx.constraintlayout.widget.ConstraintLayout>

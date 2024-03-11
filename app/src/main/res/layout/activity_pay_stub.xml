@@ -129,6 +129,7 @@
         android:id="@+id/payStubCard"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/guideline67"
         app:layout_constraintEnd_toStartOf="@+id/guideline65"
         app:layout_constraintHorizontal_bias="1.0"
@@ -252,11 +253,9 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
-        style="?attr/materialCardViewElevatedStyle"
-
         android:layout_width="368dp"
         android:layout_height="258dp"
-
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/guideline70"
         app:layout_constraintEnd_toStartOf="@+id/guideline65"
         app:layout_constraintStart_toStartOf="@+id/guideline66"
@@ -360,11 +359,14 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/viewMorePayStubsBtn"
                     style="?attr/borderlessButtonStyle"
+                    android:backgroundTint="@color/light_green"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:gravity="center"
-                    android:text="View more" />
+                    android:text="@string/details" />
 
 
             </LinearLayout>
@@ -379,6 +381,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit an expense"
+        android:backgroundTint="@color/light_green"
+        android:textColor="@color/black"
+        android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline71"
         app:layout_constraintEnd_toStartOf="@+id/guideline65"
         app:layout_constraintStart_toStartOf="@+id/guideline66"
