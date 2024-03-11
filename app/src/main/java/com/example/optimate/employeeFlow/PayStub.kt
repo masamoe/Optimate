@@ -112,14 +112,6 @@ class PayStub : AppCompatActivity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        getWorkedHoursForDateRange(previousBiWeek, previousApprovedWorkLogs)
-        getWorkedHoursForDateRange(secPreviousBiWeek, secPreviousApprovedWorkLogs)
-        getWorkedHoursForDateRange(thirdPreviousBiWeek, thirdPreviousApprovedWorkLogs)
-
-    }
-
     private fun showPayStub(netIncome: Double, maxIncome: Double) {
         // Find the CircularProgressIndicator
         val donutChart = findViewById<CircularProgressIndicator>(R.id.donutChart)

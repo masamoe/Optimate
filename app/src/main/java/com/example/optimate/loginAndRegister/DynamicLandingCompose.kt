@@ -203,7 +203,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
             shape = RoundedCornerShape(15.dp),
             colors = ButtonDefaults.buttonColors(Color.White),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 16.dp),
-            contentPadding = PaddingValues(8.dp)
+            contentPadding = PaddingValues(15.dp)
 
         ) {
 
