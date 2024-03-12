@@ -32,14 +32,14 @@ class ModuleChoosingMain : AppCompatActivity() {
         val uid = intent.getStringExtra("USER_UID")
         val container1 = findViewById<TextView>(R.id.container1)
         val container2 = findViewById<TextView>(R.id.container2)
-        val container3 = findViewById<TextView>(R.id.container3)
+
         val payButtonMain = findViewById<Button>(R.id.payButtonMain)
         var container1Picked = false
         var container2Picked = false
         var container3Picked = false
         val module1Price = 10.00
-        val module2Price = 10.00
-        val module3Price = 10.00
+        val module2Price = 30.00
+
         var currentAmount = 0.00
         val amount = findViewById<TextView>(R.id.Amount)
         val moduleList = mutableListOf<String>()
@@ -72,28 +72,16 @@ class ModuleChoosingMain : AppCompatActivity() {
             container2Picked = !container2Picked
         }
 
-        container3.setOnClickListener {
-            changeColor(container3)
 
-            if (container3Picked) {
-                currentAmount -= module3Price
-            } else {
-                currentAmount += module3Price
-            }
-            amount.text = "$" + currentAmount.toString()
-            container3Picked = !container3Picked
-        }
 
         payButtonMain.setOnClickListener {
             if(container1Picked){
-                moduleList.add("One")
+                moduleList.add("Basic")
 
                 if (container2Picked){
-                    moduleList.add("Two")
+                    moduleList.add("Plus")
                 }
-                if (container3Picked){
-                    moduleList.add("Three")
-                }
+
 
                 if (uid != null) {
                     updateUser(uid, moduleList, currentAmount)

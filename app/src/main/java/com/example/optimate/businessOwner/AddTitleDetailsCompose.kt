@@ -64,6 +64,16 @@ private val employeeAccessList = listOf(
     "Add Expense",
 )
 
+private val managerBasicAccessList = listOf(
+    "Scheduling",
+    "View Employees",
+    "Time-off Requests Approval"
+)
+private val employeeBasicAccessList = listOf(
+    "View Schedule",
+    "Request Time-off",
+)
+
 data class TitleEntry(
     val bid: String,
     val role: String,
@@ -80,6 +90,8 @@ fun SetupRoleUI(
     val context = LocalContext.current
     var titleText by remember { mutableStateOf("") }
     val selectedAccess = remember { mutableStateListOf<String>() }
+    val managerList = if (GlobalUserData.modules.contains("Plus")) managerAccessList else managerBasicAccessList
+    val employeeList = if (GlobalUserData.modules.contains("Plus")) employeeAccessList else employeeBasicAccessList
 
     Scaffold(
         topBar = { XmlTopBar(titleText = "Add $role".replaceFirstChar { it.uppercase() }) },
@@ -129,8 +141,8 @@ fun SetupRoleUI(
                                     .padding(8.dp)
                             )
                         }
-                        itemsIndexed(managerAccessList) { index, access ->
-                            AccessCardItem(access, index,role) { accessName, isSelected ->
+                        itemsIndexed(managerList) { index, access ->
+                            AccessCardItem(access, index, role) { accessName, isSelected ->
                                 if (isSelected) selectedAccess.add(accessName) else selectedAccess.remove(accessName)
                             }
                         }
@@ -146,7 +158,7 @@ fun SetupRoleUI(
                                 .padding(8.dp)
                         )
                     }
-                    itemsIndexed(employeeAccessList) { index, access ->
+                    itemsIndexed(employeeList) { index, access ->
                         AccessCardItem(access, index, role) { accessName, isSelected ->
                             if (isSelected) selectedAccess.add(accessName) else selectedAccess.remove(accessName)
                         }

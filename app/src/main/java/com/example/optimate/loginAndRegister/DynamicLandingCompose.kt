@@ -2,7 +2,6 @@ package com.example.optimate.loginAndRegister
 
 import android.content.Intent
 import android.util.Log
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,11 +16,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults.elevation
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,7 +42,6 @@ import com.example.optimate.employeeFlow.ClockModule
 import com.example.optimate.employeeFlow.PayStub
 import com.example.optimate.employeeFlow.ScheduleModule
 import com.example.optimate.employeeFlow.SubmitExpenses
-import com.example.optimate.employeeFlow.ViewTimeOffRequests
 
 private val managerAccessList = listOf(
     "Scheduling",
@@ -71,8 +66,15 @@ private val businessOwnerAccessList= listOf(
     "Schedule",
     "Requests",
 )
+private val businessOwnerBasicAccessList= listOf(
+    "Titles",
+    "Accounts",
+    "Scheduling",
+    "Schedule",
+    "Requests",
+)
 @Composable
-fun DynamicLandingScreen(accessList: List<String>, title: String) {
+fun DynamicLandingScreen(accessList: List<String>, title: String, modules: List<String>) {
     val businessOwnerBackgroundColor = Color(0xFFFFD7D7)
     val employeeBackgroundColor = Color(0xFFC4F0E6)
     val managerBackgroundColor = Color(0xFFE2EFFF)
@@ -82,8 +84,12 @@ fun DynamicLandingScreen(accessList: List<String>, title: String) {
     Scaffold(
         content = { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {  // Apply the padding to the Box
-                if (title == "businessOwner") {
+                if (title == "businessOwner" && modules.contains("Plus")) {
                     ButtonList(AccessList = businessOwnerAccessList)
+                    Log.d("compose", "access: $accessList")
+                }
+                else if (title == "businessOwner") {
+                    ButtonList(AccessList = businessOwnerBasicAccessList)
                     Log.d("compose", "access: $accessList")
                 }
                 else if (title == "Employee") {
@@ -229,6 +235,6 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
 @Preview
 @Composable
 fun BusinessOwnerButtonListPreview() {
-    DynamicLandingScreen(managerAccessList, "businessOwner")
+    DynamicLandingScreen(managerAccessList, "businessOwner", GlobalUserData.modules)
 }
 

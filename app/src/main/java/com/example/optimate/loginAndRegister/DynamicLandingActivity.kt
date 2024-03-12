@@ -8,22 +8,15 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.optimate.R
-import com.example.optimate.businessOwner.Requests.Companion.TAG
-import com.example.optimate.employeeFlow.EditProfile
 import com.example.optimate.employeeFlow.ProfilePage
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.google.firebase.messaging.FirebaseMessaging
-import java.util.Date
 
 class DynamicLandingActivity : AppCompatActivity(){
     val db = Firebase.firestore
@@ -39,7 +32,7 @@ class DynamicLandingActivity : AppCompatActivity(){
         val settingPage = findViewById<ImageView>(R.id.businessIcon)
         getAccountAccess(GlobalUserData.title, GlobalUserData.bid) {
             composeView.setContent {
-                DynamicLandingScreen(GlobalUserData.access, GlobalUserData.role)
+                DynamicLandingScreen(GlobalUserData.access, GlobalUserData.role, GlobalUserData.modules)
             }
         }
         if (GlobalUserData.profilePic != "") {
