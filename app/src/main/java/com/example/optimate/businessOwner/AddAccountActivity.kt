@@ -140,7 +140,8 @@ class AddAccountActivity : AppCompatActivity() {
             "BID" to bid,
             "wage" to wage,
             "initial_password" to password,
-            "account_status" to accountStatus
+            "account_status" to accountStatus,
+            "modules" to GlobalUserData.modules
         )
         Log.d("Hison", "addEmployeeToDatabase: $user")
         //add user to users collection

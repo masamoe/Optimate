@@ -120,7 +120,7 @@
                     android:layout_width="230dp"
                     android:layout_height="230dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/placeholder" />
+                    android:src="@drawable/optimate" />
 
                 <Button
                     android:id="@+id/iconButton"

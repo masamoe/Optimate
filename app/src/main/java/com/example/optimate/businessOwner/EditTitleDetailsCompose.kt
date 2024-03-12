@@ -75,6 +75,17 @@ private val employeeAccessList = listOf(
     "Add Expense",
 )
 
+private val managerBasicAccessList = listOf(
+    "Scheduling",
+    "View Employees",
+    "Time-off Requests Approval"
+)
+
+private val employeeBasicAccessList = listOf(
+    "View Schedule",
+    "Request Time-off",
+)
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EditTitleUI(
@@ -175,8 +186,8 @@ fun EditTitleUI(
                                         .padding(8.dp)
                                 )
                             }
-                            itemsIndexed(managerAccessList) { index, access ->
-                                AccessItem(access, index, selectedAccess,role) { accessName, isSelected ->
+                            itemsIndexed(if (GlobalUserData.modules.contains("Plus")) managerAccessList else managerBasicAccessList) { index, access ->
+                                AccessItem(access, index, selectedAccess, role) { accessName, isSelected ->
                                     if (isSelected) selectedAccess.add(accessName) else selectedAccess.remove(accessName)
                                 }
                             }
@@ -192,8 +203,8 @@ fun EditTitleUI(
                                     .padding(8.dp)
                             )
                         }
-                        itemsIndexed(employeeAccessList) { index, access ->
-                            AccessItem(access, index, selectedAccess,role) { accessName, isSelected ->
+                        itemsIndexed(if (GlobalUserData.modules.contains("Plus")) employeeAccessList else employeeBasicAccessList) { index, access ->
+                            AccessItem(access, index, selectedAccess, role) { accessName, isSelected ->
                                 if (isSelected) selectedAccess.add(accessName) else selectedAccess.remove(accessName)
                             }
                         }
@@ -203,6 +214,7 @@ fun EditTitleUI(
         )
     }
 }
+
 
 @Composable
 fun TitleField(initialValue: String, onTitleChange: (String) -> Unit, modifier: Modifier = Modifier) {
