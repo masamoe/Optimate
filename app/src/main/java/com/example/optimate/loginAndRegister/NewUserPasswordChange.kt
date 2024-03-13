@@ -40,7 +40,7 @@ class NewUserPasswordChange : AppCompatActivity() {
             }
 
             // Check for password length
-            if (password.length < 6) {
+            if (password.length < 8 && isStrongPassword(password)) {
                 Toast.makeText(
                     this,
                     "Password must be at least 6 characters long.",
@@ -50,6 +50,18 @@ class NewUserPasswordChange : AppCompatActivity() {
             }
             updatePassword(password)
         }
+    }
+    private fun isStrongPassword(password: String): Boolean {
+        val upperCasePattern = Regex("[A-Z]")
+        val lowerCasePattern = Regex("[a-z]")
+        val digitPattern = Regex("[0-9]")
+        val specialCharPattern = Regex("[^A-Za-z0-9]")
+
+        return password.length >= 8 &&
+                upperCasePattern.containsMatchIn(password) &&
+                lowerCasePattern.containsMatchIn(password) &&
+                digitPattern.containsMatchIn(password) &&
+                specialCharPattern.containsMatchIn(password)
     }
 
     private fun updatePassword(newPassword: String){

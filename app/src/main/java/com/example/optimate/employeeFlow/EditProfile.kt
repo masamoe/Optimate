@@ -84,7 +84,7 @@ class EditProfile : AppCompatActivity() {
                 //updateEmail(emailInput.text.toString())
                 //userDataAuth["email"] = emailInput.text.toString()
             }
-            if (GlobalUserData.password != passwordInput.text.toString()) {
+            if (GlobalUserData.password != passwordInput.text.toString() && isStrongPassword(passwordInput.text.toString())) {
                 updatePassword(passwordInput.text.toString())
             }
             if (GlobalUserData.address != addressInput.text.toString()) {
@@ -105,6 +105,20 @@ class EditProfile : AppCompatActivity() {
 
         // Function to save data to local database
 
+
+
+    }
+    private fun isStrongPassword(password: String): Boolean {
+        val upperCasePattern = Regex("[A-Z]")
+        val lowerCasePattern = Regex("[a-z]")
+        val digitPattern = Regex("[0-9]")
+        val specialCharPattern = Regex("[^A-Za-z0-9]")
+
+        return password.length >= 8 &&
+                upperCasePattern.containsMatchIn(password) &&
+                lowerCasePattern.containsMatchIn(password) &&
+                digitPattern.containsMatchIn(password) &&
+                specialCharPattern.containsMatchIn(password)
     }
     /* private fun updateEmail(email: String) {
         val user = Firebase.auth.currentUser
