@@ -195,7 +195,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
         "Requests" -> colorResource(id = R.color.red_button)
         "View Employees" -> colorResource(id = R.color.blue_button)
         "Availability" -> colorResource(id = R.color.blue_button)
-        "Time-off Requests Approval" -> Color(0xFFE57373)
+        "Time-off Requests Approval" -> colorResource(id = R.color.red_button)
 
 
         else -> Color(0xFF90A4AE)

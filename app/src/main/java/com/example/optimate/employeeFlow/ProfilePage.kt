@@ -5,10 +5,10 @@ package com.example.optimate.employeeFlow
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.optimate.R
@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth
 
 class ProfilePage : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +87,8 @@ class ProfilePage : AppCompatActivity() {
 
     }
 
+
+
     private fun signOutUser(context: Context) {
         val user = FirebaseAuth.getInstance()
         user.signOut()
@@ -96,3 +97,4 @@ class ProfilePage : AppCompatActivity() {
 
 
 }
+

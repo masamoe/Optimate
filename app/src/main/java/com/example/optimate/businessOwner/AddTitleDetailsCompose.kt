@@ -62,6 +62,7 @@ private val employeeAccessList = listOf(
     "View Payroll",
     "Request Time-off",
     "Add Expense",
+    "Availability"
 )
 
 private val managerBasicAccessList = listOf(
@@ -72,6 +73,7 @@ private val managerBasicAccessList = listOf(
 private val employeeBasicAccessList = listOf(
     "View Schedule",
     "Request Time-off",
+    "Availability",
 )
 
 data class TitleEntry(

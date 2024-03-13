@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import com.example.optimate.R
 import com.github.kittinunf.fuel.httpPost
@@ -36,7 +37,7 @@ class ModuleChoosingMain : AppCompatActivity() {
         val payButtonMain = findViewById<Button>(R.id.payButtonMain)
         var container1Picked = false
         var container2Picked = false
-        var container3Picked = false
+
         val module1Price = 10.00
         val module2Price = 30.00
 
@@ -45,6 +46,17 @@ class ModuleChoosingMain : AppCompatActivity() {
         val moduleList = mutableListOf<String>()
         //paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
         //fetchPaymentIntent()
+
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
+                intent.putExtra("USER_UID", uid)
+                // Start the same activity again
+                val intent = Intent(this@ModuleChoosingMain, ModuleChoosingMain::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
 
 
