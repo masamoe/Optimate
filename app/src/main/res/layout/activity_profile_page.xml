@@ -147,7 +147,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
         android:layout_width="360dp"
-        android:layout_height="400dp"
+        android:layout_height="350dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline28"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -286,7 +286,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.card.MaterialCardView
+           <!-- <com.google.android.material.card.MaterialCardView
                 android:layout_width="300dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="30dp"
@@ -306,7 +306,7 @@
                 </Button>
 
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>-->
 
             <Button
                 android:id="@+id/signOutBtn"

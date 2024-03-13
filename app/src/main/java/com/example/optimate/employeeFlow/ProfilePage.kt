@@ -29,7 +29,7 @@ class ProfilePage : AppCompatActivity() {
         val signOutBtn = findViewById<Button>(R.id.signOutBtn)
 
 
-        val viewAvailabilityBtn = findViewById<Button>(R.id.viewAvailabilityBtn)
+        //val viewAvailabilityBtn = findViewById<Button>(R.id.viewAvailabilityBtn)
         val editProfileBtn = findViewById<Button>(R.id.editProfile)
         val addressText = findViewById<TextView>(R.id.addressText)
         val wageText = findViewById<TextView>(R.id.wageText)
@@ -74,9 +74,9 @@ class ProfilePage : AppCompatActivity() {
 //            startActivity(Intent(this,EditProfile::class.java))
 //        }
 
-        viewAvailabilityBtn.setOnClickListener {
+        /*viewAvailabilityBtn.setOnClickListener {
             startActivity(Intent(this,Availability::class.java))
-        }
+        }*/
         editProfileBtn.setOnClickListener {
             startActivity(Intent(this, EditProfile::class.java))
         }

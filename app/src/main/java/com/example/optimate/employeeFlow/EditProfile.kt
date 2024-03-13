@@ -99,6 +99,8 @@ class EditProfile : AppCompatActivity() {
             } else {
                 updateDB(userDataAuth)
             }
+            val intent = Intent(this, DynamicLandingActivity::class.java)
+            startActivity(intent)
         }
 
         // Function to save data to local database
@@ -122,6 +124,8 @@ class EditProfile : AppCompatActivity() {
                 }
             }
     }*/
+
+    
 
     private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
