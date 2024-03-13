@@ -38,6 +38,7 @@ import com.example.optimate.businessOwner.FinancesActivity
 import com.example.optimate.businessOwner.Requests
 import com.example.optimate.businessOwner.SchedulerActivity
 import com.example.optimate.businessOwner.TitlesActivity
+import com.example.optimate.employeeFlow.Availability
 import com.example.optimate.employeeFlow.ClockModule
 import com.example.optimate.employeeFlow.PayStub
 import com.example.optimate.employeeFlow.ScheduleModule
@@ -56,6 +57,7 @@ private val employeeAccessList = listOf(
     "View Payroll",
     "Request Time-off",
     "Add Expense",
+    "Availability"
 )
 
 private val businessOwnerAccessList= listOf(
@@ -138,6 +140,7 @@ fun ButtonList(AccessList: List<String>) {
                         "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
                         "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))
                         "Add Expense" -> context.startActivity(Intent(context, SubmitExpenses::class.java))
+                        "Availability" -> context.startActivity(Intent(context, Availability::class.java))
 
 
                     }},
@@ -165,6 +168,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
         "Requests" -> painterResource(id =R.drawable.ic_requests_foreground)
         "View Employees" -> painterResource(id =R.drawable.ic_roles_foreground)
         "Time-off Requests Approval" -> painterResource(id =R.drawable.ic_requests_foreground)
+        "Availability" -> painterResource(id = R.drawable.availability)
 
         else -> painterResource(id =R.drawable.ic_requests_foreground)
     }
@@ -176,6 +180,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
         "View Payroll" -> "Payroll"
         "Time-off Requests Approval" -> "Requests"
         "Add Expense" -> "Expenses"
+        "Availability" -> "Availability"
         else -> text
     }
     val buttonColor = when (text) {
@@ -189,6 +194,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
         "Scheduling" -> colorResource(id = R.color.red_button)
         "Requests" -> colorResource(id = R.color.red_button)
         "View Employees" -> colorResource(id = R.color.blue_button)
+        "Availability" -> colorResource(id = R.color.blue_button)
         "Time-off Requests Approval" -> Color(0xFFE57373)
 
 
