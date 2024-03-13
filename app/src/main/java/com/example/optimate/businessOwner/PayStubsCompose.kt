@@ -255,7 +255,7 @@ fun DisplayWorkLogs(workLogs: List<Map<String, Any>>) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(text = "$name ($$wage)", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Spacer(modifier = Modifier.height(3.dp))
-                    Text(text = "$hoursInDouble hrs", fontSize = 16.sp, fontWeight = FontWeight.Normal)
+                    Text(text = "$hoursInDouble hrs", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray)
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(text = "$%.2f".format(pay), fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(
                         id = R.color.blue))

@@ -200,6 +200,7 @@ fun TitleRow(title: Title, index: Int, category: String, onClick: () -> Unit) {
                         imageVector = Icons.Default.Person,
                         contentDescription = "Role Icon",
                         modifier = Modifier.size(24.dp)
+
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(text = title.title, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)

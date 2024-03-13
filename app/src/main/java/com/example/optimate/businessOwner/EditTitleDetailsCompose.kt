@@ -71,8 +71,7 @@ private val employeeAccessList = listOf(
     "View Schedule",
     "Clock-in/out",
     "View Payroll",
-    "Request Time-off",
-    "Add Expense",
+    "Availability"
 )
 
 private val managerBasicAccessList = listOf(
@@ -80,10 +79,9 @@ private val managerBasicAccessList = listOf(
     "View Employees",
     "Time-off Requests Approval"
 )
-
 private val employeeBasicAccessList = listOf(
     "View Schedule",
-    "Request Time-off",
+    "Availability",
 )
 
 @OptIn(ExperimentalFoundationApi::class)

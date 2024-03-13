@@ -249,9 +249,9 @@ fun DonutChart(revenues: Double, expenses: Double, from: String = "", to: String
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Revenue: $${String.format("%.2f", revenues)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
-                Text("Expenses: $${String.format("%.2f", expenses)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
-                Text("Balance: $${String.format("%.2f", revenues - expenses)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                Text("Revenue: $${String.format("%.2f", revenues)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp), color = Color.DarkGray)
+                Text("Expenses: $${String.format("%.2f", expenses)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp), color = Color.DarkGray)
+                Text("Balance: $${String.format("%.2f", revenues - expenses)}", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Color.DarkGray)
             }
 
             Column(

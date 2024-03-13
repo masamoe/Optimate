@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.example.optimate.loginAndRegister.ModuleChoosingMain
 import com.google.firebase.firestore.ktx.firestore
@@ -42,7 +43,7 @@ class FinancesActivity : AppCompatActivity() {
         }
         val callback = object : OnBackPressedCallback(true /* default to enabled */) {
             override fun handleOnBackPressed() {
-                val intent = Intent(this@FinancesActivity, ModuleChoosingMain::class.java)
+                val intent = Intent(this@FinancesActivity, DynamicLandingActivity::class.java)
                 startActivity(intent)
                 finish()
             }

@@ -46,8 +46,9 @@ class PayRequestsActivity : AppCompatActivity() {
                                     value.filterIsInstance<Map<*, *>>()
                                         .filter { it["approved"] == false }
                                         .map { entry ->
-                                            // Remove the "approved" key from each map
+                                            // Remove the "approved" and "wage" key from each map
                                             entry.filterKeys { it != "approved" }
+
                                         }
                                 } else {
                                     value

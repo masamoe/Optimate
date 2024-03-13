@@ -28,7 +28,7 @@ class AccountsActivity : AppCompatActivity() {
         val callback = object : OnBackPressedCallback(true /* default to enabled */) {
             override fun handleOnBackPressed() {
                 // Start the same activity again
-                val intent = Intent(this@AccountsActivity, ModuleChoosingMain::class.java)
+                val intent = Intent(this@AccountsActivity, DynamicLandingActivity::class.java)
                 startActivity(intent)
                 finish()
             }
