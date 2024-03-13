@@ -55,8 +55,6 @@ private val employeeAccessList = listOf(
     "View Schedule",
     "Clock-in/out",
     "View Payroll",
-    "Request Time-off",
-    "Add Expense",
     "Availability"
 )
 
@@ -77,12 +75,6 @@ private val businessOwnerBasicAccessList= listOf(
 )
 @Composable
 fun DynamicLandingScreen(accessList: List<String>, title: String, modules: List<String>) {
-    val businessOwnerBackgroundColor = Color(0xFFFFD7D7)
-    val employeeBackgroundColor = Color(0xFFC4F0E6)
-    val managerBackgroundColor = Color(0xFFE2EFFF)
-    val businessOwnerFrameColor = Color(0xFFFF5E5E)
-    val employeeFrameColor = Color(0xFF14B8A6)
-    val managerFrameColor = Color(0xFF84BDFF)
     Scaffold(
         content = { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {  // Apply the padding to the Box
@@ -139,7 +131,6 @@ fun ButtonList(AccessList: List<String>) {
                         "View Employees" -> context.startActivity(Intent(context, AccountsActivity::class.java))
                         "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
                         "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))
-                        "Add Expense" -> context.startActivity(Intent(context, SubmitExpenses::class.java))
                         "Availability" -> context.startActivity(Intent(context, Availability::class.java))
 
 
