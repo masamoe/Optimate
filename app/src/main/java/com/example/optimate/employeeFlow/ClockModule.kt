@@ -41,6 +41,7 @@ class ClockModule : AppCompatActivity() {
         Log.d("hi", "onCreate")
 
         setContentView(R.layout.activity_clock_module)
+        checkTodayScheduleAndClockIn()
         loadWorkLogs()
 
         digitalClock = findViewById(R.id.digitalClock)
@@ -413,6 +414,80 @@ class ClockModule : AppCompatActivity() {
         digitalClock.text = formattedTime
     }
 
+    private fun checkTodayScheduleAndClockIn() {
+        val currentDate = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Date())
+        val currentTime = Calendar.getInstance()
+        Log.d("Time", "Current Time: $currentTime")
+
+        db.collection("schedule")
+            .whereEqualTo("day", currentDate)
+            .whereEqualTo("BID", GlobalUserData.bid)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    updateClockTextForNoSchedule()
+                } else {
+                    var isEmployeeScheduledToday = false
+                    var scheduleStartTime: Date? = null
+
+                    for (document in documents) {
+                        val employees = document.data["employees"] as? List<*>
+                        val startTimeString = document.data["startTime"] as? String
+                        val format = SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
+                        scheduleStartTime = startTimeString?.let {
+                            format.parse("$currentDate $it")
+                        }
+                        Log.d("Time", "Scheduled Time: $scheduleStartTime")
+
+                        if (employees?.contains(GlobalUserData.name) == true && scheduleStartTime != null) {
+                            // The current employee's uid is in the schedule
+                            isEmployeeScheduledToday = true
+                            break
+                        }
+                    }
+
+                    if (isEmployeeScheduledToday) {
+                        val scheduleCalendar = Calendar.getInstance()
+                        scheduleCalendar.time = scheduleStartTime!!
+
+                        // Subtract one hour from the schedule start time for the comparison
+                        scheduleCalendar.add(Calendar.HOUR_OF_DAY, -1)
+
+                        if (currentTime.after(scheduleCalendar)) {
+                            // If the current time is after (or exactly one hour before) the schedule start time minus one hour, enable clock in
+                            clockInButton.isEnabled = true
+                        } else {
+                            updateClockTextForComeBackLater()
+                        }
+                    } else {
+                        updateClockTextForNoSchedule()
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("Schedule", "Error getting documents: ", e)
+                // Handle the error appropriately
+            }
+    }
+
+    private fun updateClockTextForNoSchedule() {
+        // Update the digital clock's text
+        clockInButton.text = getString(R.string.not_scheduled_today)
+        clockInButton.backgroundTintList = getColorStateList(R.color.light_grey)
+        clockInButton.setTextColor(getColor(R.color.grey))
+        // Disable clock-in button or take other appropriate actions
+        clockInButton.isEnabled = false
+    }
+
+    private fun updateClockTextForComeBackLater() {
+        // Update the digital clock's text
+        clockInButton.text = getString(R.string.come_back_later)
+        clockInButton.backgroundTintList = getColorStateList(R.color.light_grey)
+        clockInButton.setTextColor(getColor(R.color.grey))
+        // Disable clock-in button or take other appropriate actions
+        clockInButton.isEnabled = false
+    }
+
     override fun onResume() {
         super.onResume()
         Log.d("hi", "onResume")
@@ -431,6 +506,7 @@ class ClockModule : AppCompatActivity() {
             saveWorkLogs()
         }
         updateButtonStates()
+        checkTodayScheduleAndClockIn()
     }
 
     override fun onDestroy() {
