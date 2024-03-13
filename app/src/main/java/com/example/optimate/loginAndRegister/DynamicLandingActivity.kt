@@ -1,6 +1,7 @@
 package com.example.optimate.loginAndRegister
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -8,6 +9,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.ActivityCompat
@@ -22,12 +26,28 @@ class DynamicLandingActivity : AppCompatActivity(){
     val db = Firebase.firestore
     private lateinit var businessName: String
     private lateinit var username: TextView
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dynamic_landing)
         businessName = GlobalUserData.name
         username = findViewById(R.id.username)
         username.text = businessName
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
+                // Start the same activity again
+                val intent = Intent(this@DynamicLandingActivity, DynamicLandingActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this, callback)
+
+
+
         val composeView = findViewById<ComposeView>(R.id.compose_view)
         val settingPage = findViewById<ImageView>(R.id.businessIcon)
         getAccountAccess(GlobalUserData.title, GlobalUserData.bid) {
@@ -44,13 +64,11 @@ class DynamicLandingActivity : AppCompatActivity(){
         settingPage.setOnClickListener{
             val intent = Intent(this, ProfilePage::class.java)
             startActivity(intent)
-            finish()
         }
         requestNotificationPermission()
         //updateMessagingToken()
     }
 
-    // Modify getAccountAccess to accept a callback function
     private fun getAccountAccess(title: String, bid: String, onAccessFetched: () -> Unit) {
         if (title == "businessOwner") {
             GlobalUserData.access = emptyList()
@@ -89,6 +107,7 @@ class DynamicLandingActivity : AppCompatActivity(){
             }
         }
     }
+
     /*private fun updateMessagingToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {

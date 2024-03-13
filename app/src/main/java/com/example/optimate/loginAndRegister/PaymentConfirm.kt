@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import com.example.optimate.R
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
@@ -19,6 +20,16 @@ class PaymentConfirm : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_confirm)
         val uid = GlobalUserData.uid
+
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
+
+                val intent = Intent(this@PaymentConfirm, PaymentConfirm::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
         val paidButton = findViewById<Button>(R.id.confirmedButton)
         val paidImage = findViewById<ImageView>(R.id.imageView5)
