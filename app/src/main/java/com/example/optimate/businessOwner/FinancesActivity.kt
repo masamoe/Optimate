@@ -1,12 +1,15 @@
 package com.example.optimate.businessOwner
 
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.example.optimate.loginAndRegister.ModuleChoosingMain
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
@@ -37,6 +40,14 @@ class FinancesActivity : AppCompatActivity() {
 
             )
         }
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
+                val intent = Intent(this@FinancesActivity, ModuleChoosingMain::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     override fun onResume() {
