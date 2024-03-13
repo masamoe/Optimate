@@ -176,8 +176,8 @@ fun FinancesRow(finance: Finances) {
                         .padding(5.dp)
                         .fillMaxWidth()
                 ){
-                    Text(text = "'" + finance.description + "'", fontSize = 18.sp, fontWeight = FontWeight.Normal )
-                    Text(text = "From: " + finance.name, fontSize = 18.sp, fontWeight = FontWeight.Normal )
+                    Text(text = "'" + finance.description + "'", fontSize = 18.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray)
+                    Text(text = "From: " + finance.name, fontSize = 18.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray)
                 }
             }
         }
