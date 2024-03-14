@@ -84,15 +84,14 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.card.MaterialCardView
-        style="@style/Widget.Material3.CardView.Outlined"
+
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline63"
         app:layout_constraintEnd_toStartOf="@+id/guideline80"
         app:layout_constraintStart_toStartOf="@+id/guideline76"
         app:layout_constraintTop_toTopOf="@+id/guideline81"
-        app:strokeColor="@color/dark_purple"
-        app:strokeWidth="4dp">
+        >
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -106,15 +105,15 @@
 
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline60"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline62"
+        app:layout_constraintStart_toStartOf="@+id/guideline61"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout12" />
 
     <Button
         android:id="@+id/clockIn"
         style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:backgroundTint="#C4F0E6"
         android:padding="8dp"
         android:text="@string/clock_in"
@@ -123,33 +122,41 @@
 
         app:elevation="8dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline58"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline62"
+        app:layout_constraintStart_toStartOf="@+id/guideline61"
         app:layout_constraintTop_toTopOf="@+id/guideline60" />
 
     <Button
         android:id="@+id/viewHistory"
         style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="130dp"
-        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:backgroundTint="#C4F0E6"
         android:elevation="8dp"
         android:text="@string/view_history"
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/guideline57"
         app:layout_constraintEnd_toStartOf="@+id/guideline59"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline61"
         app:layout_constraintTop_toTopOf="@+id/guideline58" />
 
     <Button
         android:id="@+id/clockOut"
         style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="130dp"
-        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:elevation="8dp"
         android:text="@string/clock_out"
         app:layout_constraintBottom_toTopOf="@+id/guideline57"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline62"
         app:layout_constraintStart_toStartOf="@+id/guideline59"
         app:layout_constraintTop_toTopOf="@+id/guideline58" />
 
