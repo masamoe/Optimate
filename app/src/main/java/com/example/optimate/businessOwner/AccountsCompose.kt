@@ -52,6 +52,7 @@ fun AccountsScreen(accounts: List<Account>) {
     val context = LocalContext.current
     Scaffold(
         topBar = { XmlTopBar(titleText = "Accounts") },
+        backgroundColor = colorResource(id = R.color.screen_border_colors),
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
                 Row(
@@ -122,7 +123,11 @@ fun AccountRow(account: Account, index: Int, onClick:() ->Unit){
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(8.dp)
-            .border(1.dp, colorResource(id = R.color.blue), shape = RoundedCornerShape(cornerRadius)),
+            .border(
+                1.dp,
+                colorResource(id = R.color.blue),
+                shape = RoundedCornerShape(cornerRadius)
+            ),
         colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(cornerRadius),

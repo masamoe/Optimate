@@ -375,20 +375,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <Button
-        android:id="@+id/submitExpensesBtn"
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit an expense"
-        android:backgroundTint="@color/light_green"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline71"
-        app:layout_constraintEnd_toStartOf="@+id/guideline65"
-        app:layout_constraintStart_toStartOf="@+id/guideline66"
-        app:layout_constraintTop_toTopOf="@+id/guideline70"
-        app:layout_constraintVertical_bias="0.0" />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline65"

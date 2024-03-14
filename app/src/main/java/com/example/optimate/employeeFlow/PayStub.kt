@@ -98,15 +98,12 @@ class PayStub : AppCompatActivity() {
         secPreviousBiWeekText.text = "${startDate3} - ${endDate3}"
 
         val viewMorePayStubsBtn = findViewById<Button>(R.id.viewMorePayStubsBtn)
-        val submitExpensesBtn = findViewById<Button>(R.id.submitExpensesBtn)
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
 
         viewMorePayStubsBtn.setOnClickListener {
             startActivity(Intent(this,ViewAllPayStubs::class.java))
         }
-        submitExpensesBtn.setOnClickListener {
-            startActivity(Intent(this,SubmitExpenses::class.java))
-        }
+
         homeBtn.setOnClickListener {
             startActivity(Intent(this,DynamicLandingActivity::class.java))
         }
@@ -121,7 +118,7 @@ class PayStub : AppCompatActivity() {
         val progressPercentage = (netIncome / maxIncome) * 100
 
         // Set indicator color
-        donutChart.setIndicatorColor(getColor(R.color.light_blue))
+        donutChart.setIndicatorColor(getColor(R.color.light_green))
 
         // Set track color
         donutChart.trackColor = getColor(R.color.light_red)

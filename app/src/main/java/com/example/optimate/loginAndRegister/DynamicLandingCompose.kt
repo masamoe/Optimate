@@ -2,6 +2,7 @@ package com.example.optimate.loginAndRegister
 
 import android.content.Intent
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,7 @@ private val employeeAccessList = listOf(
     "View Schedule",
     "Clock-in/out",
     "View Payroll",
+    "Add Expense",
     "Availability"
 )
 
@@ -103,11 +105,13 @@ fun ButtonList(AccessList: List<String>) {
     val context = LocalContext.current
 
     val modifiedList = AccessList.filter { item ->
-        item != "Request Time-off" && item != "Add Expense"
+        item != "Request Time-off"
     }
     Box(
         //contentAlignment = Alignment.Center, // This centers its children
-        modifier = Modifier.fillMaxSize() // This ensures the Box occupies the entire ElevatedCard
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.screen_border_colors))
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -132,6 +136,7 @@ fun ButtonList(AccessList: List<String>) {
                         "View Schedule" -> context.startActivity(Intent(context, ScheduleModule::class.java))
                         "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))
                         "Availability" -> context.startActivity(Intent(context, Availability::class.java))
+                        "Add Expense" -> context.startActivity(Intent(context, SubmitExpenses::class.java))
 
 
                     }},
@@ -160,6 +165,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
         "View Employees" -> painterResource(id =R.drawable.ic_roles_foreground)
         "Time-off Requests Approval" -> painterResource(id =R.drawable.ic_requests_foreground)
         "Availability" -> painterResource(id = R.drawable.availability)
+        "Add Expense" -> painterResource(id =R.drawable.expense_icon)
 
         else -> painterResource(id =R.drawable.ic_requests_foreground)
     }
@@ -170,7 +176,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
         "Clock-in/out" -> "Clock-In/Out"
         "View Payroll" -> "Payroll"
         "Time-off Requests Approval" -> "Requests"
-        "Add Expense" -> "Expenses"
+        "Add Expense" -> "Submit Expense"
         "Availability" -> "Availability"
         else -> text
     }
@@ -187,6 +193,7 @@ fun EachButton(text: String, onClick: () -> Unit, modifier: Modifier, ) {
         "View Employees" -> colorResource(id = R.color.blue_button)
         "Availability" -> colorResource(id = R.color.blue_button)
         "Time-off Requests Approval" -> colorResource(id = R.color.red_button)
+        "Add Expense" -> colorResource(id = R.color.red_button)
 
 
         else -> Color(0xFF90A4AE)

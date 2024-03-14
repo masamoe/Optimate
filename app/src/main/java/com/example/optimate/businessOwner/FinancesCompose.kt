@@ -2,6 +2,7 @@ package com.example.optimate.businessOwner
 
 import android.content.Intent
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material3.Button
@@ -52,6 +54,7 @@ fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<Fina
 
     Scaffold(
         topBar = { XmlTopBar(titleText = "Finances") },
+        containerColor = colorResource(id = R.color.screen_border_colors),
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
                 Row(
@@ -65,13 +68,29 @@ fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<Fina
                     AddExpense()
 
                 }
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween) {
-                    DateInput(label = "From", date = fromDate, onDateChange = { fromDate = it }, modifier = Modifier.weight(1f))
-                    DateInput(label = "To", date = toDate, onDateChange = { toDate = it }, modifier = Modifier.weight(1f))
-                    Search(fromDate, toDate, amountWithDate) { revenues, expenses, filteredFinances, from, to ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    DateInput(
+                        label = "From",
+                        date = fromDate,
+                        onDateChange = { fromDate = it },
+                        modifier = Modifier.weight(1f)
+                    )
+                    DateInput(
+                        label = "To",
+                        date = toDate,
+                        onDateChange = { toDate = it },
+                        modifier = Modifier.weight(1f)
+                    )
+                    Search(
+                        fromDate,
+                        toDate,
+                        amountWithDate
+                    ) { revenues, expenses, filteredFinances, from, to ->
                         filteredRevenues = revenues
                         filteredExpenses = expenses
                         filteredAmountWithDate = filteredFinances
@@ -84,16 +103,15 @@ fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<Fina
                 DonutChart(filteredRevenues, filteredExpenses, donutChartFromDate, donutChartToDate)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
                     PayStubs()
                     ViewMore()
-
                 }
-
-
             }
         }
     )
@@ -101,7 +119,7 @@ fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<Fina
 
 @Composable
 fun AddRevenue() {
-    val buttonColor = colors.run { colorResource(id = R.color.light_blue) }
+    val buttonColor = colors.run { colorResource(id = R.color.light_green) }
     val addRevenueBtn = LocalContext.current
 
     // Add Revenue button
@@ -224,7 +242,7 @@ fun DonutChart(revenues: Double, expenses: Double, from: String = "", to: String
     val total = if (revenues == 0.0 && expenses == 0.0) 1.0 else revenues + expenses // Avoid division by zero
     val revenueAngle = if (revenues == 0.0 && expenses == 0.0) 360f else (revenues / total * 360).toFloat()
     val expensesAngle = if (revenues == 0.0 && expenses == 0.0) 0f else 360f - revenueAngle
-    val revenueColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else colorResource(id = R.color.light_blue)
+    val revenueColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else colorResource(id = R.color.light_green)
     val expenseColor = if (revenues == 0.0 && expenses == 0.0) Color.Gray else colorResource(id = R.color.light_red)
 
     ElevatedCard(

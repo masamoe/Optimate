@@ -76,6 +76,7 @@ import java.time.format.DateTimeFormatter
 fun PayRequestsScreen(workLogsWaitForApproval: MutableMap<String, List<Map<String, Long>>>) {
     Scaffold(
         topBar = { XmlTopBar( titleText = "Pay Requests" ) },
+        containerColor = colorResource(id = R.color.screen_border_colors),
         content = {innerPadding ->
             Column(
                 modifier = Modifier.padding(innerPadding).padding(top = 16.dp)
