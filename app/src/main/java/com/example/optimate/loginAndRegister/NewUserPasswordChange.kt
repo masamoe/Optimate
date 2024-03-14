@@ -43,7 +43,7 @@ class NewUserPasswordChange : AppCompatActivity() {
             if (password.length < 8 && isStrongPassword(password)) {
                 Toast.makeText(
                     this,
-                    "Password must be at least 6 characters long.",
+                    "Password is not within Password Requirements.",
                     Toast.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener

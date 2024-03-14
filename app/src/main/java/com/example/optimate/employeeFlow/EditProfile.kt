@@ -52,9 +52,11 @@ class EditProfile : AppCompatActivity() {
         val nameText = findViewById<TextView>(R.id.textView6)
         val iconButton = findViewById<Button>(R.id.iconButton)
         val imageInput = findViewById<ImageView>(R.id.imageProfile)
-        Glide.with(this)
-            .load(GlobalUserData.profilePic)
-            .into(imageInput)
+        if(GlobalUserData.profilePic != "") {
+            Glide.with(this)
+                .load(GlobalUserData.profilePic)
+                .into(imageInput)
+        }
 
         emailInput.text = GlobalUserData.email
         passwordInput.text = GlobalUserData.password
@@ -86,6 +88,8 @@ class EditProfile : AppCompatActivity() {
             }
             if (GlobalUserData.password != passwordInput.text.toString() && isStrongPassword(passwordInput.text.toString())) {
                 updatePassword(passwordInput.text.toString())
+            } else if(!isStrongPassword(passwordInput.text.toString())){
+                Toast.makeText(this, "Password does not meet requirements", Toast.LENGTH_SHORT).show()
             }
             if (GlobalUserData.address != addressInput.text.toString()) {
                 userDataAuth["address"] = addressInput.text.toString()

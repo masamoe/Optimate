@@ -49,7 +49,13 @@ class ProfilePage : AppCompatActivity() {
 
         addressText.text = GlobalUserData.address
         wageText.text = formattedWage
-        val formattedPhone = "(${GlobalUserData.phone.substring(0, 3)})-${GlobalUserData.phone.substring(3, 6)}-${GlobalUserData.phone.substring(6, 10)}"
+        val phone = GlobalUserData.phone
+        val formattedPhone = if (phone.length >= 10) {
+            "(${phone.substring(0, 3)})-${phone.substring(3, 6)}-${phone.substring(6, 10)}"
+        } else {
+            // Handle case where phone number is not long enough
+            "Invalid phone number"
+        }
         phoneText.text = formattedPhone
         roleText.text = GlobalUserData.role
         nameText.text = GlobalUserData.name

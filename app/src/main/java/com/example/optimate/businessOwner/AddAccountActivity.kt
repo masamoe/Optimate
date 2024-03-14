@@ -59,8 +59,12 @@ class AddAccountActivity : AppCompatActivity() {
             val wageValue = wageText.toFloatOrNull()
 
             // Validate the inputs
-            if (nameText.isEmpty() || emailText.isEmpty() || passwordText.isEmpty() && isStrongPassword(passwordText) || wageValue == null || titleText.isEmpty()) {
+            if (nameText.isEmpty() || emailText.isEmpty() || passwordText.isEmpty() || wageValue == null || titleText.isEmpty()) {
                 Toast.makeText(this, "Please fill all the fields correctly.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if(!isStrongPassword(passwordText)){
+                Toast.makeText(this, "Password does not meet requirements", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

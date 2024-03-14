@@ -54,8 +54,8 @@ class Register : AppCompatActivity() {
             }
 
             // Check for password length
-            if (password.length < 8 && isStrongPassword(password)) {
-                Toast.makeText(this, "Password must be at least 6 characters long.", Toast.LENGTH_SHORT).show()
+            if (password.length < 8 && !isStrongPassword(password)) {
+                Toast.makeText(this, "Password Does not meet requirements.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -114,9 +114,9 @@ class Register : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             // User is signed in, show success message
-            Toast.makeText(this, "User Registered!", Toast.LENGTH_SHORT).show()
 
-        
+
+
 
             val intent = Intent(this, ModuleChoosingMain::class.java)
 
@@ -125,13 +125,14 @@ class Register : AppCompatActivity() {
             finish() // Finish the current activity so the user can't go back to it
         } else {
             // User is null, stay on the register page or show an error message
-            Toast.makeText(this, "Register failed.", Toast.LENGTH_SHORT).show()
+
         }
     }
 
     private fun addUserToDB(email: String, address: String, name: String, uid: String, user: FirebaseUser){
 
         val bid = uid + name.substring(0,2)
+        GlobalUserData.bid = bid
         data class AccountStatus(val date: Date, val status: String)
         val accountStatus = AccountStatus(date = Date(), status = "Pending")
         val userToDB = hashMapOf(
@@ -151,7 +152,8 @@ class Register : AppCompatActivity() {
         db.collection("users")
             .add(userToDB)
             .addOnSuccessListener { documentReference ->
-                Toast.makeText(this, "Register Success. ${documentReference.id}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Register Success", Toast.LENGTH_SHORT).show()
+                GlobalUserData.uid = uid
                 updateUI(user)
             }
             .addOnFailureListener { e ->
