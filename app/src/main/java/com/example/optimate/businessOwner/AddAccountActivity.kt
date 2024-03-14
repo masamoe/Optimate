@@ -63,6 +63,10 @@ class AddAccountActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please fill all the fields correctly.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            if(!isStrongPassword(passwordText)){
+                Toast.makeText(this, "Password does not meet requirements", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             // Assuming role needs to be fetched based on title
             fetchTitleToRole(titleText) { role ->
@@ -74,6 +78,18 @@ class AddAccountActivity : AppCompatActivity() {
             }
         }
 
+    }
+    private fun isStrongPassword(password: String): Boolean {
+        val upperCasePattern = Regex("[A-Z]")
+        val lowerCasePattern = Regex("[a-z]")
+        val digitPattern = Regex("[0-9]")
+        val specialCharPattern = Regex("[^A-Za-z0-9]")
+
+        return password.length >= 8 &&
+                upperCasePattern.containsMatchIn(password) &&
+                lowerCasePattern.containsMatchIn(password) &&
+                digitPattern.containsMatchIn(password) &&
+                specialCharPattern.containsMatchIn(password)
     }
 
     private fun fetchTitlesAndUpdateAdapter(

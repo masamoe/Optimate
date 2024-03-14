@@ -153,5 +153,6 @@
     <string name="expenses_claimed_year_to_date">Expenses claimed year to date:</string>
     <string name="not_scheduled_today">Not Scheduled Today!</string>
     <string name="come_back_later">Please Come Back Later!</string>
+    <string name="msg_token_fmt">"Your FCM is: %1$s"</string>
 
 </resources>

@@ -38,12 +38,25 @@ class ProfilePage : AppCompatActivity() {
         val nameText = findViewById<TextView>(R.id.textView6)
         val profilePic = findViewById<ImageView>(R.id.profilePic)
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
-
+        val formattedWage = if (!GlobalUserData.wage.toString().contains('.')) {
+            "$${GlobalUserData.wage.toString()}.00"
+        } else if (GlobalUserData.wage.toString().substring(GlobalUserData.wage.toString().indexOf('.') + 1).length == 1) {
+            "$${GlobalUserData.wage.toString()}0"
+        } else {
+            "$$GlobalUserData.wage.toString()"
+        }
 
 
         addressText.text = GlobalUserData.address
-        wageText.text = GlobalUserData.wage.toString()
-        phoneText.text = GlobalUserData.phone
+        wageText.text = formattedWage
+        val phone = GlobalUserData.phone
+        val formattedPhone = if (phone.length >= 10) {
+            "(${phone.substring(0, 3)})-${phone.substring(3, 6)}-${phone.substring(6, 10)}"
+        } else {
+            // Handle case where phone number is not long enough
+            "Invalid phone number"
+        }
+        phoneText.text = formattedPhone
         roleText.text = GlobalUserData.role
         nameText.text = GlobalUserData.name
         if (GlobalUserData.profilePic != "") {

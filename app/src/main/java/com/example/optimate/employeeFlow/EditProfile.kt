@@ -52,9 +52,11 @@ class EditProfile : AppCompatActivity() {
         val nameText = findViewById<TextView>(R.id.textView6)
         val iconButton = findViewById<Button>(R.id.iconButton)
         val imageInput = findViewById<ImageView>(R.id.imageProfile)
-        Glide.with(this)
-            .load(GlobalUserData.profilePic)
-            .into(imageInput)
+        if(GlobalUserData.profilePic != "") {
+            Glide.with(this)
+                .load(GlobalUserData.profilePic)
+                .into(imageInput)
+        }
 
         emailInput.text = GlobalUserData.email
         passwordInput.text = GlobalUserData.password
@@ -84,8 +86,20 @@ class EditProfile : AppCompatActivity() {
                 //updateEmail(emailInput.text.toString())
                 //userDataAuth["email"] = emailInput.text.toString()
             }
-            if (GlobalUserData.password != passwordInput.text.toString()) {
-                updatePassword(passwordInput.text.toString())
+            if (GlobalUserData.password != passwordInput.text.toString())
+            {
+                   if (isStrongPassword(passwordInput.text.toString())){
+                           updatePassword(passwordInput.text.toString())
+                   }
+
+                   else {
+                       Toast.makeText(
+                           this,
+                           "Password does not meet requirements",
+                           Toast.LENGTH_SHORT
+                       ).show()
+                       return@setOnClickListener
+                   }
             }
             if (GlobalUserData.address != addressInput.text.toString()) {
                 userDataAuth["address"] = addressInput.text.toString()
@@ -105,6 +119,20 @@ class EditProfile : AppCompatActivity() {
 
         // Function to save data to local database
 
+
+
+    }
+    private fun isStrongPassword(password: String): Boolean {
+        val upperCasePattern = Regex("[A-Z]")
+        val lowerCasePattern = Regex("[a-z]")
+        val digitPattern = Regex("[0-9]")
+        val specialCharPattern = Regex("[^A-Za-z0-9]")
+
+        return password.length >= 8 &&
+                upperCasePattern.containsMatchIn(password) &&
+                lowerCasePattern.containsMatchIn(password) &&
+                digitPattern.containsMatchIn(password) &&
+                specialCharPattern.containsMatchIn(password)
     }
     /* private fun updateEmail(email: String) {
         val user = Firebase.auth.currentUser
@@ -180,7 +208,7 @@ class EditProfile : AppCompatActivity() {
 
 
     private fun updateUserProfilePhotoInFirestore( photoUrl: String) {
-        val db = Firebase.firestore
+
         val updates = HashMap<String, String>()
         updates["profilePic"] = photoUrl
         val userRef = db.collection("users").whereEqualTo("UID", GlobalUserData.uid)

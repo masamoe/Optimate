@@ -1,6 +1,7 @@
 package com.example.optimate.loginAndRegister
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.annotation.NonNull
@@ -18,9 +20,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.optimate.R
+import com.example.optimate.businessOwner.Requests.Companion.TAG
 import com.example.optimate.employeeFlow.ProfilePage
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 class DynamicLandingActivity : AppCompatActivity(){
     val db = Firebase.firestore
@@ -66,7 +71,7 @@ class DynamicLandingActivity : AppCompatActivity(){
             startActivity(intent)
         }
         requestNotificationPermission()
-        //updateMessagingToken()
+        updateMessagingToken()
     }
 
     private fun getAccountAccess(title: String, bid: String, onAccessFetched: () -> Unit) {
@@ -108,7 +113,8 @@ class DynamicLandingActivity : AppCompatActivity(){
         }
     }
 
-    /*private fun updateMessagingToken() {
+    @SuppressLint("StringFormatInvalid")
+    private fun updateMessagingToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
@@ -121,7 +127,6 @@ class DynamicLandingActivity : AppCompatActivity(){
             // Log and toast
             val msg = getString(R.string.msg_token_fmt, token)
             Log.d(TAG, msg)
-            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
     }
 
@@ -151,7 +156,7 @@ class DynamicLandingActivity : AppCompatActivity(){
                     }
             }
 
-    }*/
+    }
 
 
 }

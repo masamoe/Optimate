@@ -69,7 +69,6 @@
         <activity android:name=".loginAndRegister.Login" />
         <activity android:name=".loginAndRegister.Register" />
         <activity android:name=".loginAndRegister.DynamicLandingActivity" />
-        <activity android:name=".businessOwner.BusinessLanding" />
         <activity android:name=".employeeFlow.Availability" />
         <activity android:name=".businessOwner.TitlesActivity" />
         <activity android:name=".businessOwner.AddTitle" />
