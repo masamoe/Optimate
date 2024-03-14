@@ -86,10 +86,20 @@ class EditProfile : AppCompatActivity() {
                 //updateEmail(emailInput.text.toString())
                 //userDataAuth["email"] = emailInput.text.toString()
             }
-            if (GlobalUserData.password != passwordInput.text.toString() && isStrongPassword(passwordInput.text.toString())) {
-                updatePassword(passwordInput.text.toString())
-            } else if(!isStrongPassword(passwordInput.text.toString())){
-                Toast.makeText(this, "Password does not meet requirements", Toast.LENGTH_SHORT).show()
+            if (GlobalUserData.password != passwordInput.text.toString())
+            {
+                   if (isStrongPassword(passwordInput.text.toString())){
+                           updatePassword(passwordInput.text.toString())
+                   }
+
+                   else {
+                       Toast.makeText(
+                           this,
+                           "Password does not meet requirements",
+                           Toast.LENGTH_SHORT
+                       ).show()
+                       return@setOnClickListener
+                   }
             }
             if (GlobalUserData.address != addressInput.text.toString()) {
                 userDataAuth["address"] = addressInput.text.toString()
@@ -198,7 +208,7 @@ class EditProfile : AppCompatActivity() {
 
 
     private fun updateUserProfilePhotoInFirestore( photoUrl: String) {
-        val db = Firebase.firestore
+
         val updates = HashMap<String, String>()
         updates["profilePic"] = photoUrl
         val userRef = db.collection("users").whereEqualTo("UID", GlobalUserData.uid)
