@@ -65,6 +65,7 @@ fun TitlesScreen(titles: List<Title>) {
     val context = LocalContext.current
     Scaffold(
         topBar = { XmlTopBar() },
+        backgroundColor = colorResource(id = R.color.screen_border_colors),
         content = { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
                 if (titles.isEmpty()) {
@@ -179,8 +180,9 @@ fun TitleRow(title: Title, index: Int, category: String, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable(onClick = onClick),
-        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+            .clickable(onClick = onClick)
+            .border(1.dp, color = backgroundColor, shape = RoundedCornerShape(cornerRadius)),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(cornerRadius),
 

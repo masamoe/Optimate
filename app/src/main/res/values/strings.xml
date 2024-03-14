@@ -147,7 +147,7 @@
     <string name="pay_stubs">Pay Stubs</string>
     <string name="clock_in_out">Clock In / Out</string>
     <string name="archive">Archive</string>
-    <string name="view_expenses">Expenses History</string>
+    <string name="view_expenses">History</string>
     <string name="details">Details</string>
     <string name="expenses_submitted_year_to_date">Expenses submitted year to date:</string>
     <string name="expenses_claimed_year_to_date">Expenses claimed year to date:</string>

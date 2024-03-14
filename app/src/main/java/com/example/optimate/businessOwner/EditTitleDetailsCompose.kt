@@ -3,6 +3,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -71,6 +72,7 @@ private val employeeAccessList = listOf(
     "View Schedule",
     "Clock-in/out",
     "View Payroll",
+    "Add Expense",
     "Availability"
 )
 
@@ -124,10 +126,11 @@ fun EditTitleUI(
 
     if (isLoading) {
         // Show loading UI
-        CircularProgressIndicator() // Adjust according to your design
+        //CircularProgressIndicator() // Adjust according to your design
     } else {
         Scaffold(
             topBar = { XmlTopBar(titleText = "Edit $role") },
+            backgroundColor = colorResource(id = R.color.screen_border_colors),
             content = { innerPadding ->
                 Column(modifier = Modifier.padding(innerPadding)) {
                     Row(
@@ -313,9 +316,10 @@ fun AccessItem(
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .border(1.dp, backgroundColor, RoundedCornerShape(12.dp)),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp),
     ) {
         Row(

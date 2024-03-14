@@ -63,6 +63,7 @@ fun PayStubsScreen() {
     Box(modifier = Modifier.fillMaxSize()) { // Fill the entire screen
         Scaffold(
             topBar = { XmlTopBar(titleText = "Pay Stubs") },
+            containerColor = colorResource(id = R.color.screen_border_colors),
             content = { innerPadding ->
                 Column(modifier = Modifier.padding(innerPadding)) {
                     BiWeeklyDropDown(biWeeklyDateRanges2024 = biWeeklyDateRanges2024, today = today)

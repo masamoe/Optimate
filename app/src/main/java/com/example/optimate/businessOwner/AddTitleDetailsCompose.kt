@@ -3,6 +3,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -60,6 +61,7 @@ private val employeeAccessList = listOf(
     "View Schedule",
     "Clock-in/out",
     "View Payroll",
+    "Add Expense",
     "Availability"
 )
 
@@ -94,6 +96,7 @@ fun SetupRoleUI(
 
     Scaffold(
         topBar = { XmlTopBar(titleText = "Add $role".replaceFirstChar { it.uppercase() }) },
+        backgroundColor = colorResource(id = R.color.screen_border_colors),
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
                 Row(
@@ -215,8 +218,9 @@ fun AccessCardItem(access: String, index: Int, role:String, onAccessSelected: (S
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = backgroundColor),
+            .padding(vertical = 8.dp)
+            .border(1.dp, backgroundColor, RoundedCornerShape(12.dp)),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(12.dp),
     ) {
