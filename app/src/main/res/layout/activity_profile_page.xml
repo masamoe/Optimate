@@ -306,7 +306,8 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="@color/light_purple"
+                android:backgroundTint="@color/light_green"
+                android:textColor="@color/black"
                 android:text="Sign Out">
 
             </Button>
