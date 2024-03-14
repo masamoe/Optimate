@@ -21,6 +21,7 @@ import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.properties.Delegates
 
 class AddShiftActivity : AppCompatActivity() {
@@ -89,7 +90,7 @@ class AddShiftActivity : AppCompatActivity() {
         // Set up listener for item selection/deselection
         employeeListView.setOnItemClickListener { _, _, position, _ ->
             // Handle item selection/deselection
-            val employeeName = employeeNames[position]
+            val employeeName = employeeNames[position].split("\n")[0]
             if (selectedEmployees.contains(employeeName)) {
                 selectedEmployees.remove(employeeName)
             } else {
@@ -208,15 +209,17 @@ class AddShiftActivity : AppCompatActivity() {
         // Add employee names with availability to the list
         for ((name, availability) in employeeDataList) {
             val formattedAvailability = if (availability.isNotEmpty()) {
+
                 availability.joinToString(", ") // Join multiple availability entries
             } else {
-                "Not Available"
+                "N/A"
             }
 
-            val employeeInfo = "$name - $formattedAvailability"
+            val employeeInfo = "$name\nAvailability: $formattedAvailability"
             employeeNames.add(employeeInfo)
         }
 
+        employeeNames.sort()
         // Notify the adapter of the changes
         adapter.notifyDataSetChanged()
     }
@@ -281,6 +284,7 @@ class AddShiftActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = dateInMillis
         val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         return dateFormat.format(calendar.time)
     }
 }

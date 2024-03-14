@@ -1,14 +1,11 @@
 package com.example.optimate.employeeFlow
 
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.example.optimate.R
-import com.example.optimate.businessOwner.Requests.Companion.TAG
 import com.example.optimate.businessOwner.XmlTopBar
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.android.material.button.MaterialButton
@@ -18,10 +15,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
 enum class AvailabilityStatus {
-    MORNING,
-    EVENING,
-    ALL_DAY,
-    NOT_AVAILABLE
+    Morning,
+    Evening,
+    `All-Day`,
+    Unavailable
 }
 
 
@@ -31,16 +28,14 @@ class Availability : AppCompatActivity() {
 
     private var isEditing = false
 
-
-
     private val availabilityMap = mutableMapOf(
-        "Monday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
-        "Tuesday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
-        "Wednesday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
-        "Thursday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
-        "Friday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
-        "Saturday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE),
-        "Sunday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.NOT_AVAILABLE)
+        "Monday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.Unavailable),
+        "Tuesday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.Unavailable),
+        "Wednesday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.Unavailable),
+        "Thursday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.Unavailable),
+        "Friday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.Unavailable),
+        "Saturday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.Unavailable),
+        "Sunday" to mutableListOf<AvailabilityStatus>(AvailabilityStatus.Unavailable)
     )
 
     private lateinit var toggleMondays: MaterialButtonToggleGroup
@@ -94,7 +89,6 @@ class Availability : AppCompatActivity() {
     private lateinit var sundaysM: MaterialButton
     private lateinit var sundaysE: MaterialButton
     private lateinit var sundaysA: MaterialButton
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -184,7 +178,7 @@ class Availability : AppCompatActivity() {
             toggleState(isChecked, toggleMondays)
             availabilityMap["Monday"]?.apply {
                 clear()
-                add(AvailabilityStatus.NOT_AVAILABLE)
+                add(AvailabilityStatus.Unavailable)
             }
         }
 
@@ -194,33 +188,33 @@ class Availability : AppCompatActivity() {
             toggleState(isChecked, toggleTuesdays)
             availabilityMap["Tuesday"]?.apply {
                 clear()
-                add(AvailabilityStatus.NOT_AVAILABLE)
+                add(AvailabilityStatus.Unavailable)
             }
         }
 
 
-/*// Set OnCheckedChangeListener for each toggle to update text dynamically
-        disableEnableMondays.setOnCheckedChangeListener { _, isChecked ->
-            updateToggleText(isChecked, disableEnableMondays)
-        }
-        disableEnableTuesdays.setOnCheckedChangeListener { _, isChecked ->
-            updateToggleText(isChecked, disableEnableTuesdays)
-        }
-        disableEnableWednesdays.setOnCheckedChangeListener { _, isChecked ->
-            updateToggleText(isChecked, disableEnableWednesdays)
-        }
-        disableEnableThursdays.setOnCheckedChangeListener { _, isChecked ->
-            updateToggleText(isChecked, disableEnableThursdays)
-        }
-        disableEnableFridays.setOnCheckedChangeListener { _, isChecked ->
-            updateToggleText(isChecked, disableEnableFridays)
-        }
-        disableEnableSaturdays.setOnCheckedChangeListener { _, isChecked ->
-            updateToggleText(isChecked, disableEnableSaturdays)
-        }
-        disableEnableSundays.setOnCheckedChangeListener { _, isChecked ->
-            updateToggleText(isChecked, disableEnableSundays)
-        }*/
+        /*// Set OnCheckedChangeListener for each toggle to update text dynamically
+                disableEnableMondays.setOnCheckedChangeListener { _, isChecked ->
+                    updateToggleText(isChecked, disableEnableMondays)
+                }
+                disableEnableTuesdays.setOnCheckedChangeListener { _, isChecked ->
+                    updateToggleText(isChecked, disableEnableTuesdays)
+                }
+                disableEnableWednesdays.setOnCheckedChangeListener { _, isChecked ->
+                    updateToggleText(isChecked, disableEnableWednesdays)
+                }
+                disableEnableThursdays.setOnCheckedChangeListener { _, isChecked ->
+                    updateToggleText(isChecked, disableEnableThursdays)
+                }
+                disableEnableFridays.setOnCheckedChangeListener { _, isChecked ->
+                    updateToggleText(isChecked, disableEnableFridays)
+                }
+                disableEnableSaturdays.setOnCheckedChangeListener { _, isChecked ->
+                    updateToggleText(isChecked, disableEnableSaturdays)
+                }
+                disableEnableSundays.setOnCheckedChangeListener { _, isChecked ->
+                    updateToggleText(isChecked, disableEnableSundays)
+                }*/
 
 // Wednesday
         disableEnableWednesdays.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -228,7 +222,7 @@ class Availability : AppCompatActivity() {
             toggleState(isChecked, toggleWednesdays)
             availabilityMap["Wednesday"]?.apply {
                 clear()
-                add(AvailabilityStatus.NOT_AVAILABLE)
+                add(AvailabilityStatus.Unavailable)
             }
         }
 
@@ -238,7 +232,7 @@ class Availability : AppCompatActivity() {
             toggleState(isChecked, toggleThursdays)
             availabilityMap["Thursday"]?.apply {
                 clear()
-                add(AvailabilityStatus.NOT_AVAILABLE)
+                add(AvailabilityStatus.Unavailable)
             }
         }
 
@@ -248,7 +242,7 @@ class Availability : AppCompatActivity() {
             toggleState(isChecked, toggleFridays)
             availabilityMap["Friday"]?.apply {
                 clear()
-                add(AvailabilityStatus.NOT_AVAILABLE)
+                add(AvailabilityStatus.Unavailable)
             }
         }
 
@@ -258,7 +252,7 @@ class Availability : AppCompatActivity() {
             toggleState(isChecked, toggleSaturdays)
             availabilityMap["Saturday"]?.apply {
                 clear()
-                add(AvailabilityStatus.NOT_AVAILABLE)
+                add(AvailabilityStatus.Unavailable)
             }
         }
 
@@ -268,11 +262,9 @@ class Availability : AppCompatActivity() {
             toggleState(isChecked, toggleSundays)
             availabilityMap["Sunday"]?.apply {
                 clear()
-                add(AvailabilityStatus.NOT_AVAILABLE)
+                add(AvailabilityStatus.Unavailable)
             }
         }
-
-
 
 
         // Monday
@@ -280,7 +272,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Monday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.MORNING)
+                    add(AvailabilityStatus.Morning)
                 }
             }
         }
@@ -289,7 +281,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Monday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.EVENING)
+                    add(AvailabilityStatus.Evening)
                 }
             }
         }
@@ -298,7 +290,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Monday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.ALL_DAY)
+                    add(AvailabilityStatus.`All-Day`)
                 }
             }
         }
@@ -308,7 +300,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Tuesday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.MORNING)
+                    add(AvailabilityStatus.Morning)
                 }
             }
         }
@@ -317,7 +309,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Tuesday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.EVENING)
+                    add(AvailabilityStatus.Evening)
                 }
             }
         }
@@ -326,7 +318,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Tuesday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.ALL_DAY)
+                    add(AvailabilityStatus.`All-Day`)
                 }
             }
         }
@@ -336,7 +328,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Wednesday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.MORNING)
+                    add(AvailabilityStatus.Morning)
                 }
             }
         }
@@ -345,7 +337,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Wednesday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.EVENING)
+                    add(AvailabilityStatus.Evening)
                 }
             }
         }
@@ -354,7 +346,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Wednesday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.ALL_DAY)
+                    add(AvailabilityStatus.`All-Day`)
                 }
             }
         }
@@ -364,7 +356,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Thursday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.MORNING)
+                    add(AvailabilityStatus.Morning)
                 }
             }
         }
@@ -373,7 +365,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Thursday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.EVENING)
+                    add(AvailabilityStatus.Evening)
                 }
             }
         }
@@ -382,7 +374,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Thursday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.ALL_DAY)
+                    add(AvailabilityStatus.`All-Day`)
                 }
             }
         }
@@ -391,7 +383,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Friday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.MORNING)
+                    add(AvailabilityStatus.Morning)
                 }
             }
         }
@@ -400,7 +392,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Friday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.EVENING)
+                    add(AvailabilityStatus.Evening)
                 }
             }
         }
@@ -409,7 +401,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Friday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.ALL_DAY)
+                    add(AvailabilityStatus.`All-Day`)
                 }
             }
         }
@@ -419,7 +411,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Saturday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.MORNING)
+                    add(AvailabilityStatus.Morning)
                 }
             }
         }
@@ -428,7 +420,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Saturday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.EVENING)
+                    add(AvailabilityStatus.Evening)
                 }
             }
         }
@@ -437,7 +429,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Saturday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.ALL_DAY)
+                    add(AvailabilityStatus.`All-Day`)
                 }
             }
         }
@@ -446,7 +438,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Sunday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.MORNING)
+                    add(AvailabilityStatus.Morning)
                 }
             }
         }
@@ -455,7 +447,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Sunday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.EVENING)
+                    add(AvailabilityStatus.Evening)
                 }
             }
         }
@@ -464,7 +456,7 @@ class Availability : AppCompatActivity() {
             if (isEditing) {
                 availabilityMap["Sunday"]?.apply {
                     clear()
-                    add(AvailabilityStatus.ALL_DAY)
+                    add(AvailabilityStatus.`All-Day`)
                 }
             }
         }
@@ -484,6 +476,7 @@ class Availability : AppCompatActivity() {
         toggle.isEnabled = isChecked
 
     }
+
     private fun updateToggleText(isChecked: Boolean, toggle: MaterialSwitch) {
         toggle.text = if (isChecked) "Available" else "Not Available"
     }
@@ -551,13 +544,40 @@ class Availability : AppCompatActivity() {
 
                     // Update toggle text based on checked state
                     when (day) {
-                        "Monday" -> updateToggleText(disableEnableMondays.isChecked, disableEnableMondays)
-                        "Tuesday" -> updateToggleText(disableEnableTuesdays.isChecked, disableEnableTuesdays)
-                        "Wednesday" -> updateToggleText(disableEnableWednesdays.isChecked, disableEnableWednesdays)
-                        "Thursday" -> updateToggleText(disableEnableThursdays.isChecked, disableEnableThursdays)
-                        "Friday" -> updateToggleText(disableEnableFridays.isChecked, disableEnableFridays)
-                        "Saturday" -> updateToggleText(disableEnableSaturdays.isChecked, disableEnableSaturdays)
-                        "Sunday" -> updateToggleText(disableEnableSundays.isChecked, disableEnableSundays)
+                        "Monday" -> updateToggleText(
+                            disableEnableMondays.isChecked,
+                            disableEnableMondays
+                        )
+
+                        "Tuesday" -> updateToggleText(
+                            disableEnableTuesdays.isChecked,
+                            disableEnableTuesdays
+                        )
+
+                        "Wednesday" -> updateToggleText(
+                            disableEnableWednesdays.isChecked,
+                            disableEnableWednesdays
+                        )
+
+                        "Thursday" -> updateToggleText(
+                            disableEnableThursdays.isChecked,
+                            disableEnableThursdays
+                        )
+
+                        "Friday" -> updateToggleText(
+                            disableEnableFridays.isChecked,
+                            disableEnableFridays
+                        )
+
+                        "Saturday" -> updateToggleText(
+                            disableEnableSaturdays.isChecked,
+                            disableEnableSaturdays
+                        )
+
+                        "Sunday" -> updateToggleText(
+                            disableEnableSundays.isChecked,
+                            disableEnableSundays
+                        )
                     }
                 }
             }
@@ -573,7 +593,7 @@ class Availability : AppCompatActivity() {
         val buttons = when (day) {
             "Monday" -> listOf(mondaysM, mondaysE, mondaysA, disableEnableMondays)
             "Tuesday" -> listOf(tuesdaysM, tuesdaysE, disableEnableTuesdays)
-            "Wednesday" -> listOf(wednesdaysM, wednesdaysE, wednesdaysA,disableEnableWednesdays)
+            "Wednesday" -> listOf(wednesdaysM, wednesdaysE, wednesdaysA, disableEnableWednesdays)
             "Thursday" -> listOf(thursdaysM, thursdaysE, thursdaysA, disableEnableThursdays)
             "Friday" -> listOf(fridaysM, fridaysE, fridaysA, disableEnableFridays)
             "Saturday" -> listOf(saturdaysM, saturdaysE, saturdaysA, disableEnableSaturdays)
@@ -587,24 +607,17 @@ class Availability : AppCompatActivity() {
         // Set checked state for the buttons based on the fetched availability status and editing mode
         statusList?.forEach { status ->
             when (status) {
-                AvailabilityStatus.MORNING -> buttons[0].isChecked = true
-                AvailabilityStatus.EVENING -> buttons[1].isChecked = true
-                AvailabilityStatus.ALL_DAY -> buttons[2].isChecked = true
+                AvailabilityStatus.Morning -> buttons[0].isChecked = true
+                AvailabilityStatus.Evening -> buttons[1].isChecked = true
+                AvailabilityStatus.`All-Day` -> buttons[2].isChecked = true
                 // For NOT_AVAILABLE status, no need to set any button checked
-                AvailabilityStatus.NOT_AVAILABLE -> buttons[3].isChecked = false
+                AvailabilityStatus.Unavailable -> buttons[3].isChecked = false
             }
         }
 
         // Disable the buttons if not in editing mode
         buttons.forEach { it.isEnabled = isEditing }
     }
-
-
-
-
-
-
-
 
     private fun updateUser(availabilityMap: MutableMap<String, MutableList<AvailabilityStatus>>) {
         // Query the availability collection for documents with the specified UID
@@ -625,7 +638,10 @@ class Availability : AppCompatActivity() {
                     db.collection("availability")
                         .add(newAvailability)
                         .addOnSuccessListener { documentReference ->
-                            Log.d("EditAccountActivity", "New record created with ID: ${documentReference.id}")
+                            Log.d(
+                                "EditAccountActivity",
+                                "New record created with ID: ${documentReference.id}"
+                            )
                             // You may perform additional actions here if needed
                         }
                         .addOnFailureListener { e ->
@@ -649,12 +665,6 @@ class Availability : AppCompatActivity() {
                 Log.e("EditAccountActivity", "Error fetching account", e)
             }
     }
-
-
-
-
-
-
 
 
 }

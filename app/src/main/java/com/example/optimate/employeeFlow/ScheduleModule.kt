@@ -3,6 +3,8 @@ package com.example.optimate.employeeFlow
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -40,6 +42,7 @@ class ScheduleModule : AppCompatActivity() {
 
     private lateinit var nextShiftOrNotScheduledTextView: TextView
     private lateinit var scheduledOrNotTextView: TextView
+    private lateinit var noShiftView: TextView
     private lateinit var materialCalendarView: CalendarView
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -57,6 +60,7 @@ class ScheduleModule : AppCompatActivity() {
         nextShiftOrNotScheduledTextView = findViewById(R.id.nextShiftOrNotScheduled)
         scheduledOrNotTextView = findViewById(R.id.scheduledOrNot)
         materialCalendarView = findViewById(R.id.calendarView)
+        noShiftView = findViewById(R.id.noShiftText)
 
         // Get today's date and format it
         var todayDate =
@@ -189,6 +193,9 @@ class ScheduleModule : AppCompatActivity() {
         scheduledOrNotTextView.text = ""
 
         if (shiftList.isNotEmpty()) {
+            nextShiftOrNotScheduledTextView.visibility = VISIBLE
+            scheduledOrNotTextView.visibility = VISIBLE
+            noShiftView.visibility = INVISIBLE
             nextShiftOrNotScheduledTextView.append("You are scheduled:")
             for (shiftInfo in shiftList) {
                 val shiftDetails = "${shiftInfo.startTime} to ${shiftInfo.endTime}"
@@ -196,8 +203,9 @@ class ScheduleModule : AppCompatActivity() {
             }
         } else {
             // No scheduled shift for the selected date or not scheduled
-            nextShiftOrNotScheduledTextView.text = "Not scheduled yet!"
-            scheduledOrNotTextView.text = ""
+            nextShiftOrNotScheduledTextView.visibility = INVISIBLE
+            scheduledOrNotTextView.visibility = INVISIBLE
+            noShiftView.visibility = VISIBLE
         }
     }
 

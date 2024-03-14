@@ -25,73 +25,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topBar">
 
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:focusedMonthDateColor="@color/light_green"
+            tools:layout_editor_absoluteX="34dp"
+            tools:layout_editor_absoluteY="74dp" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card"
-            style="?attr/materialCardViewElevatedStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@color/light_purple"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout7">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"
+            app:strokeWidth="3dp">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/noShiftText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No Shifts Scheduled!"
+                android:textColor="@color/gray_button"
+                android:textSize="28sp" />
+
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <!-- Title, secondary and supporting text -->
-                <TextView
-                    android:id="@+id/selectedDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/selected_date"
-                    android:textAppearance="?attr/textAppearanceTitleLarge" />
-
-                <com.google.android.material.divider.MaterialDivider
+                <LinearLayout
+                    android:id="@+id/dynamicContentContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="vertical">
 
-                <CalendarView
-                    android:id="@+id/calendarView"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_marginTop="8dp"
-
-                    android:focusedMonthDateColor="@color/light_green"
-                    tools:layout_editor_absoluteX="34dp"
-                    tools:layout_editor_absoluteY="74dp" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <LinearLayout
-                        android:id="@+id/dynamicContentContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-                </ScrollView>
-
-            </LinearLayout>
-
+                </LinearLayout>
+            </ScrollView>
         </com.google.android.material.card.MaterialCardView>
-
     </LinearLayout>
 
     <LinearLayout

@@ -31,7 +31,7 @@
             android:hint="@string/date"
             app:boxStrokeColor="@color/dark_purple"
             app:boxStrokeWidth="3dp"
-            app:endIconDrawable="@drawable/calendar"
+            app:endIconDrawable="@drawable/date_icon"
             app:endIconMode="custom"
             app:helperText="MM/DD/YYYY"
             app:helperTextEnabled="true">
@@ -108,7 +108,6 @@
                 android:padding="8dp" />
         </androidx.cardview.widget.CardView>
 
-        <!-- Save Shift Button -->
         <Button
             android:id="@+id/saveShiftButton"
             style="@style/Widget.Material3.Button.ElevatedButton"

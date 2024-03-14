@@ -5,14 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import com.example.optimate.R
+import com.example.optimate.R.id
+import com.example.optimate.R.layout
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.firebase.Firebase
@@ -45,15 +47,15 @@ class SchedulerActivity : AppCompatActivity() {
         )
     }
 
-    private lateinit var selectedDateTextView: TextView
+    private lateinit var noShiftView: TextView
     private lateinit var calendarView: CalendarView
     private var selectedDate by Delegates.notNull<Long>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scheduler)
+        setContentView(layout.activity_scheduler)
 
-        val topBar: XmlTopBar = findViewById(R.id.topBar)
+        val topBar: XmlTopBar = findViewById(id.topBar)
         topBar.setTitle("Schedule Overview")
         val callback = object : OnBackPressedCallback(true /* default to enabled */) {
             override fun handleOnBackPressed() {
@@ -64,26 +66,18 @@ class SchedulerActivity : AppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
-        selectedDateTextView = findViewById(R.id.selectedDate)
-        calendarView = findViewById(R.id.calendarView)
-        dynamicContentContainer = findViewById(R.id.dynamicContentContainer)
-
-        // Get today's date and format it
+        calendarView = findViewById(id.calendarView)
+        dynamicContentContainer = findViewById(id.dynamicContentContainer)
+        noShiftView = findViewById(id.noShiftText)
         selectedDate = calendarView.date
-        // Set today's date initially
-        selectedDateTextView.text = getDateFormattedFromMillis(selectedDate)
 
-        // Check for scheduled shifts
-//        checkScheduledShifts(selectedDate)
         fetchAndPopulateShiftData(getDateFormattedForDatabase(selectedDate))
 
-        // Set an OnDateChangeListener to update the selected date and check for scheduled shifts
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             updateSelectedDate(year, month, dayOfMonth)
         }
 
-
-        val scheduleDateBtn = findViewById<Button>(R.id.scheduleDate)
+        val scheduleDateBtn = findViewById<Button>(id.scheduleDate)
 
         scheduleDateBtn.setOnClickListener {
             val intent = Intent(this, AddShiftActivity::class.java)
@@ -93,7 +87,6 @@ class SchedulerActivity : AppCompatActivity() {
     }
 
     private fun fetchAndPopulateShiftData(selectedDate: String) {
-        // Fetch shift data using the selected date
         getShiftData(selectedDate) { shifts ->
             populateUI(shifts)
         }
@@ -103,15 +96,11 @@ class SchedulerActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, dayOfMonth)
         selectedDate = calendar.timeInMillis
-        selectedDateTextView.text = getDateFormattedFromMillis(selectedDate)
 
-        // Clear existing views in dynamicContentContainer
         dynamicContentContainer.removeAllViews()
 
-        // Format the selected date for consistency with the database
         val formattedDate = getDateFormattedForDatabase(selectedDate)
 
-        // Fetch and populate new shift data for the selected date
         fetchAndPopulateShiftData(formattedDate)
     }
 
@@ -123,9 +112,13 @@ class SchedulerActivity : AppCompatActivity() {
     }
 
     private fun populateUI(shifts: List<Shift>) {
-        showToast("Populating UI with ${shifts.size} shifts.")
+        if (shifts.isNotEmpty()) {
+            noShiftView.visibility = INVISIBLE
+        } else {
+            noShiftView.visibility = VISIBLE
+        }
         if (!::dynamicContentContainer.isInitialized) {
-            dynamicContentContainer = findViewById(R.id.dynamicContentContainer)
+            dynamicContentContainer = findViewById(id.dynamicContentContainer)
         }
 
         // Create a map to group shifts by details
@@ -151,10 +144,10 @@ class SchedulerActivity : AppCompatActivity() {
             val individuals = groupedShiftsMap[shiftDetails]
 
             val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val contentView = inflater.inflate(R.layout.content_schedule_maker, null)
+            val contentView = inflater.inflate(layout.content_schedule_maker, null)
             dynamicContentContainer.addView(contentView)
 
-            contentView.findViewById<TextView>(R.id.shiftHours).text = shiftDetails
+            contentView.findViewById<TextView>(id.shiftHours).text = shiftDetails
 
             // Create a formatted string for the individuals working on the shift
             val names = StringBuilder()
@@ -167,7 +160,7 @@ class SchedulerActivity : AppCompatActivity() {
                 names.setLength(names.length - 1)
             }
 
-            contentView.findViewById<TextView>(R.id.NameFromDb).text = names.toString()
+            contentView.findViewById<TextView>(id.NameFromDb).text = names.toString()
         }
     }
 
@@ -179,7 +172,6 @@ class SchedulerActivity : AppCompatActivity() {
     }
 
     private fun getShiftData(selectedDate: String, callback: (List<Shift>) -> Unit) {
-        showToast("getShiftData: $selectedDate")
         db.collection("schedule")
             .whereEqualTo("BID", GlobalUserData.bid)
             .whereEqualTo("day", selectedDate)
@@ -188,7 +180,6 @@ class SchedulerActivity : AppCompatActivity() {
                 val shiftsList = mutableListOf<Shift>()
                 for (document in documents) {
                     try {
-                        // Assuming Shift is a model class representing your shift data
                         val shift = document.toObject(Shift::class.java)
                         shiftsList.add(shift)
                     } catch (e: Exception) {
@@ -196,16 +187,10 @@ class SchedulerActivity : AppCompatActivity() {
                     }
                 }
 
-                // Pass the list of Shift objects to the callback function
                 callback(shiftsList)
             }
             .addOnFailureListener { exception ->
                 Log.e("SchedulerActivity", "Error getting shift data", exception)
-                // Handle failure if needed (e.g., show an error message)
             }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
