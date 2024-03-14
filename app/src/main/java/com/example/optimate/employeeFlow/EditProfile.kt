@@ -105,7 +105,13 @@ class EditProfile : AppCompatActivity() {
                 userDataAuth["address"] = addressInput.text.toString()
             }
             if (GlobalUserData.phone != phoneInput.text.toString()) {
-                userDataAuth["phone"] = phoneInput.text.toString()
+                if (phoneInput.text.toString().length == 10) {
+                    userDataAuth["phone"] = phoneInput.text.toString()
+                }
+                else{
+                    Toast.makeText(this, "Phone number should be the North American 7 Digit code", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
             }
 
             if (userDataAuth.isEmpty()) {
