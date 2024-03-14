@@ -5,10 +5,10 @@ package com.example.optimate.employeeFlow
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.optimate.R
@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth
 class ProfilePage : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_page)
@@ -29,7 +28,7 @@ class ProfilePage : AppCompatActivity() {
         val signOutBtn = findViewById<Button>(R.id.signOutBtn)
 
 
-        val viewAvailabilityBtn = findViewById<Button>(R.id.viewAvailabilityBtn)
+        //val viewAvailabilityBtn = findViewById<Button>(R.id.viewAvailabilityBtn)
         val editProfileBtn = findViewById<Button>(R.id.editProfile)
         val addressText = findViewById<TextView>(R.id.addressText)
         val wageText = findViewById<TextView>(R.id.wageText)
@@ -39,12 +38,25 @@ class ProfilePage : AppCompatActivity() {
         val nameText = findViewById<TextView>(R.id.textView6)
         val profilePic = findViewById<ImageView>(R.id.profilePic)
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
-
+        val formattedWage = if (!GlobalUserData.wage.toString().contains('.')) {
+            "$${GlobalUserData.wage.toString()}.00"
+        } else if (GlobalUserData.wage.toString().substring(GlobalUserData.wage.toString().indexOf('.') + 1).length == 1) {
+            "$${GlobalUserData.wage.toString()}0"
+        } else {
+            "$$GlobalUserData.wage.toString()"
+        }
 
 
         addressText.text = GlobalUserData.address
-        wageText.text = GlobalUserData.wage.toString()
-        phoneText.text = GlobalUserData.phone
+        wageText.text = formattedWage
+        val phone = GlobalUserData.phone
+        val formattedPhone = if (phone.length >= 10) {
+            "(${phone.substring(0, 3)})-${phone.substring(3, 6)}-${phone.substring(6, 10)}"
+        } else {
+            // Handle case where phone number is not long enough
+            "Invalid phone number"
+        }
+        phoneText.text = formattedPhone
         roleText.text = GlobalUserData.role
         nameText.text = GlobalUserData.name
         if (GlobalUserData.profilePic != "") {
@@ -74,9 +86,9 @@ class ProfilePage : AppCompatActivity() {
 //            startActivity(Intent(this,EditProfile::class.java))
 //        }
 
-        viewAvailabilityBtn.setOnClickListener {
+        /*viewAvailabilityBtn.setOnClickListener {
             startActivity(Intent(this,Availability::class.java))
-        }
+        }*/
         editProfileBtn.setOnClickListener {
             startActivity(Intent(this, EditProfile::class.java))
         }
@@ -88,6 +100,8 @@ class ProfilePage : AppCompatActivity() {
 
     }
 
+
+
     private fun signOutUser(context: Context) {
         val user = FirebaseAuth.getInstance()
         user.signOut()
@@ -96,3 +110,4 @@ class ProfilePage : AppCompatActivity() {
 
 
 }
+

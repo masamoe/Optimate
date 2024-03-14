@@ -1,5 +1,6 @@
 package com.example.optimate.employeeFlow
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import com.example.optimate.R
 import com.example.optimate.businessOwner.XmlTopBar
@@ -22,6 +24,8 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.bumptech.glide.Glide
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
+import com.example.optimate.loginAndRegister.ModuleChoosingMain
 import com.google.android.material.textfield.TextInputLayout
 
 class ExpenseRequestStatus(val status: String, val date: String) {
@@ -56,11 +60,20 @@ class ViewExpenses : AppCompatActivity() {
     private var selectedStatus: String? = null
     private lateinit var progressBar: ProgressBar
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_expenses)
 
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
 
+                val intent = Intent(this@ViewExpenses, DynamicLandingActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)

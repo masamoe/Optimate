@@ -236,7 +236,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/addresUpdate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:inputType="text"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -254,7 +258,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phoneUpdate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:inputType="number"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -266,7 +274,9 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="18dp"
                 android:backgroundTint="@color/light_purple"
-                android:text="Save"></Button>
+                android:text="Save">
+
+            </Button>
 
         </LinearLayout>
 

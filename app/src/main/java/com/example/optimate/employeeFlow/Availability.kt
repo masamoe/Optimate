@@ -180,6 +180,7 @@ class Availability : AppCompatActivity() {
 
         // Monday
         disableEnableMondays.setOnCheckedChangeListener { buttonView, isChecked ->
+            updateToggleText(isChecked, disableEnableMondays)
             toggleState(isChecked, toggleMondays)
             availabilityMap["Monday"]?.apply {
                 clear()
@@ -189,6 +190,7 @@ class Availability : AppCompatActivity() {
 
 // Tuesday
         disableEnableTuesdays.setOnCheckedChangeListener { buttonView, isChecked ->
+            updateToggleText(isChecked, disableEnableTuesdays)
             toggleState(isChecked, toggleTuesdays)
             availabilityMap["Tuesday"]?.apply {
                 clear()
@@ -196,8 +198,33 @@ class Availability : AppCompatActivity() {
             }
         }
 
+
+/*// Set OnCheckedChangeListener for each toggle to update text dynamically
+        disableEnableMondays.setOnCheckedChangeListener { _, isChecked ->
+            updateToggleText(isChecked, disableEnableMondays)
+        }
+        disableEnableTuesdays.setOnCheckedChangeListener { _, isChecked ->
+            updateToggleText(isChecked, disableEnableTuesdays)
+        }
+        disableEnableWednesdays.setOnCheckedChangeListener { _, isChecked ->
+            updateToggleText(isChecked, disableEnableWednesdays)
+        }
+        disableEnableThursdays.setOnCheckedChangeListener { _, isChecked ->
+            updateToggleText(isChecked, disableEnableThursdays)
+        }
+        disableEnableFridays.setOnCheckedChangeListener { _, isChecked ->
+            updateToggleText(isChecked, disableEnableFridays)
+        }
+        disableEnableSaturdays.setOnCheckedChangeListener { _, isChecked ->
+            updateToggleText(isChecked, disableEnableSaturdays)
+        }
+        disableEnableSundays.setOnCheckedChangeListener { _, isChecked ->
+            updateToggleText(isChecked, disableEnableSundays)
+        }*/
+
 // Wednesday
         disableEnableWednesdays.setOnCheckedChangeListener { buttonView, isChecked ->
+            updateToggleText(isChecked, disableEnableWednesdays)
             toggleState(isChecked, toggleWednesdays)
             availabilityMap["Wednesday"]?.apply {
                 clear()
@@ -207,6 +234,7 @@ class Availability : AppCompatActivity() {
 
 // Thursday
         disableEnableThursdays.setOnCheckedChangeListener { buttonView, isChecked ->
+            updateToggleText(isChecked, disableEnableThursdays)
             toggleState(isChecked, toggleThursdays)
             availabilityMap["Thursday"]?.apply {
                 clear()
@@ -216,6 +244,7 @@ class Availability : AppCompatActivity() {
 
 // Friday
         disableEnableFridays.setOnCheckedChangeListener { buttonView, isChecked ->
+            updateToggleText(isChecked, disableEnableFridays)
             toggleState(isChecked, toggleFridays)
             availabilityMap["Friday"]?.apply {
                 clear()
@@ -225,6 +254,7 @@ class Availability : AppCompatActivity() {
 
 // Saturday
         disableEnableSaturdays.setOnCheckedChangeListener { buttonView, isChecked ->
+            updateToggleText(isChecked, disableEnableSaturdays)
             toggleState(isChecked, toggleSaturdays)
             availabilityMap["Saturday"]?.apply {
                 clear()
@@ -234,12 +264,15 @@ class Availability : AppCompatActivity() {
 
 // Sunday
         disableEnableSundays.setOnCheckedChangeListener { buttonView, isChecked ->
+            updateToggleText(isChecked, disableEnableSundays)
             toggleState(isChecked, toggleSundays)
             availabilityMap["Sunday"]?.apply {
                 clear()
                 add(AvailabilityStatus.NOT_AVAILABLE)
             }
         }
+
+
 
 
         // Monday
@@ -451,6 +484,9 @@ class Availability : AppCompatActivity() {
         toggle.isEnabled = isChecked
 
     }
+    private fun updateToggleText(isChecked: Boolean, toggle: MaterialSwitch) {
+        toggle.text = if (isChecked) "Available" else "Not Available"
+    }
 
 
     private fun setEditingState(editButton: MaterialButton, icon: Drawable?) {
@@ -512,6 +548,17 @@ class Availability : AppCompatActivity() {
 
                     // Update UI for the day based on availability status
                     updateUIToggleButtons(day, availabilityMap[day])
+
+                    // Update toggle text based on checked state
+                    when (day) {
+                        "Monday" -> updateToggleText(disableEnableMondays.isChecked, disableEnableMondays)
+                        "Tuesday" -> updateToggleText(disableEnableTuesdays.isChecked, disableEnableTuesdays)
+                        "Wednesday" -> updateToggleText(disableEnableWednesdays.isChecked, disableEnableWednesdays)
+                        "Thursday" -> updateToggleText(disableEnableThursdays.isChecked, disableEnableThursdays)
+                        "Friday" -> updateToggleText(disableEnableFridays.isChecked, disableEnableFridays)
+                        "Saturday" -> updateToggleText(disableEnableSaturdays.isChecked, disableEnableSaturdays)
+                        "Sunday" -> updateToggleText(disableEnableSundays.isChecked, disableEnableSundays)
+                    }
                 }
             }
             .addOnFailureListener { e ->
@@ -519,6 +566,7 @@ class Availability : AppCompatActivity() {
                 Log.e("AvailabilityActivity", "Error fetching availability data", e)
             }
     }
+
 
     private fun updateUIToggleButtons(day: String, statusList: List<AvailabilityStatus>?) {
         // Find the corresponding buttons for the day

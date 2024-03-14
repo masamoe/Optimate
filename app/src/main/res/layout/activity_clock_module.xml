@@ -7,22 +7,6 @@
     android:background="#FEF7FF"
     tools:context=".employeeFlow.ClockModule">
 
-    <Button
-        android:id="@+id/clockIn"
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:backgroundTint="#C4F0E6"
-        android:padding="8dp"
-        android:text="@string/clock_in"
-        android:textColor="#000000"
-        android:textSize="35sp"
-
-        app:elevation="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline58"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline60" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout12"
@@ -75,10 +59,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
+            android:text="@string/clock_in_out"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="@string/clock_in_out"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintHorizontal_bias="0.0"
@@ -99,6 +83,19 @@
             app:srcCompat="@drawable/home_btn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Material3.CardView.Outlined"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline63"
+        app:layout_constraintEnd_toStartOf="@+id/guideline80"
+        app:layout_constraintStart_toStartOf="@+id/guideline76"
+        app:layout_constraintTop_toTopOf="@+id/guideline81"
+        app:strokeColor="@color/dark_purple"
+        app:strokeWidth="4dp">
+
+    </com.google.android.material.card.MaterialCardView>
+
     <TextView
         android:id="@+id/digitalClock"
         android:layout_width="177dp"
@@ -106,11 +103,29 @@
         android:text="@string/clock"
         android:textAlignment="center"
 
+
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline60"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout12" />
+
+    <Button
+        android:id="@+id/clockIn"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:backgroundTint="#C4F0E6"
+        android:padding="8dp"
+        android:text="@string/clock_in"
+        android:textColor="#000000"
+        android:textSize="35sp"
+
+        app:elevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline58"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline60" />
 
     <Button
         android:id="@+id/viewHistory"
@@ -194,7 +209,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.96" />
+        app:layout_constraintGuide_percent="0.96032834" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline64"
@@ -202,6 +217,27 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline76"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.045" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline80"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.955" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline81"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

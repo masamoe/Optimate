@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.optimate.R
+import com.example.optimate.employeeFlow.NoDataFound
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -56,6 +57,7 @@ fun FinancesDetailScreen(finances: List<Finances>) {
 
     Scaffold(
         topBar = { XmlTopBar(titleText = "Finances Details") },
+        containerColor = colorResource(id = R.color.screen_border_colors),
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
                 Row(modifier = Modifier
@@ -67,7 +69,13 @@ fun FinancesDetailScreen(finances: List<Finances>) {
                     SearchDate(fromDate, toDate, finances) { filteredFinances = it }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                FinancesList(finances = filteredFinances)
+                if(finances.isEmpty()){
+                    NoDataFound("No data found")
+                }
+                else{
+                    FinancesList(finances = filteredFinances)
+                }
+
             }
         }
     )
@@ -124,7 +132,7 @@ fun FinancesRow(finance: Finances) {
     var isExpanded by remember { mutableStateOf(false) }
 
     // Decide the card color based on the type
-    val revenueColor = colors.run { colorResource(id = R.color.light_blue)}
+    val revenueColor = colors.run { colorResource(id = R.color.light_green)}
     val expenseColor = colors.run { colorResource(id = R.color.light_red)}
     val cardColor = if (finance.type == "Expenses") expenseColor else revenueColor
     val cornerRadius = 12.dp
@@ -133,10 +141,10 @@ fun FinancesRow(finance: Finances) {
         modifier = Modifier
             .padding(horizontal = 20.dp, vertical = 5.dp)
             .fillMaxWidth()
-            .clickable { isExpanded = !isExpanded } ,// Toggle isExpanded on click
-        //.border(2.dp, cardColor, shape = RoundedCornerShape(cornerRadius))
+            .clickable { isExpanded = !isExpanded }// Toggle isExpanded on click
+            .border(2.dp, cardColor, shape = RoundedCornerShape(cornerRadius)),
 
-        colors = CardDefaults.elevatedCardColors(containerColor = cardColor),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(cornerRadius),
     ) {
@@ -176,8 +184,8 @@ fun FinancesRow(finance: Finances) {
                         .padding(5.dp)
                         .fillMaxWidth()
                 ){
-                    Text(text = "'" + finance.description + "'", fontSize = 18.sp, fontWeight = FontWeight.Normal )
-                    Text(text = "From: " + finance.name, fontSize = 18.sp, fontWeight = FontWeight.Normal )
+                    Text(text = "'" + finance.description + "'", fontSize = 18.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray)
+                    Text(text = "From: " + finance.name, fontSize = 18.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray)
                 }
             }
         }

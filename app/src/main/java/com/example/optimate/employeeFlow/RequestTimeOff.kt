@@ -42,10 +42,10 @@ import kotlin.coroutines.suspendCoroutine
 class RequestTimeOff : AppCompatActivity() {
 
     private var db = Firebase.firestore
-    /*private val retrofit = Retrofit.Builder()
+    private val retrofit = Retrofit.Builder()
         .baseUrl("https://optimateserver.onrender.com ") // Update with your server URL
         .addConverterFactory(GsonConverterFactory.create())
-        .build()*/
+        .build()
 
 
 
@@ -334,7 +334,7 @@ class RequestTimeOff : AppCompatActivity() {
             Log.d("EditTimeOffRequest", "New record created with ID: ${documentReference.id}")
             Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
 
-            //sendNotificationToManagers() // Call the suspend function within a coroutine scope
+            sendNotificationToManagers() // Call the suspend function within a coroutine scope
             startActivity(Intent(this, ScheduleModule::class.java))
         } catch (e: Exception) {
             Log.e("EditAccountActivity", "Error creating new record", e)
@@ -369,7 +369,7 @@ class RequestTimeOff : AppCompatActivity() {
     }
 
 
-        /*suspend fun sendNotificationToManagers() {
+        suspend fun sendNotificationToManagers() {
             val managerTokens = getManagerTokens()
             val fcmApi = retrofit.create(FcmApi::class.java)
 
@@ -394,7 +394,7 @@ class RequestTimeOff : AppCompatActivity() {
                     println("Manager's FCM token not found or blank.")
                 }
             }
-        }*/
+        }
 }
 
 

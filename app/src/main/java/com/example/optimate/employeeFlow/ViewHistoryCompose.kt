@@ -58,6 +58,7 @@ fun ViewHistoryScreen(showDateRangePicker: (updateDateRange: (String, String) ->
 
     Scaffold(
         topBar = { XmlTopBar(titleText = "View History") },
+        containerColor = colorResource(id = R.color.screen_border_colors),
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
                 Row(

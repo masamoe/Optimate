@@ -10,8 +10,10 @@ import android.widget.CalendarView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -53,7 +55,15 @@ class SchedulerActivity : AppCompatActivity() {
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)
         topBar.setTitle("Schedule Overview")
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
 
+                val intent = Intent(this@SchedulerActivity, DynamicLandingActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
         selectedDateTextView = findViewById(R.id.selectedDate)
         calendarView = findViewById(R.id.calendarView)
         dynamicContentContainer = findViewById(R.id.dynamicContentContainer)

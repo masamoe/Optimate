@@ -147,7 +147,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
         android:layout_width="360dp"
-        android:layout_height="400dp"
+        android:layout_height="350dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline28"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -175,63 +175,56 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Home address: ">
-
-                        </TextView>
+                            android:text="Home address:"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/addressText"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/employeeAddress">
-
-                        </TextView>
+                            android:text="@string/employeeAddress"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
-
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Phone number: ">
-
-                        </TextView>
+                            android:text="Phone number:"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/phoneText"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/employeePhoneNumber">
-
-                        </TextView>
+                            android:text="@string/employeePhoneNumber"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
-
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
@@ -239,26 +232,24 @@
 
                         <TextView
                             android:id="@+id/hourlyText"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="HourlyWage: ">
-
-                        </TextView>
+                            android:text="Hourly Wage:"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/wageText"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/employeeWage">
-
-                        </TextView>
+                            android:text="@string/employeeWage"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
-
                 </LinearLayout>
+
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -286,7 +277,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.card.MaterialCardView
+           <!-- <com.google.android.material.card.MaterialCardView
                 android:layout_width="300dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="30dp"
@@ -306,7 +297,7 @@
                 </Button>
 
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>-->
 
             <Button
                 android:id="@+id/signOutBtn"

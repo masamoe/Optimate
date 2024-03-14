@@ -1,6 +1,8 @@
 package com.example.optimate.loginAndRegister
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -8,26 +10,49 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.optimate.R
+import com.example.optimate.businessOwner.Requests.Companion.TAG
 import com.example.optimate.employeeFlow.ProfilePage
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 class DynamicLandingActivity : AppCompatActivity(){
     val db = Firebase.firestore
     private lateinit var businessName: String
     private lateinit var username: TextView
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dynamic_landing)
         businessName = GlobalUserData.name
         username = findViewById(R.id.username)
         username.text = businessName
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
+                // Start the same activity again
+                val intent = Intent(this@DynamicLandingActivity, DynamicLandingActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this, callback)
+
+
+
         val composeView = findViewById<ComposeView>(R.id.compose_view)
         val settingPage = findViewById<ImageView>(R.id.businessIcon)
         getAccountAccess(GlobalUserData.title, GlobalUserData.bid) {
@@ -44,13 +69,11 @@ class DynamicLandingActivity : AppCompatActivity(){
         settingPage.setOnClickListener{
             val intent = Intent(this, ProfilePage::class.java)
             startActivity(intent)
-            finish()
         }
         requestNotificationPermission()
-        //updateMessagingToken()
+        updateMessagingToken()
     }
 
-    // Modify getAccountAccess to accept a callback function
     private fun getAccountAccess(title: String, bid: String, onAccessFetched: () -> Unit) {
         if (title == "businessOwner") {
             GlobalUserData.access = emptyList()
@@ -89,7 +112,9 @@ class DynamicLandingActivity : AppCompatActivity(){
             }
         }
     }
-    /*private fun updateMessagingToken() {
+
+    @SuppressLint("StringFormatInvalid")
+    private fun updateMessagingToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
@@ -102,7 +127,6 @@ class DynamicLandingActivity : AppCompatActivity(){
             // Log and toast
             val msg = getString(R.string.msg_token_fmt, token)
             Log.d(TAG, msg)
-            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
     }
 
@@ -132,7 +156,7 @@ class DynamicLandingActivity : AppCompatActivity(){
                     }
             }
 
-    }*/
+    }
 
 
 }

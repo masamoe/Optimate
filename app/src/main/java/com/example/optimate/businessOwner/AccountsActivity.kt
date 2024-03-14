@@ -1,11 +1,15 @@
 package com.example.optimate.businessOwner
 
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.example.optimate.loginAndRegister.ModuleChoosingMain
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -21,6 +25,15 @@ class AccountsActivity : AppCompatActivity() {
             val accounts = remember { accountsList }
             AccountsScreen(accounts = accounts)
         }
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
+                // Start the same activity again
+                val intent = Intent(this@AccountsActivity, DynamicLandingActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
     }
     override fun onResume() {
         super.onResume()

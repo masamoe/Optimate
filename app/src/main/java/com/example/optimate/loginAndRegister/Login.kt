@@ -17,6 +17,7 @@ import java.util.Date
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.CheckBox
+import androidx.activity.OnBackPressedCallback
 
 
 class Login : AppCompatActivity(){
@@ -35,6 +36,15 @@ class Login : AppCompatActivity(){
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
+                // Start the same activity again
+                val intent = Intent(this@Login, Login::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
 
         // Get references to the EditTexts and Buttons in the layout

@@ -40,6 +40,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.613" />
 
+
     <TextView
         android:id="@+id/container1"
         android:layout_width="326dp"
@@ -66,6 +67,7 @@
         android:fontFamily="@font/baloo"
         android:text="@string/payButton"
         android:textSize="34sp"
+        android:backgroundTint="#C4F0E6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.888"

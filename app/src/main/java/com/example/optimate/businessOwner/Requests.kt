@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.optimate.R
@@ -46,6 +47,16 @@ class Requests : AppCompatActivity() {
 
         val topBar: XmlTopBar = findViewById(R.id.topBar)
         topBar.setTitle("Requests")
+
+        val callback = object : OnBackPressedCallback(true /* default to enabled */) {
+            override fun handleOnBackPressed() {
+
+                val intent = Intent(this@Requests, DynamicLandingActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
         /*val view_archive = findViewById<Button>(R.id.view_archive_btn)
         view_archive.setOnClickListener {

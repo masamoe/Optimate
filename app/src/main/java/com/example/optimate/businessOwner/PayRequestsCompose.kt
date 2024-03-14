@@ -76,6 +76,7 @@ import java.time.format.DateTimeFormatter
 fun PayRequestsScreen(workLogsWaitForApproval: MutableMap<String, List<Map<String, Long>>>) {
     Scaffold(
         topBar = { XmlTopBar( titleText = "Pay Requests" ) },
+        containerColor = colorResource(id = R.color.screen_border_colors),
         content = {innerPadding ->
             Column(
                 modifier = Modifier.padding(innerPadding).padding(top = 16.dp)
@@ -112,17 +113,21 @@ fun WorkingHoursCardList(workLogsWaitForApproval: MutableMap<String, List<Map<St
 
 @Composable
 fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<String, Long>) {
-    val date = log.keys.first()
-    val hours = log.values.first()
-    var wage by remember { mutableStateOf(0.0) }
+    val date = log.keys.first { it != "wage" } // Filter out the wage key to find the date
+    val hours: Long = (log[date] as? Number)?.toLong() ?: 0L // Safely cast to Number then to Long
+    val wage: Double = (log["wage"] as? Number)?.toDouble() ?: 0.0 // Safely cast to Number then to Double
     var pay by remember { mutableStateOf(0.0) }
     var isExpanded by remember { mutableStateOf(false) }
-    val backgroundColor = colorResource(id =R.color.light_purple)
+    val backgroundColor = colorResource(id = R.color.light_purple)
     val cornerRadius = 12.dp
-    // State to hold work logs details for the date
     val workLogsDetails = remember { mutableStateListOf<Map<String, String>>() }
 
-    // Effect to load work logs when card is expanded
+    // Calculate the pay when the wage or hours change
+    LaunchedEffect(wage, hours) {
+        pay = milliSecondsToHours(hours) * wage
+    }
+
+    // Load detailed work logs when the card is expanded
     LaunchedEffect(isExpanded, userId, date) {
         if (isExpanded) {
             val db = Firebase.firestore
@@ -137,10 +142,6 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                         workLogsDetails.addAll(dateLogs)
                     }
                 }
-        }
-        getWage(userId) { fetchedWage ->
-            wage = fetchedWage
-            pay = milliSecondsToHours(hours) * wage // Calculate pay
         }
     }
 
@@ -176,7 +177,8 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                         Text(
                             text = "$formattedDate: ${milliSecondsToHours(hours)} hs",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Normal,
+                            color = Color.DarkGray
                         )
                         Spacer(modifier = Modifier.height(3.dp))
                         Text(
@@ -196,7 +198,7 @@ fun WorkingHoursCard(index: Int, userId: String, userName: String, log: Map<Stri
                                         text = "$key: $value",
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal,
-                                        color = Color.Black
+                                        color = Color.DarkGray
                                     )
                                     Spacer(modifier = Modifier.height(3.dp))
                                 }

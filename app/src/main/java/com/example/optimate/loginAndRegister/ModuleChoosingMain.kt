@@ -1,5 +1,6 @@
 package com.example.optimate.loginAndRegister
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
@@ -9,23 +10,32 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import com.example.optimate.R
+
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.firestore
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
+import org.json.JSONObject
+import kotlin.properties.Delegates
 
 class ModuleChoosingMain : AppCompatActivity() {
     private var db = Firebase.firestore
-    //lateinit var paymentSheet: PaymentSheet
-    //lateinit var customerConfig: PaymentSheet.CustomerConfiguration
-    //lateinit var paymentIntentClientSecret: String
+    lateinit var paymentSheet: PaymentSheet
+    lateinit var customerConfig: PaymentSheet.CustomerConfiguration
+    lateinit var paymentIntentClientSecret: String
+    lateinit var customerIdforPage: String
+    var totalAmount by Delegates.notNull<Double>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_module_choosing_main)
@@ -36,21 +46,27 @@ class ModuleChoosingMain : AppCompatActivity() {
         val payButtonMain = findViewById<Button>(R.id.payButtonMain)
         var container1Picked = false
         var container2Picked = false
-        var container3Picked = false
+
         val module1Price = 10.00
         val module2Price = 30.00
 
         var currentAmount = 0.00
         val amount = findViewById<TextView>(R.id.Amount)
         val moduleList = mutableListOf<String>()
-        //paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
-        //fetchPaymentIntent()
+        paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
 
-
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                intent.putExtra("USER_UID", uid)
+                val intent = Intent(this@ModuleChoosingMain, ModuleChoosingMain::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
         container1.setOnClickListener {
             changeColor(container1)
-
             if (container1Picked) {
                 currentAmount -= module1Price
             } else {
@@ -62,7 +78,6 @@ class ModuleChoosingMain : AppCompatActivity() {
 
         container2.setOnClickListener {
             changeColor(container2)
-
             if (container2Picked) {
                 currentAmount -= module2Price
             } else {
@@ -72,31 +87,24 @@ class ModuleChoosingMain : AppCompatActivity() {
             container2Picked = !container2Picked
         }
 
-
-
         payButtonMain.setOnClickListener {
             if(container1Picked){
                 moduleList.add("Basic")
-
                 if (container2Picked){
                     moduleList.add("Plus")
                 }
-
-
                 if (uid != null) {
-                    updateUser(uid, moduleList, currentAmount)
+                    GlobalUserData.modules = moduleList
+                    totalAmount = currentAmount
+                    fetchPaymentIntent(currentAmount, GlobalUserData.bid)
 
                 }
-
-            } else{
+            } else {
                 Toast.makeText(this, "You need the Basic Plan to continue", Toast.LENGTH_SHORT).show()
             }
         }
-
-
-
-
     }
+
 
     private fun changeColor(view: View) {
         val defaultColor = ContextCompat.getColor(this, R.color.light_grey)
@@ -107,51 +115,37 @@ class ModuleChoosingMain : AppCompatActivity() {
         view.setBackgroundColor(newColor)
     }
 
-    private fun updateUI(user: String,newModules: List<String>, currentAmount: Double) {
-        if (newModules != null) {
-            // User is signed in, show success message
-            GlobalUserData.uid = user
 
-            // Navigate to the Login activity
-            //presentPaymentSheet()
 
-            val intent = Intent(this, PaymentConfirm::class.java)
-            startActivity(intent)
-            finish()
-            // Finish the current activity so the user can't go back to it
-        } else {
-            // User is null, stay on the register page or show an error message
-            Toast.makeText(this, "Update failed.", Toast.LENGTH_SHORT).show()
-        }
-    }
+    private fun updateUser() {
+        if(GlobalUserData.uid != "") {
+            Log.e(this.toString(), "updateUser: called ",)
+            db.collection("users")
+                .whereEqualTo("UID", GlobalUserData.uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        Log.e("EditAccountActivity", "No matching account found")
+                        return@addOnSuccessListener
+                    }
 
-    private fun updateUser(uid: String, newModules: List<String>, currentAmount: Double) {
-        Log.e(this.toString(), "updateUser: called ", )
-        db.collection("users")
-            .whereEqualTo("UID", uid)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    Log.e("EditAccountActivity", "No matching account found")
-                    return@addOnSuccessListener
+                    val account = documents.first()
+
+                    account.reference.update("modules", GlobalUserData.modules)
+                        .addOnSuccessListener {
+                            Log.d("EditAccountActivity", "Account updated successfully")
+
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("EditAccountActivity", "Error updating account", e)
+                        }
                 }
-
-                val account = documents.first()
-
-                account.reference.update("modules", newModules)
-                    .addOnSuccessListener {
-                        Log.d("EditAccountActivity", "Account updated successfully")
-                        updateUI(uid, newModules,currentAmount)
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("EditAccountActivity", "Error updating account", e)
-                    }
-            }
+        }
     }
     private fun reload() {
         // Reload the current activity or perform other actions if the user is already signed in
     }
-   /* fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
+   private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
         when(paymentSheetResult) {
             is PaymentSheetResult.Canceled -> {
                 print("Canceled")
@@ -162,6 +156,8 @@ class ModuleChoosingMain : AppCompatActivity() {
             is PaymentSheetResult.Completed -> {
                 // Display for example, an order confirmation screen
                 print("Completed")
+                updateUser()
+                saveCustomerToDatabase()
                 val intent = Intent(this, PaymentConfirm::class.java)
                 startActivity(intent)
                 finish()
@@ -169,7 +165,7 @@ class ModuleChoosingMain : AppCompatActivity() {
         }
     }
 
-    fun presentPaymentSheet() {
+    private fun presentPaymentSheet() {
         paymentSheet.presentWithPaymentIntent(
             paymentIntentClientSecret,
             PaymentSheet.Configuration(
@@ -182,20 +178,72 @@ class ModuleChoosingMain : AppCompatActivity() {
         )
     }
 
-    private fun fetchPaymentIntent() {
-        // Fetch payment intent client secret and customer config from your backend
-        // This is just a placeholder, replace it with your actual network request code
-        "https://optimateserver.onrender.com/payment-sheet".httpPost().responseJson { _, _, result ->
-            if (result is Result.Success) {
-                val responseJson = result.get().obj()
-                paymentIntentClientSecret = responseJson.getString("paymentIntent")
-                customerConfig = PaymentSheet.CustomerConfiguration(
-                    responseJson.getString("customer"),
-                    responseJson.getString("ephemeralKey")
-                )
-                val publishableKey = responseJson.getString("publishableKey")
-                PaymentConfiguration.init(this, publishableKey)
+    private fun fetchPaymentIntent(amount: Double, businessId: String) {
+        // Convert amount to cents (integer)
+        val amountInCents = (amount * 100).toInt()
+
+        val jsonBody = JSONObject()
+        jsonBody.put("amount", amountInCents) // Use amount in cents
+        jsonBody.put("businessId", businessId)
+
+        // Make a network request with the amount and businessId
+        "https://optimateserver.onrender.com/payment-sheet"
+            .httpPost()
+            .header("Content-Type" to "application/json")
+            .body(jsonBody.toString())
+            .responseJson { request, response, result ->
+                when (result) {
+                    is Result.Success -> {
+                        val responseJson = result.get().obj()
+                        val paymentIntent = responseJson.optString("paymentIntent", "")
+                        val ephemeralKey = responseJson.optString("ephemeralKey", "")
+                        val customerId = responseJson.optString("customer", "")
+                        val publishableKey = responseJson.optString("publishableKey", "")
+
+                        if (paymentIntent.isNotEmpty() && ephemeralKey.isNotEmpty() && customerId.isNotEmpty() && publishableKey.isNotEmpty()) {
+                            paymentIntentClientSecret = paymentIntent
+                            customerConfig = PaymentSheet.CustomerConfiguration(customerId, ephemeralKey)
+                            PaymentConfiguration.init(this, publishableKey)
+                            customerIdforPage = customerId
+                            presentPaymentSheet()
+                        } else {
+                            // Handle invalid response or missing data
+                            Log.e(TAG, "Invalid response: $responseJson")
+                            // Show an error message or retry the request
+                        }
+                    }
+                    is Result.Failure -> {
+                        val ex = result.getException()
+                        Log.e(TAG, "Error fetching payment intent", ex)
+                        // Handle network request failure
+                        // Show an error message or retry the request
+                    }
+                }
             }
-        }
-    }*/
+    }
+
+    private fun saveCustomerToDatabase() {
+
+        val paymentDetailtoDB = hashMapOf(
+            "BID" to GlobalUserData.bid,
+            "stripeId" to customerIdforPage,
+            "Payment" to totalAmount,
+            "Date" to Timestamp.now()
+        )
+
+
+        db.collection("accountPayment")
+            .add(paymentDetailtoDB)
+            .addOnSuccessListener { documentReference ->
+                Log.d("EditAccountActivity", "Payment updated successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e("EditAccountActivity", "Payment updating account", e)
+            }
+
+    }
+
+
+
+
 }

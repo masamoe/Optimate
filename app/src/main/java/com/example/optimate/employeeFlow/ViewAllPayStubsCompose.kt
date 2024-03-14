@@ -206,7 +206,7 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = "Total Hours:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                        text = "Total Hours:", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray
                     )
                     Text(
                         text = "${String.format("%.2f", hours)}hrs", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
@@ -219,7 +219,7 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = "Gross pay:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                        text = "Gross pay:", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray
                     )
                     Text(
                         text = "$${String.format("%.2f", income)}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
@@ -232,7 +232,7 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = "Net pay:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                        text = "Net pay:", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray
                     )
                     Text(
                         text = "$${String.format("%.2f", income.times(0.8))}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
@@ -245,7 +245,7 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = "Taxes:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                        text = "Taxes:", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray
                     )
                     Text(
                         text = "$${String.format("%.2f", income.times(0.2))}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
@@ -258,7 +258,7 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = "Expenses Submitted:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                        text = "Expenses Submitted:", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray
                     )
                     Text(
                         text = "$${String.format("%.2f", expenses)}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
@@ -271,7 +271,7 @@ fun ViewAllPayStubsRow(dateRange: List<String>,
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = "Expenses Claimed:", fontSize = 16.sp, fontWeight = FontWeight.SemiBold
+                        text = "Expenses Claimed:", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Color.DarkGray
                     )
                     Text(
                         text = "$${String.format("%.2f", claimed)}", fontSize = 16.sp, fontWeight = FontWeight.Normal, color = colorResource(id = R.color.blue)
