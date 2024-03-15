@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.optimate.R
+import com.example.optimate.businessOwner.XmlTopBar
 import com.example.optimate.employeeFlow.PayStub
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
@@ -68,10 +69,8 @@ class SubmitExpenses : AppCompatActivity() {
         outlinedExpenseDateLayout = findViewById(R.id.outlinedExpenseDate)
         expenseDateEditText = findViewById(R.id.expenseDate)
 
-        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
-        homeBtn.setOnClickListener {
-            startActivity(Intent(this, DynamicLandingActivity::class.java))
-        }
+        val topBar: XmlTopBar = findViewById(R.id.topBar)
+        topBar.setTitle("Submit An Expense")
 
         val viewExpensesBtn = findViewById<MaterialButton>(R.id.viewExpensesBtn)
         viewExpensesBtn.setOnClickListener {

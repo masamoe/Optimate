@@ -62,7 +62,7 @@ fun FinancesDetailScreen(finances: List<Finances>) {
             Column(modifier = Modifier.padding(innerPadding)) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 10.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     DateInput(label = "From", date = fromDate, onDateChange = { fromDate = it }, modifier = Modifier.weight(1f))
                     DateInput(label = "To", date = toDate, onDateChange = { toDate = it }, modifier = Modifier.weight(1f))

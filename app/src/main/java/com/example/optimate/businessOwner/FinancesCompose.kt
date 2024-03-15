@@ -71,7 +71,7 @@ fun FinancesScreen(revenues: Double, expenses: Double, amountWithDate: List<Fina
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(horizontal = 10.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     DateInput(

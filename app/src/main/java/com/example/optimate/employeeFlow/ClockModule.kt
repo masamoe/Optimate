@@ -41,7 +41,7 @@ class ClockModule : AppCompatActivity() {
         Log.d("hi", "onCreate")
 
         setContentView(R.layout.activity_clock_module)
-        checkTodayScheduleAndClockIn()
+        //checkTodayScheduleAndClockIn()
         loadWorkLogs()
 
         digitalClock = findViewById(R.id.digitalClock)
@@ -414,7 +414,7 @@ class ClockModule : AppCompatActivity() {
         digitalClock.text = formattedTime
     }
 
-    private fun checkTodayScheduleAndClockIn() {
+   /* private fun checkTodayScheduleAndClockIn() {
         val currentDate = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Date())
         val currentTime = Calendar.getInstance()
         Log.d("Time", "Current Time: $currentTime")
@@ -468,7 +468,7 @@ class ClockModule : AppCompatActivity() {
                 Log.w("Schedule", "Error getting documents: ", e)
                 // Handle the error appropriately
             }
-    }
+    }*/
 
     private fun updateClockTextForNoSchedule() {
         // Update the digital clock's text
@@ -506,7 +506,7 @@ class ClockModule : AppCompatActivity() {
             saveWorkLogs()
         }
         updateButtonStates()
-        checkTodayScheduleAndClockIn()
+        //checkTodayScheduleAndClockIn()
     }
 
     override fun onDestroy() {

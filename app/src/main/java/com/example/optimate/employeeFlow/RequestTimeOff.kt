@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.optimate.R
+import com.example.optimate.businessOwner.XmlTopBar
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.FcmApi
 import com.example.optimate.loginAndRegister.GlobalUserData
@@ -61,11 +62,8 @@ class RequestTimeOff : AppCompatActivity() {
         val allDaySwitch: MaterialSwitch = findViewById(R.id.allDaySwitch)
 
 
-        val homeBtn = findViewById<ImageView>(R.id.homeBtn)
-        homeBtn.setOnClickListener {
-            val intent = Intent(this, DynamicLandingActivity::class.java)
-            startActivity(intent)
-        }
+        val topBar: XmlTopBar = findViewById(R.id.topBar)
+        topBar.setTitle("Request Time Off")
 
         val cancelBtn = findViewById<Button>(R.id.cancelButton)
         cancelBtn.setOnClickListener {

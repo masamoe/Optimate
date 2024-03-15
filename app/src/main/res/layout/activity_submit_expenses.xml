@@ -6,93 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".employeeFlow.SubmitExpenses">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout7"
+    <com.example.optimate.businessOwner.XmlTopBar
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.95" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.03" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.50" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.05109489" />
-
-        <View
-            android:id="@+id/baseline"
-            android:layout_width="370dp"
-            android:layout_height="1dp"
-            android:layout_marginBottom="2dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guideline2"
-            app:layout_constraintStart_toStartOf="@id/guideline5"
-            app:layout_constraintTop_toBottomOf="parent" />
-
-        <TextView
-            android:id="@+id/topBarTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:text="@string/submit_an_expense"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline4"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toTopOf="@+id/guideline3"
-            tools:text="Submit an expense" />
-
-        <ImageView
-            android:id="@+id/homeBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:contentDescription="@string/home"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
-            app:layout_constraintTop_toTopOf="@+id/guideline3"
-            app:srcCompat="@drawable/home_btn" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView3"
         style="?attr/materialCardViewElevatedStyle"
-        android:layout_width="380dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:backgroundTint="@color/white"
         android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7">
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -101,14 +34,14 @@
 
             <TextView
                 android:id="@+id/textView3"
-                android:layout_width="238dp"
-                android:layout_height="37dp"
-                android:layout_margin="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/outlinedExpenseDate"
-                android:layout_width="340dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -133,7 +66,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/outlinedExpenseAmount"
-                android:layout_width="340dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
                 android:layout_marginStart="20dp"
@@ -154,7 +87,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/outlinedReceiptPhoto"
-                android:layout_width="340dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -178,7 +111,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/outlinedReasonField"
-                android:layout_width="340dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -208,19 +141,33 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/sendExpenseReq"
-                    style="@style/Widget.Material3.Button.TextButton"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:backgroundTint="@color/light_green"
+                    android:text="Send"
                     android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:text="Send">
+                    android:textSize="15sp">
 
                 </com.google.android.material.button.MaterialButton>
 
             </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewExpensesBtn"
+                style="@style/Widget.Material3.Button.ElevatedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+
+                android:backgroundTint="@color/light_blue"
+                android:text="@string/view_expenses"
+                android:textColor="@color/black"
+                android:textSize="15sp">
+
+            </com.google.android.material.button.MaterialButton>
 
 
         </LinearLayout>
@@ -228,23 +175,8 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline74"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.96" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/viewExpensesBtn"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/view_expenses"
-        android:backgroundTint="@color/light_green"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView3"
-        app:layout_constraintEnd_toStartOf="@+id/guideline74"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
