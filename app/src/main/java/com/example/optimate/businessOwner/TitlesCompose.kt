@@ -162,7 +162,6 @@ fun Header(title: String) {
         text = title,
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.surface)
             .padding(8.dp),
         style = MaterialTheme.typography.h6,
     )
