@@ -203,7 +203,7 @@ fun DateInput(label: String, date: String, onDateChange: (String) -> Unit, modif
         modifier = modifier
             .padding(4.dp),
         readOnly = true,
-        textStyle = TextStyle(fontSize = 11.sp),
+        textStyle = TextStyle(fontSize = 10.sp),
         label = { Text(text = label, fontSize = 12.sp) },
         trailingIcon = {
             Icon(

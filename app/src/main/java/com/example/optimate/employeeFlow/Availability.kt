@@ -607,13 +607,14 @@ class Availability : AppCompatActivity() {
         // Set checked state for the buttons based on the fetched availability status and editing mode
         statusList?.forEach { status ->
             when (status) {
-                AvailabilityStatus.Morning -> buttons[0].isChecked = true
-                AvailabilityStatus.Evening -> buttons[1].isChecked = true
-                AvailabilityStatus.`All-Day` -> buttons[2].isChecked = true
-                // For NOT_AVAILABLE status, no need to set any button checked
-                AvailabilityStatus.Unavailable -> buttons[3].isChecked = false
+                AvailabilityStatus.Morning -> if (buttons.size > 0) buttons[0].isChecked = true
+                AvailabilityStatus.Evening -> if (buttons.size > 1) buttons[1].isChecked = true
+                AvailabilityStatus.`All-Day` -> if (buttons.size > 2) buttons[2].isChecked = true
+                // Ensure there are enough buttons before trying to access the fourth one
+                AvailabilityStatus.Unavailable -> if (buttons.size > 3) buttons[3].isChecked = false
             }
         }
+
 
         // Disable the buttons if not in editing mode
         buttons.forEach { it.isEnabled = isEditing }

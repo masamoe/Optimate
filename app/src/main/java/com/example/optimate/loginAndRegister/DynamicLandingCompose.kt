@@ -58,7 +58,6 @@ private val employeeAccessList = listOf(
     "View Payroll",
     "Add Expense",
     "Availability",
-    "Submit an expense"
 
 )
 

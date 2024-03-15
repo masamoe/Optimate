@@ -83,7 +83,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:layout_weight="1"
-                        android:checked="true"
+                        android:checked="false"
                         android:enabled="false"
 
 
@@ -147,7 +147,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TUESDAYS"
+                        android:text="Tuesdays"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
                     </TextView>
@@ -159,7 +159,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:layout_weight="1"
-                        android:checked="true"
+                        android:checked="false"
 
                         android:enabled="false"
                         android:gravity="end" />
@@ -220,7 +220,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="WEDNESDAYS"
+                        android:text="Wednesdays"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
                     </TextView>
@@ -232,7 +232,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:layout_weight="1"
-                        android:checked="true"
+                        android:checked="false"
 
                         android:enabled="false"
                         android:gravity="end" />
@@ -294,7 +294,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="THURSDAYS"
+                        android:text="Thursdays"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
                     </TextView>
@@ -306,7 +306,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:layout_weight="1"
-                        android:checked="true"
+                        android:checked="false"
 
                         android:enabled="false"
                         android:gravity="end" />
@@ -368,7 +368,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="FRIDAYS"
+                        android:text="Fridays"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
                     </TextView>
@@ -380,7 +380,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:layout_weight="1"
-                        android:checked="true"
+                        android:checked="false"
 
                         android:enabled="false"
                         android:gravity="end" />
@@ -444,7 +444,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SATURDAYS"
+                        android:text="Saturdays"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
                     </TextView>
@@ -456,7 +456,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:layout_weight="1"
-                        android:checked="true"
+                        android:checked="false"
 
                         android:enabled="false"
                         android:gravity="end" />
@@ -518,7 +518,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SUNDAYS"
+                        android:text="Sundays"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge">
 
                     </TextView>
@@ -530,7 +530,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:layout_weight="1"
-                        android:checked="true"
+                        android:checked="false"
 
                         android:enabled="false"
                         android:gravity="end" />
