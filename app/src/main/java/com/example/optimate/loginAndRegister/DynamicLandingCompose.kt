@@ -57,7 +57,9 @@ private val employeeAccessList = listOf(
     "Clock-in/out",
     "View Payroll",
     "Add Expense",
-    "Availability"
+    "Availability",
+    "Submit an expense"
+
 )
 
 private val businessOwnerAccessList= listOf(
@@ -137,6 +139,7 @@ fun ButtonList(AccessList: List<String>) {
                         "View Payroll" -> context.startActivity(Intent(context, PayStub::class.java))
                         "Availability" -> context.startActivity(Intent(context, Availability::class.java))
                         "Add Expense" -> context.startActivity(Intent(context, SubmitExpenses::class.java))
+
 
 
                     }},
