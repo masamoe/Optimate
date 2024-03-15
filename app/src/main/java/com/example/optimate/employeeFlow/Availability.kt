@@ -592,7 +592,7 @@ class Availability : AppCompatActivity() {
         // Find the corresponding buttons for the day
         val buttons = when (day) {
             "Monday" -> listOf(mondaysM, mondaysE, mondaysA, disableEnableMondays)
-            "Tuesday" -> listOf(tuesdaysM, tuesdaysE, disableEnableTuesdays)
+            "Tuesday" -> listOf(tuesdaysM, tuesdaysE,tuesdaysA, disableEnableTuesdays)
             "Wednesday" -> listOf(wednesdaysM, wednesdaysE, wednesdaysA, disableEnableWednesdays)
             "Thursday" -> listOf(thursdaysM, thursdaysE, thursdaysA, disableEnableThursdays)
             "Friday" -> listOf(fridaysM, fridaysE, fridaysA, disableEnableFridays)
