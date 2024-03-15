@@ -82,10 +82,13 @@
 
     </ScrollView>
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        app:indicatorColor="@color/blue"
+        android:indeterminate="true"
+        app:trackThickness="30dp"
         android:layout_centerInParent="true"
         android:visibility="visible"
         app:indicatorSize="300dp"

@@ -86,6 +86,8 @@ class ViewExpenses : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
 
 
+
+
         // Get current user's UID
         currentUserUid = auth.currentUser?.uid ?: ""
 
