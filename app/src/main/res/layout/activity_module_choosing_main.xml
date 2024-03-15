@@ -24,9 +24,9 @@
 
     <TextView
         android:id="@+id/container2"
-        android:layout_width="320dp"
-        android:layout_height="208dp"
-        android:background="@color/light_grey"
+        android:layout_width="325dp"
+        android:layout_height="180dp"
+        android:background="@drawable/plus"
         android:clickable="true"
         android:focusable="true"
         android:fontFamily="@font/baloo"
@@ -42,10 +42,11 @@
 
 
     <TextView
+
         android:id="@+id/container1"
-        android:layout_width="326dp"
-        android:layout_height="179dp"
-        android:background="@color/light_grey"
+        android:layout_width="325dp"
+        android:layout_height="180dp"
+        android:background="@drawable/basic"
         android:clickable="true"
         android:focusable="true"
         android:fontFamily="@font/baloo"
