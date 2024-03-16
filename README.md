@@ -2,33 +2,52 @@
 
 Welcome to our Business Management App! This Android application, developed in Kotlin, provides a comprehensive solution for managing your business efficiently. With features ranging from employee management to financial tracking, our app aims to streamline your business operations.
 
-## Features
+## Team
 
-- **User Authentication**: The app integrates with Firebase for secure user authentication, ensuring that only authorized users can access the platform.
-- **Business Setup**: Users can add their businesses to the app, enabling them to utilize various features tailored to their specific needs.
-- **User Roles and Permissions**: Differentiate between employees and managers, granting access to specific features based on predefined roles.
-- **User Management**: Managers can create new user accounts and assign them roles within the organization.
-- **Financial Tracking**: Easily record and manage expenses and income within the app.
-- **Scheduling**: Create and manage schedules for employees, helping to streamline workflow and improve efficiency.
-- **Employee Time Availability**: View the availability of employees to better plan schedules and assignments.
-- **Expense and Income Reporting**: Generate reports to track expenses and income over time, aiding in financial analysis and decision-making.
-- **Time Off Requests**: Employees can submit time off requests through the app, simplifying the process for both employees and managers.
+- **Ali** (Project Manager) - Oversaw project planning, coordination, and resource allocation.
+- **Hison** (Developer) - Led the development efforts, including architecture design and implementation.
+- **Jake** (Developer) - Implemented backend functionalities, including database integration and API development.
+- **Adam** (Developer) - Designed and developed the user interface and user experience components.
 
+## Tech Stack
 
+The app is built using the following technologies:
 
-## Dependencies
-
-The app relies on the following dependencies:
-
+- Kotlin
 - Firebase Authentication
 - Firebase Realtime Database
 - Firebase Storage
+- Firebase Messaging Services
+- Stripe Payment
 - Kotlin Coroutines
+- Jetpack Compose
 - Material Components for Android
+- Node.js Server For Stripe Payments and Firebase Messaging 
 
+## Contributions
 
+We welcome contributions from developers to improve our app! Here's how you can contribute:
 
+1. Fork the repository.
+2. Make your changes in a new branch.
+3. Test your changes thoroughly.
+4. Submit a pull request detailing your modifications.
 
+## Running the App
 
-Thank you for using our Business Management App!
+To run the app locally, follow these steps:
 
+1. Clone the repository:
+
+    ```
+    git clone https://github.com/your-username/business-management-app.git
+    ```
+
+2. Open the project in Android Studio.
+3. Add in your google-services.json from Firebase when it configured for Android.
+4. Configure Firebase for authentication, database, and storage. Refer to Firebase documentation for detailed instructions.
+5. Build and run the app on an Android device or emulator.
+6. Clone the node.js server which the code is located at https://github.com/Rangathan/OptimateServer
+7. Replace the server url with your server url
+
+Thank you for using our Business Management App! We appreciate your support and contributions. If you encounter any issues or have suggestions for improvement, please don't hesitate to reach out to us.
