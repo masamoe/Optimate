@@ -208,6 +208,5 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline25"
         app:layout_constraintStart_toStartOf="@+id/guideline26"
         app:layout_constraintTop_toTopOf="@+id/guideline23"
-        app:strokeColor="@color/dark_purple"
-        app:strokeWidth="1dp" />
+         />
     </androidx.constraintlayout.widget.ConstraintLayout>

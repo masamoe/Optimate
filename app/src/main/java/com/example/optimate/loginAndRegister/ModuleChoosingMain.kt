@@ -2,7 +2,9 @@ package com.example.optimate.loginAndRegister
 
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -43,6 +45,7 @@ class ModuleChoosingMain : AppCompatActivity() {
         val container1 = findViewById<TextView>(R.id.container1)
         val container2 = findViewById<TextView>(R.id.container2)
 
+
         val payButtonMain = findViewById<Button>(R.id.payButtonMain)
         var container1Picked = false
         var container2Picked = false
@@ -66,7 +69,7 @@ class ModuleChoosingMain : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, callback)
 
         container1.setOnClickListener {
-            changeColor(container1)
+            changeColor(container1, !container1Picked)
             if (container1Picked) {
                 currentAmount -= module1Price
             } else {
@@ -77,7 +80,7 @@ class ModuleChoosingMain : AppCompatActivity() {
         }
 
         container2.setOnClickListener {
-            changeColor(container2)
+            changeColor(container2, !container2Picked)
             if (container2Picked) {
                 currentAmount -= module2Price
             } else {
@@ -106,15 +109,15 @@ class ModuleChoosingMain : AppCompatActivity() {
     }
 
 
-    private fun changeColor(view: View) {
-        val defaultColor = ContextCompat.getColor(this, R.color.light_grey)
-        val clickedColor = ContextCompat.getColor(this, R.color.grey)// Change this to the appropriate color resource
 
-        val currentColor = (view.background as? ColorDrawable)?.color ?: defaultColor
-        val newColor = if(currentColor == defaultColor) clickedColor else defaultColor
-        view.setBackgroundColor(newColor)
+
+    private fun changeColor(view: TextView, hasStroke: Boolean) {
+        val defaultBackground = ContextCompat.getDrawable(this, R.drawable.stroke_white_color)
+        val clickedBackground = ContextCompat.getDrawable(this, R.drawable.stroke_dark_purple)
+
+        val newBackground = if (hasStroke) clickedBackground else defaultBackground
+        view.foreground = newBackground
     }
-
 
 
     private fun updateUser() {
