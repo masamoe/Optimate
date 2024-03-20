@@ -44,13 +44,11 @@ https://github.com/masamoe/Optimate/assets/121978255/81f7aaeb-e5f2-4260-9d60-164
 
 3. Expense Uploading and History
    
-<img src="https://github.com/masamoe/Optimate/assets/121978255/1998271d-a0a5-4e83-a5e7-6b12e92966bb" width="200px"> <img src="https://github.com/masamoe/Optimate/assets/121978255/4984cd0b-ddc6-422d-ab22-6768f0c18cc2" width="200px"> <img scr="https://github.com/masamoe/Optimate/assets/121978255/6bce8317-5901-492b-9f92-4169a1d5ae4f" width="200px">
+<img src="https://github.com/masamoe/Optimate/assets/121978255/1998271d-a0a5-4e83-a5e7-6b12e92966bb" width="200px"> <img src="https://github.com/masamoe/Optimate/assets/121978255/4984cd0b-ddc6-422d-ab22-6768f0c18cc2" width="200px"><img src="https://github.com/masamoe/Optimate/assets/121978255/6bce8317-5901-492b-9f92-4169a1d5ae4f" width="200px">
 
 4. Shift Scheduling
    
-<img scr="https://github.com/masamoe/Optimate/assets/121978255/9bb1e0cf-20bb-4ab5-b274-14e57e028776" width="200px"> 
-<img src="https://github.com/masamoe/Optimate/assets/121978255/b2dadf99-3f6e-4313-bb37-ca7a1bd2c05a" width="200px">
-<img scr="https://github.com/masamoe/Optimate/assets/121978255/70435bc9-9a0c-45e7-9d7b-b253e929a253" width="200px">
+<img src="https://github.com/masamoe/Optimate/assets/121978255/9bb1e0cf-20bb-4ab5-b274-14e57e028776" width="200px">  <img src="https://github.com/masamoe/Optimate/assets/121978255/b2dadf99-3f6e-4313-bb37-ca7a1bd2c05a" width="200px"> <img src="https://github.com/masamoe/Optimate/assets/121978255/70435bc9-9a0c-45e7-9d7b-b253e929a253" width="200px">
 
 
 
