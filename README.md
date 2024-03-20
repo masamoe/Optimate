@@ -13,8 +13,9 @@ our app aims to streamline your business operations.
 
     Impact: Played a key role in designing user-friendly layouts, ensuring seamless frontend, and overseeing timely delivery.
 
-- **Hison** Developer -
-      Responsibilities: Develop and maintain the UI and functionality for various activities ensuring integration with Firebase for data management and user authentication.
+- **Hison** Developer
+  
+    Responsibilities: Develop and maintain the UI and functionality for various activities ensuring integration with Firebase for data management and user authentication.
 
     Impact: Enhance user experience and streamline business operations by providing intuitive interfaces and functionalities for managing user accounts, financial transactions, work logs, and payroll activities while leveraging Firebase for efficient data storage and retrieval.
       
