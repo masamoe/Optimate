@@ -15,7 +15,11 @@ our app aims to streamline your business operations.
 
 - **Hison** (Developer) - Led the development efforts, including architecture design and implementation.
 
-- **Jake** (Developer) -  Designed and developed the user interface and user experience components.
+- **Jake** Position: Developer
+  
+   Responsibilities: Designed and developed the user interface and user experience components, particularly in the topbar, landing page and schedule views.
+  
+   Impact: Primary development on the business schedule, add shift activity, and employee schedule flow including employee availability.
 
 - **Adam**  Position: Developer
 
