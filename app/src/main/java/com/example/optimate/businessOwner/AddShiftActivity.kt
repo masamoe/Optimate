@@ -17,6 +17,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -43,7 +44,21 @@ class AddShiftActivity : AppCompatActivity() {
         val endTime: String
     )
 
+    data class TimeOffRequest(
+        val bid: String? = null,
+        val dateOfRequest: Timestamp? = null,
+        val endDate: String? = null,
+        val endTime: String? = null,
+        val name: String? = null,
+        val reason: String? = null,
+        val startDate: String? = null,
+        val startTime: String? = null,
+        val status: String? = null,
+        val uid: String? = null
+    )
+
     private val selectedEmployees = mutableListOf<String>()
+    private var approvedTimeOffRequests = mutableListOf<TimeOffRequest>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,15 +104,27 @@ class AddShiftActivity : AppCompatActivity() {
 
         // Set up listener for item selection/deselection
         employeeListView.setOnItemClickListener { _, _, position, _ ->
-            // Handle item selection/deselection
             val employeeName = employeeNames[position].split("\n")[0]
-            if (selectedEmployees.contains(employeeName)) {
-                selectedEmployees.remove(employeeName)
+
+            // Check if the employee has an approved time off request
+            val timeOffRequest = approvedTimeOffRequests.find { it.name == employeeName }
+            if (timeOffRequest != null) {
+                // If the employee has an approved time off, show a toast indicating their unavailability
+                Toast.makeText(this, "This employee has an approved time off", Toast.LENGTH_SHORT).show()
+                // Optionally, you can deselect the employee programmatically
+                employeeListView.setItemChecked(position, false)
             } else {
-                selectedEmployees.add(employeeName)
+                // If the employee doesn't have an approved time off, proceed with selection/deselection
+                if (selectedEmployees.contains(employeeName)) {
+                    selectedEmployees.remove(employeeName)
+                } else {
+                    selectedEmployees.add(employeeName)
+                }
+                // Update the UI based on selection/deselection
+                adapter.notifyDataSetChanged()
             }
-            // Perform any additional actions based on selection/deselection
         }
+
 
         saveShiftBtn.setOnClickListener {
             saveShiftToFirebase(formattedDate, startTimeEditText, endTimeEditText)
@@ -164,7 +191,10 @@ class AddShiftActivity : AppCompatActivity() {
 
                         // Notify the adapter when all data is fetched
                         if (employeeDataList.size == documents.size()) {
-                            updateEmployeeListView(employeeDataList)
+                            // Fetch all approved time off requests for the selected date
+                            fetchApprovedTimeOffRequests(selectedDate) { approvedTimeOffRequests ->
+                                updateEmployeeListView(employeeDataList, approvedTimeOffRequests)
+                            }
                         }
                     }
                 }
@@ -174,6 +204,37 @@ class AddShiftActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to retrieve employees", Toast.LENGTH_SHORT).show()
             }
     }
+
+    private fun fetchApprovedTimeOffRequests(selectedDate: Long, callback: (List<TimeOffRequest>) -> Unit) {
+            // Fetch all approved time off requests
+            db.collection("timeOffRequest")
+                .whereEqualTo("bid", GlobalUserData.bid)
+                .whereEqualTo("status", "approved")
+                .get()
+                .addOnSuccessListener { documents ->
+                    approvedTimeOffRequests = mutableListOf<TimeOffRequest>()
+                    for (document in documents) {
+                        val request = document.toObject(TimeOffRequest::class.java)
+                        approvedTimeOffRequests.add(request)
+                    }
+
+                    // Check if the selected date falls within any approved time off request period
+                    val matchingTimeOffRequests = approvedTimeOffRequests.filter { request ->
+                        val startDateFormatted = formatDate(request.startDate!!)
+                        val endDateFormatted = formatDate(request.endDate!!)
+                        val selectedDateFormatted = getDateFormattedFromMillis(selectedDate)
+                        selectedDateFormatted in startDateFormatted..endDateFormatted
+                    }
+
+                    callback(matchingTimeOffRequests)
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("FirestoreData", "Failed to fetch time off requests. Error: ${exception.message}")
+                    callback(emptyList())
+                }
+    }
+
+
 
     private fun fetchAvailability(uid: String, selectedDate: Long, callback: (List<String>) -> Unit) {
         // Fetch availability from the "availability" collection for the specified UID and selected date
@@ -202,17 +263,24 @@ class AddShiftActivity : AppCompatActivity() {
             }
     }
 
-    private fun updateEmployeeListView(employeeDataList: List<Pair<String, List<String>>>) {
+    private fun updateEmployeeListView(employeeDataList: List<Pair<String, List<String>>>, approvedTimeOffRequests: List<TimeOffRequest>) {
         // Clear existing data
         employeeNames.clear()
 
         // Add employee names with availability to the list
         for ((name, availability) in employeeDataList) {
-            val formattedAvailability = if (availability.isNotEmpty()) {
-
-                availability.joinToString(", ") // Join multiple availability entries
+            // Check if the employee has an approved time off request for the selected date
+            val timeOffRequest = approvedTimeOffRequests.find { it.name == name }
+            val formattedAvailability = if (timeOffRequest != null) {
+                // If there's an approved time off request, set availability as "Unavailable: reason"
+                "${timeOffRequest.reason}"
             } else {
-                "N/A"
+                // Otherwise, format and display their availability normally
+                if (availability.isNotEmpty()) {
+                    availability.joinToString(", ") // Join multiple availability entries
+                } else {
+                    "N/A"
+                }
             }
 
             val employeeInfo = "$name\nAvailability: $formattedAvailability"
@@ -224,6 +292,8 @@ class AddShiftActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
+
+
     private fun getDayOfWeekFromDate(dateInMillis: Long): String {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = dateInMillis
@@ -233,6 +303,11 @@ class AddShiftActivity : AppCompatActivity() {
         return SimpleDateFormat("EEEE", Locale.getDefault()).format(calendar.time)
     }
 
+    private fun formatDate(dateString: String): String {
+        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+        val date = dateFormat.parse(dateString)
+        return SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date)
+    }
 
     private fun showDatePicker() {
         // Create a MaterialDatePicker instance for date picking

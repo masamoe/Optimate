@@ -18,6 +18,8 @@ import com.example.optimate.R.layout
 import com.example.optimate.loginAndRegister.DynamicLandingActivity
 import com.example.optimate.loginAndRegister.GlobalUserData
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -27,6 +29,7 @@ import kotlin.properties.Delegates
 class SchedulerActivity : AppCompatActivity() {
 
     private var db = Firebase.firestore
+    private lateinit var auth: FirebaseAuth
     private lateinit var dynamicContentContainer: LinearLayout
 
     data class Shift(
@@ -47,6 +50,19 @@ class SchedulerActivity : AppCompatActivity() {
         )
     }
 
+    data class TimeOffRequest(
+        val bid: String? = null,
+        val dateOfRequest: Timestamp? = null,
+        val endDate: String? = null,
+        val endTime: String? = null,
+        val name: String? = null,
+        val reason: String? = null,
+        val startDate: String? = null,
+        val startTime: String? = null,
+        val status: String? = null,
+        val uid: String? = null
+    )
+
     private lateinit var noShiftView: TextView
     private lateinit var calendarView: CalendarView
     private var selectedDate by Delegates.notNull<Long>()
@@ -57,6 +73,7 @@ class SchedulerActivity : AppCompatActivity() {
 
         val topBar: XmlTopBar = findViewById(id.topBar)
         topBar.setTitle("Schedule Overview")
+        auth = FirebaseAuth.getInstance()
         val callback = object : OnBackPressedCallback(true /* default to enabled */) {
             override fun handleOnBackPressed() {
 
@@ -89,6 +106,7 @@ class SchedulerActivity : AppCompatActivity() {
     private fun fetchAndPopulateShiftData(selectedDate: String) {
         getShiftData(selectedDate) { shifts ->
             populateUI(shifts)
+            fetchAndDisplayTimeOffRequests(selectedDate)
         }
     }
 
@@ -142,14 +160,84 @@ class SchedulerActivity : AppCompatActivity() {
         // Iterate through the sorted keys
         for (shiftDetails in sortedShiftDetails) {
             val individuals = groupedShiftsMap[shiftDetails]
+            val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val contentView = inflater.inflate(layout.content_schedule_maker, null)
+            dynamicContentContainer.addView(contentView)
+            contentView.findViewById<TextView>(id.shiftHours).text = shiftDetails
+            // Create a formatted string for the individuals working on the shift
+            val names = StringBuilder()
+            individuals?.forEach { name ->
+                names.append(name).append(" \n")
+            }
+            // Remove the trailing newline if there are names
+            if (names.isNotEmpty()) {
+                names.setLength(names.length - 1)
+            }
+            contentView.findViewById<TextView>(id.NameFromDb).text = names.toString()
+        }
+    }
+
+    private fun fetchAndDisplayTimeOffRequests(selectedDate: String) {
+        val user = auth.currentUser
+        if (user != null) {
+            // Fetch all approved time off requests
+            db.collection("timeOffRequest")
+                .whereEqualTo("bid", GlobalUserData.bid)
+                .whereEqualTo("status", "approved")
+                .get()
+                .addOnSuccessListener { documents ->
+                    val approvedTimeOffRequests = mutableListOf<TimeOffRequest>()
+                    for (document in documents) {
+                        val request = document.toObject(TimeOffRequest::class.java)
+                        approvedTimeOffRequests.add(request)
+                    }
+
+                    // Check if the selected date falls within any approved time off request period
+                    val matchingTimeOffRequests = approvedTimeOffRequests.filter { request ->
+                        val startDateFormatted = formatDate(request.startDate!!)
+                        val endDateFormatted = formatDate(request.endDate!!)
+                        selectedDate in startDateFormatted..endDateFormatted
+                    }
+
+                    if (matchingTimeOffRequests.isNotEmpty()) {
+                        // If approved time off request(s) exist, display them
+                        populateUIWithTimeOffRequests(matchingTimeOffRequests)
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("FirestoreData", "Failed to fetch time off requests. Error: ${exception.message}")
+                }
+        }
+    }
+
+    private fun populateUIWithTimeOffRequests(timeOffRequests: List<TimeOffRequest>) {
+        // Group time off requests by reason
+        val groupedTimeOffRequestsMap = mutableMapOf<String, MutableList<String>>()
+        for (timeOffRequest in timeOffRequests) {
+            val reason = timeOffRequest.reason ?: ""
+            val individuals = listOf(timeOffRequest.name ?: "")
+
+            if (groupedTimeOffRequestsMap.containsKey(reason)) {
+                groupedTimeOffRequestsMap[reason]?.addAll(individuals)
+            } else {
+                groupedTimeOffRequestsMap[reason] = individuals.toMutableList()
+            }
+        }
+
+        // Sort the keys of groupedTimeOffRequestsMap
+        val sortedTimeOffReasons = groupedTimeOffRequestsMap.keys.sorted()
+
+        // Iterate through the sorted keys and populate the UI
+        for (reason in sortedTimeOffReasons) {
+            val individuals = groupedTimeOffRequestsMap[reason]
 
             val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val contentView = inflater.inflate(layout.content_schedule_maker, null)
             dynamicContentContainer.addView(contentView)
 
-            contentView.findViewById<TextView>(id.shiftHours).text = shiftDetails
+            contentView.findViewById<TextView>(id.shiftHours).text = reason
 
-            // Create a formatted string for the individuals working on the shift
+            // Create a formatted string for the individuals taking time off
             val names = StringBuilder()
             individuals?.forEach { name ->
                 names.append(name).append(" \n")
@@ -164,10 +252,12 @@ class SchedulerActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun getDateFormattedFromMillis(dateInMillis: Long): String {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = dateInMillis
-        val dateFormat = SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         return dateFormat.format(calendar.time)
     }
 
@@ -192,5 +282,11 @@ class SchedulerActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.e("SchedulerActivity", "Error getting shift data", exception)
             }
+    }
+
+    private fun formatDate(dateString: String): String {
+        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+        val date = dateFormat.parse(dateString)
+        return SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date)
     }
 }

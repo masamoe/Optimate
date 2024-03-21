@@ -15,6 +15,7 @@ import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.example.optimate.R
 import com.example.optimate.businessOwner.XmlTopBar
 import com.example.optimate.loginAndRegister.GlobalUserData
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -39,6 +40,19 @@ class ScheduleModule : AppCompatActivity() {
             startTime = null
         )
     }
+
+    data class TimeOffRequest(
+        val bid: String? = null,
+        val dateOfRequest: Timestamp? = null,
+        val endDate: String? = null,
+        val endTime: String? = null,
+        val name: String? = null,
+        val reason: String? = null,
+        val startDate: String? = null,
+        val startTime: String? = null,
+        val status: String? = null,
+        val uid: String? = null
+    )
 
     private lateinit var nextShiftOrNotScheduledTextView: TextView
     private lateinit var scheduledOrNotTextView: TextView
@@ -155,36 +169,79 @@ class ScheduleModule : AppCompatActivity() {
             // Fetch the shifts for the current user from the database
             val userName = GlobalUserData.name
 
-            db.collection("schedule")
-                .whereEqualTo("BID", GlobalUserData.bid)
-                .whereArrayContains(
-                    "employees",
-                    userName
-                ) // Replace with the actual field name in your database
-                .whereEqualTo("day", selectedDate)
+            // Fetch all approved time off requests
+            db.collection("timeOffRequest")
+                .whereEqualTo("bid", GlobalUserData.bid)
+                .whereEqualTo("uid", user.uid)
+                .whereEqualTo("status", "approved")
                 .get()
                 .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        Log.e("FirestoreData", "checkScheduledShifts: Schedule has no document")
-                    }
-
-                    val shiftList = mutableListOf<ShiftInfo>()
-
+                    val approvedTimeOffRequests = mutableListOf<TimeOffRequest>()
                     for (document in documents) {
-                        val shift = document.toObject(ShiftInfo::class.java)
-                        shiftList.add(shift)
-                        Log.d("FirestoreData", "Document ID: ${document.id}, Shift: $shift")
+                        val request = document.toObject(TimeOffRequest::class.java)
+                        approvedTimeOffRequests.add(request)
                     }
 
-                    displayShiftData(shiftList)
+                    // Check if the selected date falls within any approved time off request period
+                    val timeOffRequest = approvedTimeOffRequests.find { request ->
+                        val startDateFormatted = formatDate(request.startDate!!)
+                        val endDateFormatted = formatDate(request.endDate!!)
+                        selectedDate in startDateFormatted..endDateFormatted
+                    }
 
+                    if (timeOffRequest != null) {
+                        // If an approved time off request exists, display it
+                        timeOffRequest.reason?.let { it1 -> displayApprovedTimeOff(it1) }
+                    } else {
+                        // If no approved time off request covers the selected date, proceed with fetching scheduled shifts
+                        fetchScheduledShifts(selectedDate, userName)
+                    }
                 }
                 .addOnFailureListener { exception ->
-                    val failureToastText =
-                        "Failed to fetch shift data. Error: ${exception.message}"
-                    showToast(failureToastText)
+                    Log.e("FirestoreData", "Failed to fetch time off request. Error: ${exception.message}")
                 }
         }
+    }
+
+
+    private fun fetchScheduledShifts(selectedDate: String, userName: String) {
+        db.collection("schedule")
+            .whereEqualTo("BID", GlobalUserData.bid)
+            .whereArrayContains("employees", userName)
+            .whereEqualTo("day", selectedDate)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Log.e("FirestoreData", "checkScheduledShifts: Schedule has no document")
+                }
+
+                val shiftList = mutableListOf<ShiftInfo>()
+
+                for (document in documents) {
+                    val shift = document.toObject(ShiftInfo::class.java)
+                    shiftList.add(shift)
+                    Log.d("FirestoreData", "Document ID: ${document.id}, Shift: $shift")
+                }
+
+                displayShiftData(shiftList)
+            }
+            .addOnFailureListener { exception ->
+                val failureToastText = "Failed to fetch shift data. Error: ${exception.message}"
+                showToast(failureToastText)
+            }
+    }
+
+    private fun displayApprovedTimeOff(timeOffReason: String) {
+        // Clear previous text
+        nextShiftOrNotScheduledTextView.text = ""
+        scheduledOrNotTextView.text = ""
+
+        // Display the approved time off request
+        nextShiftOrNotScheduledTextView.visibility = INVISIBLE
+        scheduledOrNotTextView.visibility = INVISIBLE
+        noShiftView.visibility = VISIBLE
+
+        noShiftView.text = "Approved Time Off:\n$timeOffReason"
     }
 
     private fun displayShiftData(shiftList: List<ShiftInfo>) {
@@ -206,6 +263,7 @@ class ScheduleModule : AppCompatActivity() {
             nextShiftOrNotScheduledTextView.visibility = INVISIBLE
             scheduledOrNotTextView.visibility = INVISIBLE
             noShiftView.visibility = VISIBLE
+            noShiftView.text = "No Shifts Scheduled!"
         }
     }
 
@@ -220,6 +278,12 @@ class ScheduleModule : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         val date = dateFormat.parse(formattedDate)
         return date?.time ?: 0L
+    }
+
+    private fun formatDate(dateString: String): String {
+        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+        val date = dateFormat.parse(dateString)
+        return SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date)
     }
 
     private fun showToast(message: String) {
