@@ -43,6 +43,7 @@ class AccountsActivity : AppCompatActivity() {
     private fun fetchAccounts(bid: String) {
         db.collection("users")
             .whereEqualTo("BID", bid)
+            .whereNotEqualTo("role", "BusinessOwner")
             .whereIn("account_status.status", listOf("Created", "Active")) // Modified line
             .get()
             .addOnSuccessListener { documents ->

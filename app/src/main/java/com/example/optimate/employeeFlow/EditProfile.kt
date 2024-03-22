@@ -58,6 +58,8 @@ class EditProfile : AppCompatActivity() {
                 .into(imageInput)
         }
 
+        emailInput.setEnabled(false);
+
         emailInput.text = GlobalUserData.email
         passwordInput.text = GlobalUserData.password
         addressInput.text = GlobalUserData.address
