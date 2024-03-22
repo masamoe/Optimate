@@ -89,7 +89,7 @@ fun addRevenueOrExpenseToDB(type: String, dateStr: String, amount: Double, descr
     val date = sdf.parse(dateStr)
 
     val entry = hashMapOf(
-        "UID" to (GlobalUserData.uid ?: ""),
+        "UID" to GlobalUserData.uid,
         "Date" to date,
         "Amount" to amount,
         "Description" to description,

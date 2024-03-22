@@ -48,10 +48,12 @@ class AccountsActivity : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 val fetchedAccounts = mutableListOf<Account>()
                 for (document in documents) {
-                    val name = document.getString("name") ?: "N/A"
-                    val title = document.getString("title") ?: "N/A"
-                    val uid = document.getString("UID") ?: "N/A"
-                    fetchedAccounts.add(Account(name, title, uid))
+                    if(document.getString("role") != "businessOwner") {
+                        val name = document.getString("name") ?: "N/A"
+                        val title = document.getString("title") ?: "N/A"
+                        val uid = document.getString("UID") ?: "N/A"
+                        fetchedAccounts.add(Account(name, title, uid))
+                    }
                 }
 
                 accountsList.clear()

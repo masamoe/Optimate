@@ -39,7 +39,7 @@ class PayRequestsActivity : AppCompatActivity() {
                             .filter { (key, value) ->
                                 key != "bid" &&
                                         value is List<*> &&
-                                        (value as List<*>).any { (it as? Map<*, *>)?.get("approved") == false }
+                                        value.any { (it as? Map<*, *>)?.get("approved") == false }
                             }
                             .mapValues { (_, value) ->
                                 if (value is List<*>) {

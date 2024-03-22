@@ -54,7 +54,7 @@ class Register : AppCompatActivity() {
             }
 
             // Check for password length
-            if (password.length < 8 && !isStrongPassword(password)) {
+            if (password.length < 8 || !isStrongPassword(password)) {
                 Toast.makeText(this, "Password Does not meet requirements.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }

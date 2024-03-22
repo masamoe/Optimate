@@ -58,6 +58,8 @@ class EditProfile : AppCompatActivity() {
                 .into(imageInput)
         }
 
+        emailInput.setEnabled(false);
+
         emailInput.text = GlobalUserData.email
         passwordInput.text = GlobalUserData.password
         addressInput.text = GlobalUserData.address
@@ -171,7 +173,9 @@ class EditProfile : AppCompatActivity() {
                 val fileName = getFileName(applicationContext, imageUri!!)
 
                 // Upload Task with upload to directory 'file'
-                val uploadTask = storageRef.child("profileImage/${GlobalUserData.uid}/$fileName").putFile(imageUri!!)
+                val uploadTask = storageRef.child("profileImage/${GlobalUserData.uid}/$fileName").putFile(
+                    imageUri
+                )
 
                 // On success, download the file URL and display it
                 uploadTask.addOnSuccessListener { _ ->

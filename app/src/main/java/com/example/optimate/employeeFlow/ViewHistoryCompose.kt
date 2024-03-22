@@ -17,9 +17,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -315,7 +315,7 @@ fun NoDataFound(text: String) {
             .padding(top = 100.dp)
     ) {
         Icon(
-            imageVector = Icons.Default.Help,
+            imageVector = Icons.AutoMirrored.Filled.Help,
             contentDescription = "No Data",
             modifier = Modifier.size(64.dp),
             tint = Color.Gray
