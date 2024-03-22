@@ -109,7 +109,7 @@ class SubmitExpenses : AppCompatActivity() {
                             Toast.makeText(this, "Your request has been Sent for approval", Toast.LENGTH_SHORT).show()
                             Handler(Looper.getMainLooper()).postDelayed({
                                 finish()
-                                startActivity(Intent(this, PayStub::class.java))
+                                startActivity(Intent(this, DynamicLandingActivity::class.java))
                             }, 1000) // 1000 milliseconds delay (1 second)
                         }.addOnFailureListener { e ->
                             // Failed to get URL
