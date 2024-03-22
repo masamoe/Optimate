@@ -39,9 +39,9 @@ class ProfilePage : AppCompatActivity() {
         val profilePic = findViewById<ImageView>(R.id.profilePic)
         val homeBtn = findViewById<ImageView>(R.id.homeBtn)
         val formattedWage = if (!GlobalUserData.wage.toString().contains('.')) {
-            "$${GlobalUserData.wage.toString()}.00"
+            "$${GlobalUserData.wage}.00"
         } else if (GlobalUserData.wage.toString().substring(GlobalUserData.wage.toString().indexOf('.') + 1).length == 1) {
-            "$${GlobalUserData.wage.toString()}0"
+            "$${GlobalUserData.wage}0"
         } else {
             "$$GlobalUserData.wage.toString()"
         }
