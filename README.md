@@ -13,19 +13,19 @@ our app aims to streamline your business operations.
 
     Impact: Played a key role in designing user-friendly layouts, ensuring seamless frontend, and overseeing timely delivery.
 
-- **Hison** Developer
+- **Hison** Role: Developer
   
     Responsibilities: Develop and maintain the UI and functionality for various activities ensuring integration with Firebase for data management and user authentication.
 
     Impact: Enhance user experience and streamline business operations by providing intuitive interfaces and functionalities for managing user accounts, financial transactions, work logs, and payroll activities while leveraging Firebase for efficient data storage and retrieval.
       
-- **Jake** Position: Developer
+- **Jake** Role: Developer
   
    Responsibilities: Designed and developed the user interface and user experience components, particularly in the topbar, landing page and schedule views.
   
    Impact: Primary development on the business schedule, add shift activity, and employee schedule flow including employee availability.
 
-- **Adam**  Position: Developer
+- **Adam**  Role: Developer
 
    Responsibilities: Executed backend functionalities with seamless database integration, crafted messaging systems, and orchestrated Payment Server flow.
 
